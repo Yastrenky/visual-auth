@@ -17,7 +17,7 @@ class App extends Component {
 
 
   render() {
-    console.log("App state", this.state)
+    // console.log("App state", this.state)
     return (
       <div className="App">
         <Switch>

@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import red from '@material-ui/core/colors/red';
+import validate from '../../../assets/validate'
 
 import './signup.css';
 
@@ -26,7 +29,16 @@ const styles = theme => ({
   },
   input: {
     display: 'none',
-  }
+  },
+  icon: {
+    margin: theme.spacing.unit * 2,
+  },
+  iconHover: {
+    margin: theme.spacing.unit * 2,
+    '&:hover': {
+      color: red[800],
+    },
+  },
 });
 
 
@@ -39,6 +51,17 @@ class App extends Component {
     copassword: ''
   };
 
+  onSubmit = event => {
+    var name = this.name;
+    var email = this.email;
+    var password = this.password;
+    var copassword = this.copassword;
+
+ 
+      console.log(validate.name(name))
+   
+  }
+
   handleChange = value => event => {
     this.setState({
       [value]: event.target.value,
@@ -46,13 +69,19 @@ class App extends Component {
   };
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
     const { classes } = this.props;
     return (
       <div>
         <header className="Signup-header">
-          <h1 className="Signup-title">Signup</h1>
+          <h1 className="Signup-title">
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
+              input
+            </Icon>
+            Signup
+           </h1>
         </header>
+
         <div className="auth-container">
           <div className="Signup-card auht-view">
             <TextField
@@ -90,7 +119,12 @@ class App extends Component {
               type="password"
             />
             <h5>Already have an account? <Link to='/login'> Login </Link></h5>
-            <Button variant="contained" color="primary" className={classes.button}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={this.onSubmit}
+            >
               Submit
             </Button>
           </div>
