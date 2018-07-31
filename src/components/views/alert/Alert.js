@@ -12,9 +12,16 @@ function Transition(props) {
 }
 
 class AlertDialogSlide extends React.Component {
-  state = {
-    open: true,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: true,
+    };
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+
+  }
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -25,6 +32,8 @@ class AlertDialogSlide extends React.Component {
   };
 
   render() {
+    console.log(this.props)
+    var data = this.props.data
     return (
       <div>
         <Dialog
@@ -36,20 +45,16 @@ class AlertDialogSlide extends React.Component {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            {"Use Google's location service?"}
+            {data.title}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
+              {data.text}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
-              Disagree
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Agree
+              Close
             </Button>
           </DialogActions>
         </Dialog>

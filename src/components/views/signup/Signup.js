@@ -50,9 +50,9 @@ class App extends Component {
     email: '',
     password: '',
     copassword: '',
-    alert:{
-      show: false,
-      title:'',
+    alert: {
+      show: true,
+      title: '',
       text: ''
     }
   };
@@ -62,9 +62,15 @@ class App extends Component {
     var email = this.state.email;
     var password = this.state.password;
     var copassword = this.state.copassword;
+    
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.name(name)) {
       console.log("Invalid Name")
+      alert.show = true;
+      alert.title = 'Invalid Name';
+      alert.text = 'Please enter a name with the valid parameters.'
+      this.setState({alert: alert })
     }
     else if (!validate.email(email)) {
       console.log("Invalid Email")
@@ -77,6 +83,7 @@ class App extends Component {
     }
     else {
       console.log("Todo ok")
+
     }
   }
 
@@ -87,11 +94,15 @@ class App extends Component {
   };
 
   render() {
-    // console.log("state", this.state)
+    console.log("state", this.state)
+
     const { classes } = this.props;
+    const alert = this.state.alert.show;
+
     return (
       <div>
-        <Alert />
+        {alert ? <Alert data={this.state.alert} /> : null}
+
         <header className="Signup-header">
           <h1 className="Signup-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
