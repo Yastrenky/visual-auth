@@ -1,4 +1,4 @@
-.Signup {
+.Signup-card{
   text-align: center;
   display: flex;
   justify-content: space-around;
@@ -9,8 +9,19 @@
 
 .Signup-header {
   background-color: #222;
-  height: 150px;
+  height: 100px;
   padding: 20px;
   color: white;
 }
+.auth-footer{
+  background-color: #222;
+  position: absolute;
+  height: 50px;
+  width: 100%;
+  bottom: 0px;
+  color: white
+}
 
+footer h5 a{
+  color:#3f51b5
+}

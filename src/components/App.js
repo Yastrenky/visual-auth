@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Signup } from './views'
+import { Switch, Route } from 'react-router-dom'
+import { Signup } from './views';
 import './App.css';
 
 class App extends Component {
@@ -19,7 +20,11 @@ class App extends Component {
     console.log("App state", this.state)
     return (
       <div className="App">
-        <Signup />
+        <Switch>
+          <Route exact path='/'
+            render={() => <Signup />}
+          />
+        </Switch>
       </div>
     );
   }
