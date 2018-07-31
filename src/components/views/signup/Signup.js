@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate'
+import Alert from '../alert/Alert'
 
 import './signup.css';
 
@@ -48,18 +49,35 @@ class App extends Component {
     name: '',
     email: '',
     password: '',
-    copassword: ''
+    copassword: '',
+    alert:{
+      show: false,
+      title:'',
+      text: ''
+    }
   };
 
   onSubmit = event => {
-    var name = this.name;
-    var email = this.email;
-    var password = this.password;
-    var copassword = this.copassword;
+    var name = this.state.name;
+    var email = this.state.email;
+    var password = this.state.password;
+    var copassword = this.state.copassword;
 
- 
-      console.log(validate.name(name))
-   
+    if (!validate.name(name)) {
+      console.log("Invalid Name")
+    }
+    else if (!validate.email(email)) {
+      console.log("Invalid Email")
+    }
+    else if (!validate.password(password)) {
+      console.log("Invalid Password")
+    }
+    else if (!validate.password(copassword) && password !== copassword) {
+      console.log("Invalid Confirmed Password")
+    }
+    else {
+      console.log("Todo ok")
+    }
   }
 
   handleChange = value => event => {
@@ -73,6 +91,7 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <div>
+        <Alert />
         <header className="Signup-header">
           <h1 className="Signup-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
@@ -91,6 +110,7 @@ class App extends Component {
               value={this.state.name}
               onChange={this.handleChange('name')}
               margin="normal"
+              required={true}
             />
             <TextField
               id="email"
@@ -99,6 +119,7 @@ class App extends Component {
               value={this.state.email}
               onChange={this.handleChange('email')}
               margin="normal"
+              required={true}
             />
             <TextField
               id="password"
@@ -108,6 +129,7 @@ class App extends Component {
               onChange={this.handleChange('password')}
               margin="normal"
               type="password"
+              required={true}
             />
             <TextField
               id="copassword"
@@ -117,6 +139,7 @@ class App extends Component {
               onChange={this.handleChange('copassword')}
               margin="normal"
               type="password"
+              required={true}
             />
             <h5>Already have an account? <Link to='/login'> Login </Link></h5>
             <Button

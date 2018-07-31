@@ -4,9 +4,3 @@ body {
     font-family: sans-serif;
 }
 
-.auth-container {
-    height: 75vh;
-    display: flex;
-    align-items: center;
-    justify-content: space-around
-}

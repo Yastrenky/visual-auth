@@ -2,6 +2,9 @@
   text-align: center;
 }
 
-.App-textField-2 {
-  width: 280px;
+.auth-container {
+  height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around
 }
