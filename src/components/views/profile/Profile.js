@@ -25,7 +25,7 @@ const styles = theme => ({
     width: 200,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: 15,
     width: 100,
   },
   input: {
@@ -86,7 +86,7 @@ class Profile extends Component {
         <header className="Profile-header">
           <h1 className="Profile-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
-              input
+              account_box
             </Icon>
             User Profile
            </h1>

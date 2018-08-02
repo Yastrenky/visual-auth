@@ -25,7 +25,8 @@ const styles = theme => ({
     width: 200,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: 15,
+    marginTop: 40,
     width: 100,
   },
   input: {
@@ -61,7 +62,7 @@ class Reset extends Component {
     var password = this.state.password;
     var copassword = this.state.copassword;
     var alert = JSON.parse(JSON.stringify(this.state.alert));
-    
+
     if (!validate.password(password)) {
       console.log("Invalid Password")
       alert.show = true;
@@ -111,7 +112,7 @@ class Reset extends Component {
         <header className="Reset-header">
           <h1 className="Reset-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
-              input
+              lock_open
             </Icon>
             Reset Password
            </h1>
@@ -140,7 +141,7 @@ class Reset extends Component {
               type="password"
               required={true}
             />
-            <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>
+
             <Button
               variant="contained"
               color="primary"
@@ -149,6 +150,8 @@ class Reset extends Component {
             >
               Submit
             </Button>
+            <hr></hr>
+            <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>
           </div>
         </div>
         <footer className="auth-footer">

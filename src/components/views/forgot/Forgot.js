@@ -25,7 +25,7 @@ const styles = theme => ({
     width: 200,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: 15,
     width: 100,
   },
   input: {
@@ -100,7 +100,7 @@ class Forgot extends Component {
         <header className="Forgot-header">
           <h1 className="Forgot-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
-              input
+              lock
             </Icon>
             Forgot Password
            </h1>
@@ -117,8 +117,6 @@ class Forgot extends Component {
               margin="normal"
               required={true}
             />
-            <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>
-            <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>
             <Button
               variant="contained"
               color="primary"
@@ -127,6 +125,9 @@ class Forgot extends Component {
             >
               Submit
             </Button>
+            <hr></hr>
+            <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>
+            <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>
           </div>
         </div>
         <footer className="auth-footer">

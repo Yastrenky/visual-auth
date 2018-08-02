@@ -1,10 +1,28 @@
 .App {
   text-align: center;
+  height: 100vh;
+  margin: 0px;
+  padding: 0px;
 }
 
 .auth-container {
-  height: 65vh;
+  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: space-around
+}
+
+.auth-footer {
+  justify-content: center;
+  background-color: #222;
+  height: 51px;
+  width: 100%;
+  bottom: 0vh;
+  color: white;
+  display: flex;
+}
+
+hr {
+  width: 70%;
+  border-top: 1px dashed #8c8b8b;
 }

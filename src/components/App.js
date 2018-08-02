@@ -34,7 +34,7 @@ class App extends Component {
       <div className="App">
         <Switch>
           <Route exact path='/'
-            render={() => <Profile logOut = {this.logOut}/>}
+            render={() => <Profile logOut={this.logOut} />}
           />
           <Route exact path='/signup'
             render={() => <Signup />}
@@ -44,6 +44,9 @@ class App extends Component {
           />
           <Route exact path='/forgot'
             render={() => <Forgot />}
+          />
+          <Route exact path='/profile'
+            render={() => <Profile logOut={this.logOut} />}
           />
           <Route path='/reset'
             render={() => <Reset />}

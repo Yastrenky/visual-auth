@@ -25,7 +25,8 @@ const styles = theme => ({
     width: 200,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: 15,
+    marginTop: 40,
     width: 100,
   },
   input: {
@@ -68,7 +69,7 @@ class Login extends Component {
       alert.text = 'Please enter a email with the valid parameters.'
       this.setState({ alert: alert })
     }
-    
+
     else if (!validate.password(password)) {
       console.log("Invalid Password")
       alert.show = true;
@@ -139,7 +140,7 @@ class Login extends Component {
               required={true}
             />
             <h5><Link to='/forgot'> Forgot Password?  </Link></h5>
-            <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>
+
             <Button
               variant="contained"
               color="primary"
@@ -148,6 +149,8 @@ class Login extends Component {
             >
               Submit
             </Button>
+            <hr></hr>
+            <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>
           </div>
         </div>
         <footer className="auth-footer">

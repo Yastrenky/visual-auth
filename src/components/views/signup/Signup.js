@@ -25,7 +25,8 @@ const styles = theme => ({
     width: 200,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: 15,
+    marginTop: 40,
     width: 100,
   },
   input: {
@@ -173,7 +174,6 @@ class Signup extends Component {
               type="password"
               required={true}
             />
-            <h5>Already have an account? <Link to='/login'> Login </Link></h5>
             <Button
               variant="contained"
               color="primary"
@@ -182,6 +182,8 @@ class Signup extends Component {
             >
               Submit
             </Button>
+            <hr></hr>
+            <h5>Already have an account? <Link to='/login'> Login </Link></h5>
           </div>
         </div>
         <footer className="auth-footer">
