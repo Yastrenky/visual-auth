@@ -33,7 +33,7 @@ class AlertDialogSlide extends React.Component {
   };
 
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     var data = this.props.data
     return (
       <div>

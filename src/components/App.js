@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom'
 import { Signup } from './views';
+import { Login } from './views';
 import './App.css';
 
 class App extends Component {
@@ -22,7 +23,13 @@ class App extends Component {
       <div className="App">
         <Switch>
           <Route exact path='/'
+            render={() => <Login />}
+          />
+          <Route exact path='/signup'
             render={() => <Signup />}
+          />
+          <Route exact path='/login'
+            render={() => <Login />}
           />
         </Switch>
       </div>
