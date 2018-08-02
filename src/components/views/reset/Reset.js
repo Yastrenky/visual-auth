@@ -8,7 +8,7 @@ import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate'
 import Alert from '../alert/Alert'
 
-import './login.css';
+import './reset.css';
 
 
 const styles = theme => ({
@@ -43,12 +43,13 @@ const styles = theme => ({
 });
 
 
-class Login extends Component {
+class Reset extends Component {
 
   state = {
-
+    name: '',
     email: '',
     password: '',
+    copassword: '',
     alert: {
       show: false,
       title: '',
@@ -57,23 +58,22 @@ class Login extends Component {
   };
 
   onSubmit = event => {
-    var email = this.state.email;
     var password = this.state.password;
+    var copassword = this.state.copassword;
     var alert = JSON.parse(JSON.stringify(this.state.alert));
-
-    if (!validate.email(email)) {
-      console.log("Invalid Email")
-      alert.show = true;
-      alert.title = 'Invalid Email';
-      alert.text = 'Please enter a email with the valid parameters.'
-      this.setState({ alert: alert })
-    }
     
-    else if (!validate.password(password)) {
+    if (!validate.password(password)) {
       console.log("Invalid Password")
       alert.show = true;
       alert.title = 'Invalid Password';
       alert.text = 'Please enter a password with the valid parameters.'
+      this.setState({ alert: alert })
+    }
+    else if (!validate.password(copassword) && password !== copassword) {
+      console.log("Invalid Confirmed Password")
+      alert.show = true;
+      alert.title = 'Invalid Confirmed Password';
+      alert.text = 'Please enter a confirmed password with the valid parameters.'
       this.setState({ alert: alert })
     }
     else {
@@ -108,29 +108,21 @@ class Login extends Component {
       <div>
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
 
-        <header className="Login-header">
-          <h1 className="Login-title">
+        <header className="Reset-header">
+          <h1 className="Reset-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               input
             </Icon>
-            Login
+            Reset
            </h1>
         </header>
 
         <div className="auth-container">
-          <div className="Login-card auht-view">
-            <TextField
-              id="email"
-              label="Email"
-              className={classes.textField}
-              value={this.state.email}
-              onChange={this.handleChange('email')}
-              margin="normal"
-              required={true}
-            />
+          <div className="Reset-card auht-view">
+
             <TextField
               id="password"
-              label="Password"
+              label="New password"
               className={classes.textField}
               value={this.state.password}
               onChange={this.handleChange('password')}
@@ -138,8 +130,17 @@ class Login extends Component {
               type="password"
               required={true}
             />
-            <h5><Link to='/forgot'> Forgot Password?  </Link></h5>
-            <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>
+            <TextField
+              id="copassword"
+              label="Confirm new password"
+              className={classes.textField}
+              value={this.state.copassword}
+              onChange={this.handleChange('copassword')}
+              margin="normal"
+              type="password"
+              required={true}
+            />
+            <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>
             <Button
               variant="contained"
               color="primary"
@@ -158,4 +159,4 @@ class Login extends Component {
   }
 }
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(Reset);

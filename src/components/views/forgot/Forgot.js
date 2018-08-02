@@ -43,7 +43,7 @@ const styles = theme => ({
 });
 
 
-class App extends Component {
+class Forgot extends Component {
 
   state = {
     email: '',
@@ -137,4 +137,4 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(Forgot);
