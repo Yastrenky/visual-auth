@@ -113,7 +113,7 @@ class Reset extends Component {
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               input
             </Icon>
-            Reset
+            Reset Password
            </h1>
         </header>
 
