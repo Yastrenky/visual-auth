@@ -51,7 +51,7 @@ class App extends Component {
     password: '',
     copassword: '',
     alert: {
-      show: true,
+      show: false,
       title: '',
       text: ''
     }
@@ -62,7 +62,6 @@ class App extends Component {
     var email = this.state.email;
     var password = this.state.password;
     var copassword = this.state.copassword;
-    
     var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.name(name)) {
@@ -70,21 +69,43 @@ class App extends Component {
       alert.show = true;
       alert.title = 'Invalid Name';
       alert.text = 'Please enter a name with the valid parameters.'
-      this.setState({alert: alert })
+      this.setState({ alert: alert })
     }
     else if (!validate.email(email)) {
       console.log("Invalid Email")
+      alert.show = true;
+      alert.title = 'Invalid Email';
+      alert.text = 'Please enter a email with the valid parameters.'
+      this.setState({ alert: alert })
     }
     else if (!validate.password(password)) {
       console.log("Invalid Password")
+      alert.show = true;
+      alert.title = 'Invalid Password';
+      alert.text = 'Please enter a password with the valid parameters.'
+      this.setState({ alert: alert })
     }
     else if (!validate.password(copassword) && password !== copassword) {
       console.log("Invalid Confirmed Password")
+      alert.show = true;
+      alert.title = 'Invalid Confirmed Password';
+      alert.text = 'Please enter a confirmed password with the valid parameters.'
+      this.setState({ alert: alert })
     }
     else {
       console.log("Todo ok")
 
     }
+  }
+
+  resetAlert = () => {
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
+    alert = {
+      show: false,
+      title: '',
+      text: ''
+    }
+    this.setState({ alert: alert })
   }
 
   handleChange = value => event => {
@@ -101,7 +122,7 @@ class App extends Component {
 
     return (
       <div>
-        {alert ? <Alert data={this.state.alert} /> : null}
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
 
         <header className="Signup-header">
           <h1 className="Signup-title">
