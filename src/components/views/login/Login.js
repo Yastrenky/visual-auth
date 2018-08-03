@@ -48,7 +48,7 @@ class Login extends Component {
 
   state = {
 
-    email: 'noreply@email.com',
+    email: 'ybramos91@gmail.com',
     password: 'Zxcvbn95',
     alert: {
       show: false,
@@ -96,14 +96,20 @@ class Login extends Component {
           if (response.success) {
 
           }
-
-       })
-        .catch(function (error) {
-          console.log('Request failure: ', error);
+          else {
+            alert.show = true;
+            alert.title = response.title;
+            alert.text = response.message
+            this.setState({ alert: alert })
+          }
         })
-
-      console.log("Virified")
-
+        .catch(
+          (error) => {
+            alert.show = true;
+            alert.title = 'Request failure';
+            alert.text = "Server connection lost. Please contact your service provider.";
+            this.setState({ alert: alert })
+          })
     }
   }
 

@@ -47,7 +47,7 @@ class App extends Component {
 
   state = {
     name: 'Yastrenky',
-    email: 'noreply@email.com',
+    email: 'ybramos91@gmail.com',
     password: 'Zxcvbn95',
     copassword: 'Zxcvbn95',
     alert: {
@@ -107,17 +107,24 @@ class App extends Component {
         }),
       }).then(response => response.json())
         .then(response => {
-          console.log('Request success: ', response);
+          console.log('Request:', response);
           if (response.success) {
 
           }
+          else{
+            alert.show = true;
+            alert.title = response.title;
+            alert.text = response.message
+            this.setState({ alert: alert })
+          }
 
         })
-        .catch(function (error) {
-          console.log('Request failure: ', error);
+        .catch( (error) => {
+          alert.show = true;
+          alert.title = 'Request failure';
+          alert.text = "Server connection lost. Please contact your service provider.";
+          this.setState({ alert: alert })
         })
-      console.log("Todo ok")
-
     }
   }
 
