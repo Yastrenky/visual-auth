@@ -5,8 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
-import validate from '../../../assets/validate'
-import Alert from '../alert/Alert'
+import validate from '../../../assets/validate';
+import Alert from '../alert/Alert';
+import server from '../../../config/config';
 
 import './forgot.css';
 
@@ -66,7 +67,32 @@ class Forgot extends Component {
       this.setState({ alert: alert })
     }
     else {
-      console.log("Todo ok")
+      fetch(server + '/forgot', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email: this.state.email,
+        }),
+      }).then(response => response.json())
+        .then(response => {
+          console.log('Request success: ', response);
+            alert.show = true;
+            alert.title = response.title;
+            alert.text = response.message
+            this.setState({ alert: alert })
+          
+        })
+        .catch(
+          (error) => {
+            alert.show = true;
+            alert.title = 'Request failure';
+            alert.text = "Server connection lost. Please contact your service provider.";
+            this.setState({ alert: alert })
+          })
 
     }
   }

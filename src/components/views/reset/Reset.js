@@ -5,8 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
-import validate from '../../../assets/validate'
-import Alert from '../alert/Alert'
+import validate from '../../../assets/validate';
+import Alert from '../alert/Alert';
+import server from '../../../config/config';
 
 import './reset.css';
 
@@ -45,19 +46,21 @@ const styles = theme => ({
 
 
 class Reset extends Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    name: '',
-    email: '',
-    password: '',
-    copassword: '',
-    alert: {
-      show: false,
-      title: '',
-      text: ''
-    }
-  };
-
+    this.state = {
+      name: '',
+      email: '',
+      password: '',
+      copassword: '',
+      alert: {
+        show: false,
+        title: '',
+        text: ''
+      }
+    };
+  }
   onSubmit = event => {
     var password = this.state.password;
     var copassword = this.state.copassword;
@@ -78,7 +81,44 @@ class Reset extends Component {
       this.setState({ alert: alert })
     }
     else {
-      console.log("Todo ok")
+
+      var token = this.props.match.params.handle;
+      console.log("Token", this.props.match.params.handle)
+      fetch(server + '/reset/' + token, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          password: this.state.password
+        }),
+      }).then(response => response.json())
+        .then(response => {
+          console.log('Request success: ', response);
+          if (response.success) {
+            alert.show = true;
+            alert.title = response.title;
+            alert.text = response.message
+            this.setState({ alert: alert })
+
+          }
+          else {
+            alert.show = true;
+            alert.title = response.title;
+            alert.text = response.message
+            this.setState({ alert: alert })
+          }
+        })
+        .catch(
+          (error) => {
+            console.log(error)
+            alert.show = true;
+            alert.title = 'Request failure';
+            alert.text = "Server connection lost. Please contact your service provider.";
+            this.setState({ alert: alert })
+          })
 
     }
   }

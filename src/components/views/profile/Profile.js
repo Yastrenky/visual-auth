@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router-dom';
+
 import { withStyles } from '@material-ui/core/styles';
-// import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
-// import validate from '../../../assets/validate'
 import Alert from '../alert/Alert'
 
 import './profile.css';
@@ -44,18 +42,22 @@ const styles = theme => ({
 
 
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+    var data = this.props.data;
 
-  state = {
-    id: '',
-    name: '',
-    email: '',
-    password: '',
-    alert: {
-      show: false,
-      title: '',
-      text: ''
-    }
-  };
+    this.state = {
+      id: '' || data.id,
+      name: '' || data.name,
+      email: '' || data.email,
+      password: '' || data.password,
+      alert: {
+        show: false,
+        title: '',
+        text: ''
+      }
+    };
+  }
 
   resetAlert = () => {
     var alert = JSON.parse(JSON.stringify(this.state.alert));

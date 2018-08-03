@@ -5,8 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
-import validate from '../../../assets/validate'
-import Alert from '../alert/Alert'
+import validate from '../../../assets/validate';
+import Alert from '../alert/Alert';
+import server from '../../../config/config';
 
 import './login.css';
 
@@ -47,7 +48,6 @@ const styles = theme => ({
 class Login extends Component {
 
   state = {
-
     email: 'ybramos91@gmail.com',
     password: 'Zxcvbn95',
     alert: {
@@ -79,7 +79,7 @@ class Login extends Component {
     }
     else {
 
-      fetch('http://localhost:8001/login', {
+      fetch(server + '/login', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -95,6 +95,7 @@ class Login extends Component {
           console.log('Request success: ', response);
           if (response.success) {
 
+            this.props.logIn(response.user)
           }
           else {
             alert.show = true;
@@ -130,7 +131,7 @@ class Login extends Component {
   };
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
@@ -170,7 +171,6 @@ class Login extends Component {
               required={true}
             />
             <h5><Link to='/forgot'> Forgot Password?  </Link></h5>
-
             <Button
               variant="contained"
               color="primary"

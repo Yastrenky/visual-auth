@@ -6,7 +6,9 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate'
-import Alert from '../alert/Alert'
+import Alert from '../alert/Alert';
+import server from '../../../config/config';
+
 
 import './signup.css';
 
@@ -93,7 +95,7 @@ class App extends Component {
       this.setState({ alert: alert })
     }
     else {
-      fetch('http://localhost:8001/signup', {
+      fetch(server + '/signup', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -107,7 +109,7 @@ class App extends Component {
         }),
       }).then(response => response.json())
         .then(response => {
-          console.log('Request:', response);
+          // console.log('Request:', response);
           if (response.success) {
 
           }
@@ -145,7 +147,7 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
