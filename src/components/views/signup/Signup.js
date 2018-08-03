@@ -25,8 +25,7 @@ const styles = theme => ({
     width: 200,
   },
   button: {
-    margin: 15,
-    marginTop: 40,
+    margin: theme.spacing.unit,
     width: 100,
   },
   input: {
@@ -44,13 +43,13 @@ const styles = theme => ({
 });
 
 
-class Signup extends Component {
+class App extends Component {
 
   state = {
-    name: '',
-    email: '',
-    password: '',
-    copassword: '',
+    name: 'Yastrenky',
+    email: 'noreply@email.com',
+    password: 'Zxcvbn95',
+    copassword: 'Zxcvbn95',
     alert: {
       show: false,
       title: '',
@@ -94,6 +93,29 @@ class Signup extends Component {
       this.setState({ alert: alert })
     }
     else {
+      fetch('http://localhost:8001/signup', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          name: this.state.name,
+          email: this.state.email,
+          password: this.state.password
+        }),
+      }).then(response => response.json())
+        .then(response => {
+          console.log('Request success: ', response);
+          if (response.success) {
+
+          }
+
+        })
+        .catch(function (error) {
+          console.log('Request failure: ', error);
+        })
       console.log("Todo ok")
 
     }
@@ -116,7 +138,7 @@ class Signup extends Component {
   };
 
   render() {
-    console.log("state", this.state)
+    console.log(this.state)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
@@ -174,6 +196,7 @@ class Signup extends Component {
               type="password"
               required={true}
             />
+            <h5>Already have an account? <Link to='/login'> Login </Link></h5>
             <Button
               variant="contained"
               color="primary"
@@ -182,8 +205,6 @@ class Signup extends Component {
             >
               Submit
             </Button>
-            <hr></hr>
-            <h5>Already have an account? <Link to='/login'> Login </Link></h5>
           </div>
         </div>
         <footer className="auth-footer">
@@ -194,4 +215,4 @@ class Signup extends Component {
   }
 }
 
-export default withStyles(styles)(Signup);
+export default withStyles(styles)(App);

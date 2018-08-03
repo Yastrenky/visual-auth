@@ -48,8 +48,8 @@ class Login extends Component {
 
   state = {
 
-    email: '',
-    password: '',
+    email: 'noreply@email.com',
+    password: 'Zxcvbn95',
     alert: {
       show: false,
       title: '',
@@ -78,7 +78,31 @@ class Login extends Component {
       this.setState({ alert: alert })
     }
     else {
-      console.log("Todo ok")
+
+      fetch('http://localhost:8001/login', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email: this.state.email,
+          password: this.state.password
+        }),
+      }).then(response => response.json())
+        .then(response => {
+          console.log('Request success: ', response);
+          if (response.success) {
+
+          }
+
+       })
+        .catch(function (error) {
+          console.log('Request failure: ', error);
+        })
+
+      console.log("Virified")
 
     }
   }

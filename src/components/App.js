@@ -29,12 +29,13 @@ class App extends Component {
 
 
   render() {
-    console.log("App state", this.state)
+    // console.log("App state", this.state)
+    
     return (
       <div className="App">
         <Switch>
           <Route exact path='/'
-            render={() => <Profile logOut={this.logOut} />}
+            render={() => <Login />}
           />
           <Route exact path='/signup'
             render={() => <Signup />}
