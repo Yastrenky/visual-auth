@@ -67,14 +67,14 @@ class Reset extends Component {
     var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.password(password)) {
-      console.log("Invalid Password")
+      // console.log("Invalid Password")
       alert.show = true;
       alert.title = 'Invalid Password';
       alert.text = 'Please enter a password with the valid parameters.'
       this.setState({ alert: alert })
     }
     else if (!validate.password(copassword) && password !== copassword) {
-      console.log("Invalid Confirmed Password")
+      // console.log("Invalid Confirmed Password")
       alert.show = true;
       alert.title = 'Invalid Confirmed Password';
       alert.text = 'Please enter a confirmed password with the valid parameters.'
@@ -83,7 +83,7 @@ class Reset extends Component {
     else {
 
       var token = this.props.match.params.handle;
-      console.log("Token", this.props.match.params.handle)
+
       fetch(server + '/reset/' + token, {
         method: 'POST',
         headers: {
@@ -96,7 +96,7 @@ class Reset extends Component {
         }),
       }).then(response => response.json())
         .then(response => {
-          console.log('Request success: ', response);
+          // console.log('Request success: ', response);
           if (response.success) {
             alert.show = true;
             alert.title = response.title;
@@ -113,7 +113,7 @@ class Reset extends Component {
         })
         .catch(
           (error) => {
-            console.log(error)
+            // console.log(error)
             alert.show = true;
             alert.title = 'Request failure';
             alert.text = "Server connection lost. Please contact your service provider.";
@@ -140,7 +140,7 @@ class Reset extends Component {
   };
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;

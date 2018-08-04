@@ -63,7 +63,7 @@ class Login extends Component {
     var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.email(email)) {
-      console.log("Invalid Email")
+      // console.log("Invalid Email")
       alert.show = true;
       alert.title = 'Invalid Email';
       alert.text = 'Please enter a email with the valid parameters.'
@@ -71,7 +71,7 @@ class Login extends Component {
     }
 
     else if (!validate.password(password)) {
-      console.log("Invalid Password")
+      // console.log("Invalid Password")
       alert.show = true;
       alert.title = 'Invalid Password';
       alert.text = 'Please enter a password with the valid parameters.'
@@ -92,7 +92,7 @@ class Login extends Component {
         }),
       }).then(response => response.json())
         .then(response => {
-          console.log('Request success: ', response);
+          // console.log('Request success: ', response);
           if (response.success) {
 
             this.props.logIn(response.user)

@@ -67,28 +67,28 @@ class App extends Component {
     var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.name(name)) {
-      console.log("Invalid Name")
+      // console.log("Invalid Name")
       alert.show = true;
       alert.title = 'Invalid Name';
       alert.text = 'Please enter a name with the valid parameters.'
       this.setState({ alert: alert })
     }
     else if (!validate.email(email)) {
-      console.log("Invalid Email")
+      // console.log("Invalid Email")
       alert.show = true;
       alert.title = 'Invalid Email';
       alert.text = 'Please enter a email with the valid parameters.'
       this.setState({ alert: alert })
     }
     else if (!validate.password(password)) {
-      console.log("Invalid Password")
+      // console.log("Invalid Password")
       alert.show = true;
       alert.title = 'Invalid Password';
       alert.text = 'Please enter a password with the valid parameters.'
       this.setState({ alert: alert })
     }
     else if (!validate.password(copassword) && password !== copassword) {
-      console.log("Invalid Confirmed Password")
+      // console.log("Invalid Confirmed Password")
       alert.show = true;
       alert.title = 'Invalid Confirmed Password';
       alert.text = 'Please enter a confirmed password with the valid parameters.'
@@ -111,7 +111,10 @@ class App extends Component {
         .then(response => {
           // console.log('Request:', response);
           if (response.success) {
-
+            alert.show = true;
+            alert.title = response.title;
+            alert.text = response.message
+            this.setState({ alert: alert })
           }
           else{
             alert.show = true;

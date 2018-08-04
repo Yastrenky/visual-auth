@@ -60,7 +60,7 @@ class Forgot extends Component {
     var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.email(email)) {
-      console.log("Invalid Email")
+      // console.log("Invalid Email")
       alert.show = true;
       alert.title = 'Invalid Email';
       alert.text = 'Please enter a email with the valid parameters.'
@@ -79,7 +79,7 @@ class Forgot extends Component {
         }),
       }).then(response => response.json())
         .then(response => {
-          console.log('Request success: ', response);
+          // console.log('Request success: ', response);
             alert.show = true;
             alert.title = response.title;
             alert.text = response.message
@@ -114,7 +114,7 @@ class Forgot extends Component {
   };
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
