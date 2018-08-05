@@ -7,7 +7,8 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
-import server from '../../../config/config';
+import server, {secure} from '../../../config/config';
+import Cryptr from 'cryptr';
 
 import './login.css';
 
@@ -49,7 +50,7 @@ class Login extends Component {
 
   state = {
     email: 'ybramos91@gmail.com',
-    password: 'Zxcvbn95',
+    password: 'Zxcvbn95',// only for testing
     alert: {
       show: false,
       title: '',
@@ -78,7 +79,7 @@ class Login extends Component {
       this.setState({ alert: alert })
     }
     else {
-
+      const cryptr = new Cryptr(secure);
       fetch(server + '/login', {
         method: 'POST',
         headers: {
@@ -88,13 +89,12 @@ class Login extends Component {
         credentials: "include",
         body: JSON.stringify({
           email: this.state.email,
-          password: this.state.password
+          password: cryptr.encrypt(this.state.password)
         }),
       }).then(response => response.json())
         .then(response => {
           // console.log('Request success: ', response);
           if (response.success) {
-
             this.props.logIn(response.user)
           }
           else {
@@ -107,7 +107,7 @@ class Login extends Component {
         .catch(
           (error) => {
             alert.show = true;
-            alert.title = 'Request failure';
+            alert.title = 'Connection lost';
             alert.text = "Server connection lost. Please contact your service provider.";
             this.setState({ alert: alert })
           })
