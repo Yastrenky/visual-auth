@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
-import Alert from '../alert/Alert'
-
+import Alert from '../alert/Alert';
+import { Elements, StripeProvider } from 'react-stripe-elements';
+import StripeCard from '../stripeElem';
+import server, { stripekey } from '../../../config/config';
 import './profile.css';
 
 
@@ -75,6 +76,14 @@ class Profile extends Component {
     });
   };
 
+  componentDidMount() {
+
+    fetch(server + '/transactionsList', { credentials: 'include' })
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(e => console.log(e));
+  }
+
   render() {
     // console.log("state", this.state)
 
@@ -109,6 +118,14 @@ class Profile extends Component {
               Logout
             </Button>
           </div>
+          <StripeProvider apiKey={stripekey}>
+            <div className="example">
+              <h1>React Stripe Elements Example</h1>
+              <Elements>
+                <StripeCard />
+              </Elements>
+            </div>
+          </StripeProvider>
         </div>
         <footer className="auth-footer">
           <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>

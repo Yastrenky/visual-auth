@@ -78,14 +78,14 @@ class Login extends Component {
       alert.text = 'Please enter a password with the valid parameters.'
       this.setState({ alert: alert })
     }
-    else if (!this.state.recaptcha) {
-      // console.log("Invalid Password")
-      this.resetRecaptcha();
-      alert.show = true;
-      alert.title = 'Bot verification fail';
-      alert.text = 'Access to login denied by google verification.'
-      this.setState({ alert: alert })
-    }
+    // else if (!this.state.recaptcha) {
+    //   // console.log("Invalid Password")
+    //   this.resetRecaptcha();
+    //   alert.show = true;
+    //   alert.title = 'Bot verification fail';
+    //   alert.text = 'Access to login denied by google verification.'
+    //   this.setState({ alert: alert })
+    // }
     else {
       const cryptr = new Cryptr(secure);
       fetch(server + '/login', {
