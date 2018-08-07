@@ -1,25 +1,29 @@
 .Signup-card {
-  text-align: center;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-direction: column;
-  width: 400px;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
 }
 
 .Signup-header {
-  background-color: #222;
-  height: 100px;
-  padding: 20px;
-  color: white;
+    background-color: #222;
+    height: 100px;
+    padding: 20px;
+    color: white;
 }
 
 .Signup-title {
-  align-items: center;
-  display: flex;
-  justify-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#g-recaptcha {
+    margin-top: 20px;
 }
 
 footer h5 a {
-  color: #3f51b5
+    color: #3f51b5
 }

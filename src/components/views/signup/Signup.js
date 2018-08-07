@@ -8,7 +8,7 @@ import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate'
 import Alert from '../alert/Alert';
 import server from '../../../config/config';
-
+import Recaptcha from 'react-recaptcha';
 
 import './signup.css';
 
@@ -94,6 +94,14 @@ class App extends Component {
       alert.text = 'Please enter a confirmed password with the valid parameters.'
       this.setState({ alert: alert })
     }
+    else if (!this.state.recaptcha) {
+      // console.log("Invalid Password")
+      this.resetRecaptcha();
+      alert.show = true;
+      alert.title = 'Bot verification fail';
+      alert.text = 'Access to login denied by google verification.'
+      this.setState({ alert: alert })
+    }
     else {
       fetch(server + '/signup', {
         method: 'POST',
@@ -116,7 +124,7 @@ class App extends Component {
             alert.text = response.message
             this.setState({ alert: alert })
           }
-          else{
+          else {
             alert.show = true;
             alert.title = response.title;
             alert.text = response.message
@@ -124,7 +132,7 @@ class App extends Component {
           }
 
         })
-        .catch( (error) => {
+        .catch((error) => {
           alert.show = true;
           alert.title = 'Request failure';
           alert.text = "Server connection lost. Please contact your service provider.";
@@ -149,6 +157,17 @@ class App extends Component {
     });
   };
 
+  callback = () => {
+    console.log('Done!!!!');
+  };
+
+  verifyCallback = (response) => {
+    this.setState({ recaptcha: response })
+  };
+
+  resetRecaptcha = () => {
+    this.recaptchaInstance.reset();
+  };
   render() {
     // console.log(this.state)
 
@@ -208,6 +227,14 @@ class App extends Component {
               type="password"
               required={true}
             />
+            <Recaptcha
+              ref={e => this.recaptchaInstance = e}
+              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+              render="explicit"
+              onloadCallback={this.callback}
+              verifyCallback={this.verifyCallback}
+            />
+
             <h5>Already have an account? <Link to='/login'> Login </Link></h5>
             <Button
               variant="contained"

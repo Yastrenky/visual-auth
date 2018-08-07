@@ -7,9 +7,9 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
-import server, {secure} from '../../../config/config';
+import server, { secure } from '../../../config/config';
 import Cryptr from 'cryptr';
-
+import Recaptcha from 'react-recaptcha';
 import './login.css';
 
 
@@ -78,6 +78,14 @@ class Login extends Component {
       alert.text = 'Please enter a password with the valid parameters.'
       this.setState({ alert: alert })
     }
+    else if (!this.state.recaptcha) {
+      // console.log("Invalid Password")
+      this.resetRecaptcha();
+      alert.show = true;
+      alert.title = 'Bot verification fail';
+      alert.text = 'Access to login denied by google verification.'
+      this.setState({ alert: alert })
+    }
     else {
       const cryptr = new Cryptr(secure);
       fetch(server + '/login', {
@@ -130,6 +138,17 @@ class Login extends Component {
     });
   };
 
+  callback = () => {
+    console.log('Done!!!!');
+  };
+
+  verifyCallback = (response) => {
+    this.setState({ recaptcha: response })
+  };
+
+  resetRecaptcha = () => {
+    this.recaptchaInstance.reset();
+  };
   render() {
     // console.log("state", this.state)
 
@@ -171,6 +190,14 @@ class Login extends Component {
               required={true}
             />
             <h5><Link to='/forgot'> Forgot Password?  </Link></h5>
+            <Recaptcha
+              ref={e => this.recaptchaInstance = e}
+              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+              render="explicit"
+              onloadCallback={this.callback}
+              verifyCallback={this.verifyCallback}
+            />
+
             <Button
               variant="contained"
               color="primary"
