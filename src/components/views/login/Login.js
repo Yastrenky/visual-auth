@@ -7,7 +7,7 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
-import server, { secure } from '../../../config/config';
+import server, { secure, recaptcha } from '../../../config/config';
 import Cryptr from 'cryptr';
 import Recaptcha from 'react-recaptcha';
 import './login.css';
@@ -192,7 +192,7 @@ class Login extends Component {
             <h5><Link to='/forgot'> Forgot Password?  </Link></h5>
             <Recaptcha
               ref={e => this.recaptchaInstance = e}
-              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+              sitekey={recaptcha}
               render="explicit"
               onloadCallback={this.callback}
               verifyCallback={this.verifyCallback}

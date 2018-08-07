@@ -7,7 +7,7 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate'
 import Alert from '../alert/Alert';
-import server from '../../../config/config';
+import server,{recaptcha} from '../../../config/config';
 import Recaptcha from 'react-recaptcha';
 
 import './signup.css';
@@ -229,7 +229,7 @@ class App extends Component {
             />
             <Recaptcha
               ref={e => this.recaptchaInstance = e}
-              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+              sitekey={recaptcha}
               render="explicit"
               onloadCallback={this.callback}
               verifyCallback={this.verifyCallback}
