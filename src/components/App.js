@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import { Signup, Login, Forgot, Reset, Profile } from './views';
 import Alert from './views/alert/Alert';
-import server from '../config/config';
+import server from '../config';
 // import Cryptr from 'cryptr';
 // import route from './routes'
 import './App.css';

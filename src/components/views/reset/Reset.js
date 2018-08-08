@@ -7,7 +7,7 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
-import server from '../../../config/config';
+import server from '../../../config';
 
 import './reset.css';
 

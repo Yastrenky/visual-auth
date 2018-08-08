@@ -6,7 +6,7 @@ import red from '@material-ui/core/colors/red';
 import Alert from '../alert/Alert';
 import { Elements, StripeProvider } from 'react-stripe-elements';
 import StripeCard from '../stripeElem';
-import server, { stripekey } from '../../../config/config';
+import server, { stripekey } from '../../../config';
 import './profile.css';
 
 
@@ -78,7 +78,7 @@ class Profile extends Component {
 
   componentDidMount() {
 
-    fetch(server + '/transactionsList', { credentials: 'include' })
+    fetch(server + '/getCharge', { credentials: 'include' })
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(e => console.log(e));

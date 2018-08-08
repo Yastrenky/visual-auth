@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { CardElement, injectStripe } from 'react-stripe-elements';
-import server from '../../../config/config';
+import server from '../../../config';
 
 const createOptions = () => {
   return {
