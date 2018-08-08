@@ -76,8 +76,32 @@ class Profile extends Component {
     });
   };
 
-  componentDidMount() {
+  deleteUser = () => {
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
+    fetch(server + '/deleteuser', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+    }).then(response => response.json())
+      .then(response => {
+        alert.show = true;
+        alert.title = response.title;
+        alert.text = response.message
+        this.setState({ alert: alert })
+      })
+      .catch(
+        (error) => {
+          alert.show = true;
+          alert.title = 'Connection lost';
+          alert.text = "Server connection lost. Please contact your service provider.";
+          this.setState({ alert: alert })
+        })
+  }
 
+  componentDidMount() {
     fetch(server + '/getCharge', { credentials: 'include' })
       .then(response => response.json())
       .then(result => console.log(result))
@@ -116,6 +140,14 @@ class Profile extends Component {
               onClick={this.props.logOut}
             >
               Logout
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.button}
+              onClick={this.deleteUser}
+            >
+              Delete Account
             </Button>
           </div>
           <StripeProvider apiKey={stripekey}>
