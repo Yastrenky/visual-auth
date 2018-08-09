@@ -1,4 +1,4 @@
-.Login-card {
+.Dashboard-card {
   text-align: center;
   display: flex;
   justify-content: space-around;
@@ -12,14 +12,14 @@
   box-shadow: 0px 10px 31px #888888a8;
 }
 
-.Login-header {
+.Dashboard-header {
   background-color: #222;
   height: 100px;
   padding: 20px;
   color: white;
 }
 
-.Login-title {
+.Dashboard-title {
   align-items: center;
   display: flex;
   justify-content: center;

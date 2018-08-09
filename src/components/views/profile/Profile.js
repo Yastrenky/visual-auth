@@ -4,9 +4,7 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import Alert from '../alert/Alert';
-import { Elements, StripeProvider } from 'react-stripe-elements';
-import StripeCard from '../stripeElem';
-import server, { stripekey } from '../../../config';
+import server from '../../../config';
 import './profile.css';
 
 
@@ -102,10 +100,7 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    fetch(server + '/getCharge', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => console.log(result))
-      .catch(e => console.log(e));
+
   }
 
   render() {
@@ -132,7 +127,6 @@ class Profile extends Component {
             <h5>Id: {this.state.id}</h5>
             <h5>Name: {this.state.name}</h5>
             <h5>E-Mail: {this.state.email}</h5>
-            <h5>ENCRIPTED-Password: {this.state.password}</h5>
             <Button
               variant="contained"
               color="secondary"
@@ -150,14 +144,7 @@ class Profile extends Component {
               Delete Account
             </Button>
           </div>
-          <StripeProvider apiKey={stripekey}>
-            <div className="example">
-              <h1>React Stripe Elements Example</h1>
-              <Elements>
-                <StripeCard />
-              </Elements>
-            </div>
-          </StripeProvider>
+
         </div>
         <footer className="auth-footer">
           <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>

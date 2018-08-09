@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
 import server, { secure, recaptcha } from '../../../config';
@@ -43,6 +44,9 @@ const styles = theme => ({
       color: red[800],
     },
   },
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
 });
 
 
@@ -55,7 +59,8 @@ class Login extends Component {
       show: false,
       title: '',
       text: ''
-    }
+    },
+    loadRecaptcha: false
   };
 
   onSubmit = event => {
@@ -139,7 +144,7 @@ class Login extends Component {
   };
 
   callback = () => {
-    console.log('Done!!!!');
+    this.setState({ loadRecaptcha: true })
   };
 
   verifyCallback = (response) => {
@@ -190,6 +195,7 @@ class Login extends Component {
               required={true}
             />
             <h5><Link to='/forgot'> Forgot Password?  </Link></h5>
+            {!this.state.loadRecaptcha ? <CircularProgress className={classes.progress} /> : null}
             <Recaptcha
               ref={e => this.recaptchaInstance = e}
               sitekey={recaptcha}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom'
-import { Signup, Login, Forgot, Reset, Profile } from './views';
+import { Dashboard, Signup, Login, Forgot, Reset, Profile, NavMenu } from './views';
 import Alert from './views/alert/Alert';
 import server from '../config';
 // import Cryptr from 'cryptr';
@@ -82,13 +82,15 @@ class App extends Component {
   }
 
   render() {
-    // console.log("App state", this.state)
+    console.log("App state", this.state)
     const alert = this.state.alert.show;
 
     return (
       <div className="App">
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
+        {this.state.user.acces ? <NavMenu logOut={this.logOut} /> : null}
         <Switch>
+
           <Route exact path='/'
             render={() => <div>
               <Link to='/signup'> Signup </Link>
@@ -97,20 +99,14 @@ class App extends Component {
 
             </div>}
           />
-          <Route exact path='/signup'
-            render={() => <Signup />}
-          />
 
-          <Route exact path='/login'
+          <Route exact path='/dashboard'
             render={() =>
               this.state.user.acces ?
-                <Redirect to='/profile' />
+                <Dashboard logOut={this.logOut} data={this.state.user} />
                 :
-                <Login logIn={this.logIn} handleRoute={this.handleRoute} />}
-          />
-
-          <Route exact path='/forgot'
-            render={() => <Forgot />}
+                <Redirect to='/login' />
+            }
           />
 
           <Route exact path='/profile'
@@ -122,6 +118,21 @@ class App extends Component {
             }
           />
 
+          <Route exact path='/login'
+            render={() =>
+              this.state.user.acces ?
+                <Redirect to='/dashboard' />
+                :
+                <Login logIn={this.logIn} handleRoute={this.handleRoute} />}
+          />
+
+          <Route exact path='/signup'
+            render={() => <Signup />}
+          />
+
+          <Route exact path='/forgot'
+            render={() => <Forgot />}
+          />
           <Route path='/reset/:handle'
             component={Reset}
           />
