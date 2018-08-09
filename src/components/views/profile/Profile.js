@@ -18,9 +18,6 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 320,
   },
-  menu: {
-    width: 200,
-  },
   button: {
     margin: 15,
     width: 100,

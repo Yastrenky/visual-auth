@@ -72,7 +72,7 @@ class App extends Component {
     var alert = JSON.parse(JSON.stringify(this.state.alert));
     fetch(server + '/getSecret', { credentials: 'include' })
       .then(response => response.json())
-      .then(result => console.log(result))
+      .then(result => this.setState({key: result.publicKey}))
       .catch(e => {
         alert.show = true;
         alert.title = "Connection lost";

@@ -1,4 +1,5 @@
    .nav-menu {
+     top: 5vh;
      position: fixed;
-     background-color: white;
+     left: 5vw;
    }

@@ -12,35 +12,9 @@ import './navmenu.css';
 
 
 const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  menu: {
-    width: 200,
-    color: red,
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
   icon: {
-    margin: theme.spacing.unit * 2,
-  },
-  iconHover: {
-    margin: theme.spacing.unit * 2,
-    '&:hover': {
-      color: red[800],
-    },
-  },
+    color: '#3f51b5'
+  }
 });
 
 
@@ -74,7 +48,7 @@ class NavMenu extends Component {
           onClick={this.handleClick}
         >
           <ListItemIcon className={classes.icon}>
-            <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 45 }} color="action">
               menu
             </Icon>
           </ListItemIcon>
@@ -86,9 +60,26 @@ class NavMenu extends Component {
           onClose={this.handleClose}
           TransitionComponent={Fade}
         >
-          <MenuItem onClick={this.handleClose} component={Link} to="./dashboard" >Dashboard</MenuItem>
-          <MenuItem onClick={this.handleClose} component={Link} to="./profile" >Profile</MenuItem>
-          <MenuItem onClick={this.props.logOut}>Logout</MenuItem>
+          <MenuItem onClick={this.handleClose} component={Link} to="./dashboard" >
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
+              airplay
+            </Icon>
+            Dashboard
+          </MenuItem>
+
+          <MenuItem onClick={this.handleClose} component={Link} to="./profile" >
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
+              account_box
+           </Icon>
+            Profile
+           </MenuItem>
+
+          <MenuItem onClick={this.props.logOut}>
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
+              cancel
+           </Icon>
+          Logout
+          </MenuItem>
         </Menu>
       </div>
     );
