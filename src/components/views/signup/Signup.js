@@ -246,7 +246,7 @@ class App extends Component {
               className={classes.button}
               onClick={this.onSubmit}
             >
-              Submit
+              Signup
             </Button>
             <hr></hr>
             <h5>Already have an account? <Link to='/login'> Login </Link></h5>

@@ -149,7 +149,7 @@ class Forgot extends Component {
               className={classes.button}
               onClick={this.onSubmit}
             >
-              Submit
+              Send
             </Button>
             <hr></hr>
             <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>

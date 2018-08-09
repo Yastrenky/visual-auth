@@ -210,7 +210,7 @@ class Login extends Component {
               className={classes.button}
               onClick={this.onSubmit}
             >
-              Submit
+              Login
             </Button>
             <hr></hr>
             <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>

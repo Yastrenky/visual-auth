@@ -121,7 +121,7 @@ class App extends Component {
           <Route exact path='/login'
             render={() =>
               this.state.user.acces ?
-                <Redirect to='/dashboard' />
+                <Redirect to='/profile' />
                 :
                 <Login logIn={this.logIn} handleRoute={this.handleRoute} />}
           />
