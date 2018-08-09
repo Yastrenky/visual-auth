@@ -30,7 +30,7 @@ class CheckoutForm extends Component {
   }
 
   async submit(ev) {
-    console.log("click")
+    // console.log("click")
     let { token } = await this.props.stripe.createToken({ name: "Name" });
     if (token) {
       await fetch(server + "/charge", {
@@ -55,7 +55,7 @@ class CheckoutForm extends Component {
   }
 
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     if (this.state.complete) return <h1>Purchase Complete</h1>;
     return (
       <div className="checkout">

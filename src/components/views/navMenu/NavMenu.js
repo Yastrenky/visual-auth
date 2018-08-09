@@ -3,7 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
 import Icon from '@material-ui/core/Icon';
-import red from '@material-ui/core/colors/red';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -48,7 +47,7 @@ class NavMenu extends Component {
           onClick={this.handleClick}
         >
           <ListItemIcon className={classes.icon}>
-            <Icon className={classes.icon} color="primary" style={{ fontSize: 45 }} color="action">
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 45 }}>
               menu
             </Icon>
           </ListItemIcon>

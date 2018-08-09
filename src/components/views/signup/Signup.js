@@ -240,8 +240,6 @@ class App extends Component {
               onloadCallback={this.callback}
               verifyCallback={this.verifyCallback}
             />
-
-            <h5>Already have an account? <Link to='/login'> Login </Link></h5>
             <Button
               variant="contained"
               color="primary"
@@ -250,6 +248,8 @@ class App extends Component {
             >
               Submit
             </Button>
+            <hr></hr>
+            <h5>Already have an account? <Link to='/login'> Login </Link></h5>
           </div>
         </div>
         <footer className="auth-footer">

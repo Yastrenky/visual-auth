@@ -121,25 +121,34 @@ class Profile extends Component {
 
         <div className="auth-container">
           <div className="Profile-card auht-view">
-            <h5>Id: {this.state.id}</h5>
-            <h5>Name: {this.state.name}</h5>
-            <h5>E-Mail: {this.state.email}</h5>
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.button}
-              onClick={this.props.logOut}
-            >
-              Logout
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.button}
-              onClick={this.deleteUser}
-            >
-              Delete Account
-            </Button>
+<div>
+            <div>
+              <h5>Id: {this.state.id}</h5>
+              <h5>Name: {this.state.name}</h5>
+              <h5>E-Mail: {this.state.email}</h5>
+            </div>
+
+              <Button
+                variant="contained"
+                className={classes.button}
+                onClick={this.props.logOut}
+              >
+                Logout
+              </Button>
+</div>
+<div>
+              <hr></hr>
+              <h5>Delete your account permanently</h5>
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.button}
+                onClick={this.deleteUser}
+              >
+                Delete
+              </Button>
+</div>
+
           </div>
 
         </div>
