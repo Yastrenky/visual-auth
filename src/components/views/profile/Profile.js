@@ -91,20 +91,20 @@ class Profile extends Component {
       alert.text = 'Please enter a password with the valid parameters.'
       this.setState({ alert: alert })
     }
-    else if (!validate.password(newpassword)) {
-      // console.log("Invalid Confirmed Password")
-      alert.show = true;
-      alert.title = 'Invalid Confirmed Password';
-      alert.text = 'Please enter a confirmed password with the valid parameters.'
-      this.setState({ alert: alert })
-    }
-    else if (!validate.password(copassword) && newpassword !== copassword) {
-      // console.log("Invalid Confirmed Password")
-      alert.show = true;
-      alert.title = 'Invalid Confirmed Password';
-      alert.text = 'Please enter a confirmed password with the valid parameters.'
-      this.setState({ alert: alert })
-    }
+    // else if (!validate.password(newpassword)) {
+    //   // console.log("Invalid Confirmed Password")
+    //   alert.show = true;
+    //   alert.title = 'Invalid Confirmed Password';
+    //   alert.text = 'Please enter a confirmed password with the valid parameters.'
+    //   this.setState({ alert: alert })
+    // }
+    // else if (!validate.password(copassword) && newpassword !== copassword) {
+    //   // console.log("Invalid Confirmed Password")
+    //   alert.show = true;
+    //   alert.title = 'Invalid Confirmed Password';
+    //   alert.text = 'Please enter a confirmed password with the valid parameters.'
+    //   this.setState({ alert: alert })
+    // }
     else {
       fetch(server + '/changepassword', {
         method: 'POST',
@@ -128,7 +128,7 @@ class Profile extends Component {
           (error) => {
             alert.show = true;
             alert.title = 'Connection lost';
-            alert.text = "Server connection lost. Please contact your service provider.";
+            alert.text = "Server connection lost. Please contact your service provider." + error;
             this.setState({ alert: alert })
           });
     }
