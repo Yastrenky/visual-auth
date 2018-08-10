@@ -74,9 +74,10 @@ class App extends Component {
       .then(response => response.json())
       .then(result => this.setState({key: result.publicKey}))
       .catch(e => {
+        
         alert.show = true;
         alert.title = "Connection lost";
-        alert.text = 'Server connection lost. Please contact your service provider.';
+        alert.text = 'Server connection lost. Please contact your service provider. '+e;
         this.setState({ alert: alert })
       });
   }
@@ -88,7 +89,7 @@ class App extends Component {
     return (
       <div className="App">
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
-        {this.state.user.acces ? <NavMenu logOut={this.logOut} /> : null}
+        {this.state.user.acces ? <NavMenu logOut={this.logOut}  variant="contained" /> : null}
         <Switch>
 
           <Route exact path='/'

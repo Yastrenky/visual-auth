@@ -1,5 +1,5 @@
    .nav-menu {
-     top: 5vh;
-     position: fixed;
-     left: 5vw;
+     top: 3vh;
+     position: absolute;
+     left: 3vw;
    }

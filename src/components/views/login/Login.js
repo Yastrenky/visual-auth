@@ -161,7 +161,7 @@ class Login extends Component {
     const alert = this.state.alert.show;
 
     return (
-      <div>
+      <div className = 'view-container'>
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
 
         <header className="Login-header">
