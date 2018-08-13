@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
+import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
 import server from '../../../config';
@@ -14,6 +15,11 @@ const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+  },
+  media:{
+    backgroundPosition: 'center',
+    backgroundSize: 200,
+    height: 200,
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -52,6 +58,8 @@ class Profile extends Component {
       currentpassword: '',
       newpassword: '',
       copassword: '',
+      selectedFile: null,
+      imageURL: null || server + '/uploads/users/' + data.id + '/avatar.jpg',
       alert: {
         show: false,
         title: '',
@@ -161,13 +169,47 @@ class Profile extends Component {
         });
   }
 
+  fileChangedHandler = (event) => {
+    this.setState({ selectedFile: event.target.files[0] })
+  }
+
+  uploadHandler = () => {
+    console.log(this.state.selectedFile)
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
+    if (this.state.selectedFile) {
+      const formData = new FormData();
+      formData.append('myFile', this.state.selectedFile, this.state.selectedFile.name);
+
+      fetch(server + '/uploadprofileimage', {
+        method: 'POST',
+        body: formData,
+        credentials: "include",
+      }).then(response => response.json())
+        .then(response => {
+          alert.show = true;
+          alert.title = response.title;
+          alert.text = response.message
+          this.setState({ alert: alert })
+        })
+        .catch(
+          (error) => {
+            alert.show = true;
+            alert.title = 'Connection lost';
+            alert.text = "Server connection lost. Please contact your service provider.";
+            this.setState({ alert: alert })
+          });
+
+    }
+    else {
+      console.log("No file selected")
+    }
+  }
 
   componentDidMount() {
-
   }
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
@@ -193,6 +235,14 @@ class Profile extends Component {
                 <h5>Name: {this.state.name}</h5>
                 <h5>Email: {this.state.email}</h5>
               </div>
+
+              <CardMedia
+                className={classes.media}
+                image={this.state.imageURL}
+                title="Avatar"
+              />
+              <input type="file" onChange={this.fileChangedHandler} />
+              <button onClick={this.uploadHandler}>Upload!</button>
 
               <Button
                 variant="contained"
