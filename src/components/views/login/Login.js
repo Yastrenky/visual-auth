@@ -54,7 +54,7 @@ class Login extends Component {
 
   state = {
     email: 'ybramos91@gmail.com',
-    password: 'Zxcvbn95',// only for testing
+    password: 'Yastre910711',// only for testing
     alert: {
       show: false,
       title: '',

@@ -4,12 +4,14 @@
   margin: 0px;
   padding: 0px;
 }
-.view-container{
+
+.view-container {
   flex-direction: column;
   display: flex;
   justify-content: space-between;
   height: 100%;
 }
+
 .auth-container {
   margin: 20px 0 20px 0;
   display: flex;
@@ -30,4 +32,30 @@
 hr {
   width: 90%;
   border-top: 1px dashed #8c8b8b;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  padding-top: 40px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+  border: 1px solid black;
+  background: black;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  height: 10px;
+  width: 5px;
+  border: 1px solid black;
+  background: black;
+  -webkit-box-shadow: 0 1px 1px rgb(0, 0, 0);
+  background: -webkit-linear-gradient(rgb(200, 200, 200), rgb(150, 150, 150));
+}
+
+::-webkit-scrollbar-track-piece {
+  height: 10px;
 }

@@ -91,20 +91,20 @@ class Profile extends Component {
       alert.text = 'Please enter a password with the valid parameters.'
       this.setState({ alert: alert })
     }
-    // else if (!validate.password(newpassword)) {
-    //   // console.log("Invalid Confirmed Password")
-    //   alert.show = true;
-    //   alert.title = 'Invalid Confirmed Password';
-    //   alert.text = 'Please enter a confirmed password with the valid parameters.'
-    //   this.setState({ alert: alert })
-    // }
-    // else if (!validate.password(copassword) && newpassword !== copassword) {
-    //   // console.log("Invalid Confirmed Password")
-    //   alert.show = true;
-    //   alert.title = 'Invalid Confirmed Password';
-    //   alert.text = 'Please enter a confirmed password with the valid parameters.'
-    //   this.setState({ alert: alert })
-    // }
+    else if (!validate.password(newpassword)) {
+      // console.log("Invalid Confirmed Password")
+      alert.show = true;
+      alert.title = 'Invalid Confirmed Password';
+      alert.text = 'Please enter a confirmed password with the valid parameters.'
+      this.setState({ alert: alert })
+    }
+    else if (!validate.password(copassword) && newpassword !== copassword) {
+      // console.log("Invalid Confirmed Password")
+      alert.show = true;
+      alert.title = 'Invalid Confirmed Password';
+      alert.text = 'Please enter a confirmed password with the valid parameters.'
+      this.setState({ alert: alert })
+    }
     else {
       fetch(server + '/changepassword', {
         method: 'POST',
@@ -114,7 +114,8 @@ class Profile extends Component {
         },
         body: JSON.stringify({
           id: this.state.id,
-          password: this.state.newpassword
+          password: password,
+          newpassword: newpassword
         }),
         credentials: "include",
       }).then(response => response.json())
