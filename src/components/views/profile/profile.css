@@ -17,13 +17,20 @@
   padding: 20px;
   color: white;
 }
+.profile-image-container{
+justify-content: space-around;
+display: flex;
+}
 
 .Profile-title {
   align-items: center;
   display: flex;
   justify-content: center;
 }
-
+.profile-card-info{
+  display: flex;
+  justify-content: space-around
+}
 hr{
   width: 100%;
 }

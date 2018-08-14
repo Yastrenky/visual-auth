@@ -16,10 +16,12 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
-  media:{
+  media: {
     backgroundPosition: 'center',
-    backgroundSize: 200,
-    height: 200,
+    backgroundSize: 140,
+    height: 140,
+    width: 140,
+    borderRadius: 100,
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -59,7 +61,7 @@ class Profile extends Component {
       newpassword: '',
       copassword: '',
       selectedFile: null,
-      imageURL: null || server + '/uploads/users/' + data.id + '/avatar.jpg',
+      imageURL: data.imageName ? server + '/uploads/users/' + data.id + '/' + data.imageName : server + '/uploads/users/default/user.png',
       alert: {
         show: false,
         title: '',
@@ -170,11 +172,12 @@ class Profile extends Component {
   }
 
   fileChangedHandler = (event) => {
+    console.log(event.target.files[0].path)
     this.setState({ selectedFile: event.target.files[0] })
   }
 
   uploadHandler = () => {
-    console.log(this.state.selectedFile)
+    // console.log(this.state.selectedFile)
     var alert = JSON.parse(JSON.stringify(this.state.alert));
     if (this.state.selectedFile) {
       const formData = new FormData();
@@ -186,10 +189,15 @@ class Profile extends Component {
         credentials: "include",
       }).then(response => response.json())
         .then(response => {
+          console.log(response)
           alert.show = true;
           alert.title = response.title;
-          alert.text = response.message
-          this.setState({ alert: alert })
+          alert.text = response.message;
+          this.setState({
+            alert: alert,
+            imageURL: server + '/uploads/users/' + this.state.id + '/' + response.value,
+            selectedFile: null
+          })
         })
         .catch(
           (error) => {
@@ -198,22 +206,22 @@ class Profile extends Component {
             alert.text = "Server connection lost. Please contact your service provider.";
             this.setState({ alert: alert })
           });
-
     }
     else {
       console.log("No file selected")
     }
   }
 
+
   componentDidMount() {
+
   }
 
   render() {
-    // console.log("state", this.state)
+    console.log("state", this.state.selectedFile)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
-
     return (
       <div>
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
@@ -230,20 +238,52 @@ class Profile extends Component {
         <div className="auth-container">
           <div className="Profile-card auht-view">
             <div>
-              <div>
-                <h5>Id: {this.state.id}</h5>
-                <h5>Name: {this.state.name}</h5>
-                <h5>Email: {this.state.email}</h5>
+              <div className="profile-card-info">
+                <div>
+                  {this.state.imageURL ?
+                    <div className="profile-image-container">
+                      <CardMedia
+                        className={classes.media}
+                        image={this.state.imageURL}
+                        title={"Avatar"}
+                      />
+                    </div>
+                    : null}
+                  <input
+                    type="file"
+                    onChange={this.fileChangedHandler}
+                    accept="image/*"
+                    className={classes.input}
+                    id="contained-button-file"
+                    multiple
+                  />
+
+                  {!this.state.selectedFile ?
+                    <label htmlFor="contained-button-file">
+                      <Button
+                        variant="outlined"
+                        component="span"
+                        className={classes.button}
+                        >
+                        Change
+                      </Button>
+                    </label> :
+                    <Button
+                      variant="outlined"
+                      component="span"
+                      className={classes.button}
+                      onClick={this.uploadHandler}>
+                      Upload
+                    </Button>}
+                  {/* <button onClick={this.uploadHandler}>Upload!</button> */}
+                </div>
+                <div>
+                  <h5>Id: {this.state.id}</h5>
+                  <h5>Name: {this.state.name}</h5>
+                  <h5>Email: {this.state.email}</h5>
+                </div>
+
               </div>
-
-              <CardMedia
-                className={classes.media}
-                image={this.state.imageURL}
-                title="Avatar"
-              />
-              <input type="file" onChange={this.fileChangedHandler} />
-              <button onClick={this.uploadHandler}>Upload!</button>
-
               <Button
                 variant="contained"
                 className={classes.button}

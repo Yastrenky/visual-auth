@@ -34,6 +34,7 @@ class App extends Component {
       name: data.username,
       email: data.email,
       password: data.password,
+      imageName: data.imageName
     }
     this.setState({
       user: user
