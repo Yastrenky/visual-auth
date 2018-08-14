@@ -18,7 +18,7 @@ const styles = theme => ({
   },
   media: {
     backgroundPosition: 'center',
-    backgroundSize: 140,
+    backgroundSize: 142,
     height: 140,
     width: 140,
     borderRadius: 100,
@@ -59,7 +59,7 @@ class Profile extends Component {
       currentpassword: '',
       newpassword: '',
       copassword: '',
-      imageName: null,
+      imageName: this.props.data.imageName ? this.props.data.imageName : null,
       alert: {
         show: false,
         title: '',
@@ -158,6 +158,7 @@ class Profile extends Component {
         alert.show = true;
         alert.title = response.title;
         alert.text = response.message
+        alert.action = 'loguot'
         this.setState({ alert: alert })
       })
       .catch(
@@ -204,32 +205,37 @@ class Profile extends Component {
       console.log("No file selected")
     }
   }
+  updateProfileApp = (newimage) => {
+    if (this.props.data.imageName !== newimage) {
+      var user = JSON.parse(JSON.stringify(this.props.data));
+      user.imageName = newimage;
+      console.log()
+      this.props.updateUser(user)
+    }
+  }
 
   componentDidMount() {
+    console.log("profile mount")
     var data = this.props.data;
     this.setState({
-      id:  data.id,
+      id: data.id,
       name: data.name,
-      email:data.email,
-      password:  data.password,
-      imageName: data.imageName ? data.imageName : 'user.png',
+      email: data.email,
+      password: data.password,
     })
   }
 
   render() {
+
     console.log("Profile state", this.state)
 
-    // if (this.props.data.imageName !== this.state.imageName) {
-    //   var user = JSON.parse(JSON.stringify(this.props.data));
-    //   user.imageName = this.state.imageName;
-    //   this.props.updateUser(user)
-    // }
+
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
       <div>
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert}/> : null}
 
         <header className="Profile-header">
           <h1 className="Profile-title">
@@ -249,7 +255,12 @@ class Profile extends Component {
                   <div className="profile-image-container">
                     <CardMedia
                       className={classes.media}
-                      image={server + '/uploads/users/' + this.state.id + '/' + this.state.imageName}
+                      image={
+                        this.state.imageName ?
+                          server + '/uploads/users/' + this.state.id + '/' + this.state.imageName
+                          :
+                          server + '/uploads/users/default/user.png'
+                      }
                       title={"Avatar"}
                     />
                   </div>

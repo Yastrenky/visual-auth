@@ -54,8 +54,8 @@ class App extends Component {
   state = {
     name: 'Yastrenky',
     email: 'ybramos91@gmail.com',
-    password: 'Zxcvbn95',
-    copassword: 'Zxcvbn95',
+    password: 'Yast56238',
+    copassword: 'Yast56238',
     alert: {
       show: false,
       title: '',
