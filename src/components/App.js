@@ -18,6 +18,7 @@ class App extends Component {
         name: null,
         email: null,
         password: null,
+        imageName:null
       },
       alert: {
         show: false,
@@ -27,6 +28,11 @@ class App extends Component {
     };
   }
 
+  updateUser = (user)=>{
+    this.setState({
+      user : user
+    })
+  }
   logIn = (data) => {
     let user = {
       acces: true,
@@ -41,6 +47,7 @@ class App extends Component {
     });
   }
 
+  
   logOut = () => {
     const user = {
       acces: false,
@@ -69,6 +76,8 @@ class App extends Component {
     this.setState({ alert: alert })
   }
 
+
+
   componentDidMount() {
     var alert = JSON.parse(JSON.stringify(this.state.alert));
     fetch(server + '/getSecret', { credentials: 'include' })
@@ -84,7 +93,7 @@ class App extends Component {
   }
 
   render() {
-    // console.log("App state", this.state)
+    console.log("App state", this.state)
     const alert = this.state.alert.show;
 
     return (
@@ -114,7 +123,11 @@ class App extends Component {
           <Route exact path='/profile'
             render={() =>
               this.state.user.acces ?
-                <Profile logOut={this.logOut} data={this.state.user} />
+                <Profile 
+                  logOut={this.logOut}  
+                  data={this.state.user}
+                  updateUser={this.updateUser}
+                  />
                 :
                 <Redirect to='/login' />
             }

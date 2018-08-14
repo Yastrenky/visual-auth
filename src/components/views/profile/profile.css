@@ -1,5 +1,4 @@
 .Profile-card {
-  text-align: left;
   display: flex;
   flex-direction: column;
   width: 400px;
@@ -17,9 +16,10 @@
   padding: 20px;
   color: white;
 }
-.profile-image-container{
-justify-content: space-around;
-display: flex;
+
+.profile-image-container {
+  justify-content: space-around;
+  display: flex;
 }
 
 .Profile-title {
@@ -27,11 +27,14 @@ display: flex;
   display: flex;
   justify-content: center;
 }
-.profile-card-info{
+
+.profile-card-info {
   display: flex;
-  justify-content: space-around
+  justify-content: space-around ;
+  flex-direction: column;
 }
-hr{
+
+hr {
   width: 100%;
 }
 
