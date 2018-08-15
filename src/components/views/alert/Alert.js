@@ -30,6 +30,10 @@ class AlertDialogSlide extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
     this.props.resetAlert();
+    if(this.props.data.title ==="User Eliminated"){
+      // console.log("<<<<<<<<Alert>>>>>>")
+    this.props.logOut()
+    }
   };
 
   render() {

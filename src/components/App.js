@@ -93,7 +93,8 @@ class App extends Component {
   }
 
   render() {
-    console.log("App state", this.state)
+
+    // console.log("App state", this.state.user.imageName)
     const alert = this.state.alert.show;
 
     return (
