@@ -158,7 +158,10 @@ class Profile extends Component {
         alert.title = response.title;
         alert.text = response.message
         alert.action = 'loguot'
+<<<<<<< HEAD
 
+=======
+>>>>>>> 92b457c58aca0d3d8e24cdb53c85b61916ae943f
         this.setState({ alert: alert })
       })
       .catch(
@@ -211,11 +214,16 @@ class Profile extends Component {
     if (this.props.data.imageName !== newimage) {
       var user = JSON.parse(JSON.stringify(this.props.data));
       user.imageName = newimage;
+<<<<<<< HEAD
+=======
+      console.log()
+>>>>>>> 92b457c58aca0d3d8e24cdb53c85b61916ae943f
       this.props.updateUser(user)
     }
   }
 
   componentDidMount() {
+    console.log("profile mount")
     var data = this.props.data;
     this.setState({
       id: data.id,
@@ -226,15 +234,26 @@ class Profile extends Component {
   }
 
   render() {
+<<<<<<< HEAD
 
     // console.log("Profile state", this.state.imageName)
     // console.log("Profile props", this.props.data.imageName)
+=======
+
+    console.log("Profile state", this.state)
+
+
+>>>>>>> 92b457c58aca0d3d8e24cdb53c85b61916ae943f
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
       <div>
+<<<<<<< HEAD
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut ={this.props.logOut}/> : null}
+=======
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert}/> : null}
+>>>>>>> 92b457c58aca0d3d8e24cdb53c85b61916ae943f
 
         <header className="Profile-header">
           <h1 className="Profile-title">
