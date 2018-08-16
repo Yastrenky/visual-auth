@@ -1,11 +1,43 @@
 import React, { Component } from 'react';
-import { Switch, Route, Link, Redirect } from 'react-router-dom'
+import { Switch, Route,Redirect } from 'react-router-dom'
 import { Dashboard, Signup, Login, Forgot, Reset, Profile, NavMenu, Billing } from './views';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
 import server from '../config';
-// import Cryptr from 'cryptr';
-// import route from './routes'
 import './App.css';
+
+
+
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  media: {
+    backgroundPosition: 'center',
+    backgroundSize: 142,
+    height: 140,
+    width: 140,
+    borderRadius: 100,
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 320,
+  },
+  button: {
+    margin: 15,
+    width: 100,
+  },
+  input: {
+    display: 'none',
+  },
+  initial: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  }
+});
 
 class App extends Component {
   constructor(props) {
@@ -95,6 +127,7 @@ class App extends Component {
   render() {
 
     // console.log("App state", this.state.user.imageName)
+    const { classes } = this.props;
     const alert = this.state.alert.show;
 
     return (
@@ -105,10 +138,14 @@ class App extends Component {
 
           <Route exact path='/'
             render={() => <div>
-              <Link to='/signup'> Signup </Link>
-              <br />
-              <Link to='/login'> Login </Link>
+              <Button variant="contained" color="secondary" href="/signup" className={classes.button}>
+                Signup
+              </Button>
 
+              <br />
+              <Button variant="contained" color="primary" href="/login" className={classes.button}>
+                Login
+              </Button>
             </div>}
           />
 
@@ -168,4 +205,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

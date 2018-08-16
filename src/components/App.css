@@ -29,10 +29,6 @@
   display: flex;
 }
 
-hr {
-  width: 90%;
-  border-top: 1px dashed #8c8b8b;
-}
 
 ::-webkit-scrollbar {
   width: 5px;
