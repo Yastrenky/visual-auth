@@ -122,7 +122,7 @@ class App extends Component {
         }),
       }).then(response => response.json())
         .then(response => {
-          console.log('Request:', response);
+          // console.log('Request:', response);
           if (response.success) {
             alert.show = true;
             alert.title = response.title;

@@ -9,14 +9,14 @@
   flex-direction: column;
   display: flex;
   justify-content: space-between;
-  height: 100%;
 }
 
 .auth-container {
   margin: 20px 0 20px 0;
   display: flex;
   align-items: center;
-  justify-content: space-around
+  justify-content: space-around;
+  min-height: 70vh;
 }
 
 .auth-footer {

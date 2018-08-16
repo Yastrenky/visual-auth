@@ -66,6 +66,13 @@ class NavMenu extends Component {
             Dashboard
           </MenuItem>
 
+          <MenuItem onClick={this.handleClose} component={Link} to="./billing" >
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
+              attach_money
+            </Icon>
+            Billing
+          </MenuItem>
+
           <MenuItem onClick={this.handleClose} component={Link} to="./profile" >
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               account_box

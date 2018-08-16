@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom'
-import { Dashboard, Signup, Login, Forgot, Reset, Profile, NavMenu } from './views';
+import { Dashboard, Signup, Login, Forgot, Reset, Profile, NavMenu, Billing } from './views';
 import Alert from './views/alert/Alert';
 import server from '../config';
 // import Cryptr from 'cryptr';
@@ -18,7 +18,7 @@ class App extends Component {
         name: null,
         email: null,
         password: null,
-        imageName:null
+        imageName: null
       },
       alert: {
         show: false,
@@ -28,9 +28,9 @@ class App extends Component {
     };
   }
 
-  updateUser = (user)=>{
+  updateUser = (user) => {
     this.setState({
-      user : user
+      user: user
     })
   }
   logIn = (data) => {
@@ -47,7 +47,7 @@ class App extends Component {
     });
   }
 
-  
+
   logOut = () => {
     const user = {
       acces: false,
@@ -82,12 +82,12 @@ class App extends Component {
     var alert = JSON.parse(JSON.stringify(this.state.alert));
     fetch(server + '/getSecret', { credentials: 'include' })
       .then(response => response.json())
-      .then(result => this.setState({key: result.publicKey}))
+      .then(result => this.setState({ key: result.publicKey }))
       .catch(e => {
-        
+
         alert.show = true;
         alert.title = "Connection lost";
-        alert.text = 'Server connection lost. Please contact your service provider. '+e;
+        alert.text = 'Server connection lost. Please contact your service provider. ' + e;
         this.setState({ alert: alert })
       });
   }
@@ -100,7 +100,7 @@ class App extends Component {
     return (
       <div className="App">
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
-        {this.state.user.acces ? <NavMenu logOut={this.logOut}  variant="contained" /> : null}
+        {this.state.user.acces ? <NavMenu logOut={this.logOut} variant="contained" /> : null}
         <Switch>
 
           <Route exact path='/'
@@ -121,14 +121,23 @@ class App extends Component {
             }
           />
 
+          <Route exact path='/billing'
+            render={() =>
+              this.state.user.acces ?
+                <Billing data={this.state.user} />
+                :
+                <Redirect to='/login' />
+            }
+          />
+
           <Route exact path='/profile'
             render={() =>
               this.state.user.acces ?
-                <Profile 
-                  logOut={this.logOut}  
+                <Profile
+                  logOut={this.logOut}
                   data={this.state.user}
                   updateUser={this.updateUser}
-                  />
+                />
                 :
                 <Redirect to='/login' />
             }
@@ -137,7 +146,7 @@ class App extends Component {
           <Route exact path='/login'
             render={() =>
               this.state.user.acces ?
-                <Redirect to='/profile' />
+                <Redirect to='/billing' />
                 :
                 <Login logIn={this.logIn} handleRoute={this.handleRoute} />}
           />
