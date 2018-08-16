@@ -80,18 +80,20 @@ class Billing extends Component {
   };
 
   componentDidMount() {
-    fetch(server + '/getCharge', { credentials: 'include' })
+    fetch(server + '/getAllCharges', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
         console.log(result)
-        var charge = result.charge;
-        var newData = [{
+        var list = result.charge.data
+        var newData = [];
+
+        list.forEach((charge => newData.push({
           name: charge.source.name,
           id: charge.id,
           brand: charge.source.brand,
           card: charge.source.last4,
           amount: charge.amount
-        }];
+        })));
 
         this.setState({
           data: newData
@@ -168,7 +170,7 @@ class Billing extends Component {
 
         </div>
 
-        <footer className="auth-footer">
+        <footer className="footer auth-footer">
           <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
         </footer>
       </div >

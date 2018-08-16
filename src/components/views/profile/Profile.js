@@ -357,7 +357,7 @@ class Profile extends Component {
             </div>
           </div>
         </div>
-        <footer className="auth-footer">
+        <footer className="footer auth-footer">
           <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
         </footer>
       </div>
