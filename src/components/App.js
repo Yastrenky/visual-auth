@@ -50,7 +50,8 @@ class App extends Component {
         name: null,
         email: null,
         password: null,
-        imageName: null
+        imageName: null,
+        customerid: null
       },
       alert: {
         show: false,
@@ -72,7 +73,8 @@ class App extends Component {
       name: data.username,
       email: data.email,
       password: data.password,
-      imageName: data.imageName
+      imageName: data.imageName,
+      customerid: data.stripeCustId
     }
     this.setState({
       user: user

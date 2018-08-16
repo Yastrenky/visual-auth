@@ -9,20 +9,23 @@
   flex-direction: column;
   display: flex;
   justify-content: space-between;
-  height: 100%;
+  height: 100vh;
 }
 
 .auth-container {
-  margin: 5vh 0 5vh 0;
+  flex: 1 0 auto;
+  /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 20px;
+  margin: 10px 0 10px 0;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  min-height: 100%
-  /* min-height: 75.8vh; */
+  justify-content: center;
+
 }
 
 .auth-footer {
-  position: absolute;
+  flex-shrink: 0;
+  /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
   justify-content: center;
   background-color: #222;
   height: 50px;

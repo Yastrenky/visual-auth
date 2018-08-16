@@ -53,6 +53,7 @@ class Billing extends Component {
         id: '' || data.id,
         name: '' || data.name,
         email: '' || data.email,
+        customerid: data.customerid || null
       },
       alert: {
         show: false,
@@ -80,19 +81,19 @@ class Billing extends Component {
   };
 
   componentDidMount() {
-    fetch(server + '/getAllCharges', { credentials: 'include' })
+    fetch(server + '/getAllCards', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
         console.log(result)
-        var list = result.charge.data
+        var list = result.cards.data
         var newData = [];
 
-        list.forEach((charge => newData.push({
-          name: charge.source.name,
-          id: charge.id,
-          brand: charge.source.brand,
-          card: charge.source.last4,
-          amount: charge.amount
+        list.forEach((card => newData.push({
+          name: card.name,
+          id: card.id,
+          brand: card.brand,
+          card: card.last4,
+          date: card.exp_month + "/" + card.exp_year
         })));
 
         this.setState({
@@ -103,7 +104,7 @@ class Billing extends Component {
   }
 
   render() {
-    // console.log("state", this.state)
+    console.log("state", this.state.user)
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
@@ -128,7 +129,7 @@ class Billing extends Component {
                 <div className="example">
                   <h1>React Stripe Elements Example</h1>
                   <Elements>
-                    <StripeCard />
+                    <StripeCard customerid = {this.state.user.customerid}/>
                   </Elements>
                 </div>
               </StripeProvider>
@@ -143,7 +144,7 @@ class Billing extends Component {
                     accessor: "name"
                   },
                   {
-                    Header: "Transaction id",
+                    Header: "Card id",
                     accessor: "id"
                   },
                   {
@@ -151,14 +152,13 @@ class Billing extends Component {
                     accessor: "brand"
                   },
                   {
-                    Header: "Card",
+                    Header: "Number",
                     id: "card",
                     accessor: d => (d.card) ? "**** **** **** " + d.card : 'unknown'
                   },
                   {
-                    Header: "Amount",
-                    id: "amount",
-                    accessor: d => (d.amount) ? "$ " + (d.amount / 100).toFixed(2) : '0'
+                    Header: "Expiration Date",
+                    accessor: 'date'
                   }
                 ]}
                 defaultPageSize={15}

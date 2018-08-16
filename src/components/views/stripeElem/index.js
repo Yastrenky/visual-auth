@@ -30,10 +30,9 @@ class CheckoutForm extends Component {
   }
 
   async submit(ev) {
-    // console.log("click")
     let { token } = await this.props.stripe.createToken({ name: "Name" });
     if (token) {
-      await fetch(server + "/charge", {
+      await fetch(server + "/addCard", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -42,7 +41,8 @@ class CheckoutForm extends Component {
         credentials: "include",
         body: JSON.stringify({
           token: token.id,
-          amount: "800"
+          customerid: this.props.customerid
+
         })
       })
         .then(response => response.json())
