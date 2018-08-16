@@ -60,11 +60,7 @@ class Billing extends Component {
         text: ''
       },
       anchorEl: null,
-      data: [{
-        name: 'Tanner Linsley',
-        age: 26,
-        status: 'active'
-      }]
+      data: []
     };
   }
   resetAlert = () => {
@@ -86,7 +82,21 @@ class Billing extends Component {
   componentDidMount() {
     fetch(server + '/getCharge', { credentials: 'include' })
       .then(response => response.json())
-      .then(result => console.log(result))
+      .then(result => {
+        console.log(result)
+        var charge = result.charge;
+        var newData = [{
+          name: charge.source.name,
+          id: charge.id,
+          brand: charge.source.brand,
+          card: charge.source.last4,
+          amount: charge.amount
+        }];
+
+        this.setState({
+          data: newData
+        })
+      })
       .catch(e => console.log(e));
   }
 
@@ -122,21 +132,31 @@ class Billing extends Component {
               </StripeProvider>
 
             </div>
-            <div>
+            <div className="table-card">
               <ReactTable
                 data={this.state.data}
                 columns={[
                   {
-                    Header: "Name",
+                    Header: "Cardholder Name",
                     accessor: "name"
                   },
                   {
-                    Header: "Age",
-                    accessor: "age"
+                    Header: "Transaction id",
+                    accessor: "id"
                   },
                   {
-                    Header: "Staus",
-                    accessor: "status"
+                    Header: "Brand",
+                    accessor: "brand"
+                  },
+                  {
+                    Header: "Card",
+                    id: "card",
+                    accessor: d => (d.card) ? "**** **** **** " + d.card : 'unknown'
+                  },
+                  {
+                    Header: "Amount",
+                    id: "amount",
+                    accessor: d => (d.amount) ? "$ " + (d.amount / 100).toFixed(2) : '0'
                   }
                 ]}
                 defaultPageSize={15}
