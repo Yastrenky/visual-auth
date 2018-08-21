@@ -6,6 +6,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import ReactTable from "react-table";
 
 function TabContainer({ children, dir }) {
   return (
@@ -42,7 +43,7 @@ class FullWidthTabs extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-
+console.log(this.props.data)
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -53,9 +54,9 @@ class FullWidthTabs extends React.Component {
             textColor="primary"
             fullWidth
           >
-            <Tab label="Item One" />
-            <Tab label="Item Two" />
-            <Tab label="Item Three" />
+            <Tab label="Make a Payment" />
+            <Tab label="Payment History" />
+            <Tab label="Saved Cards" />
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -65,7 +66,37 @@ class FullWidthTabs extends React.Component {
         >
           <TabContainer dir={theme.direction}>Make a Payment</TabContainer>
           <TabContainer dir={theme.direction}>Payment History</TabContainer>
-          <TabContainer dir={theme.direction}>Saved Cards</TabContainer>
+          <TabContainer dir={theme.direction}>{
+            <ReactTable
+                data={this.props.data}
+                columns={[
+                  {
+                    Header: "Cardholder Name",
+                    accessor: "name"
+                  },
+                  {
+                    Header: "Card id",
+                    accessor: "id"
+                  },
+                  {
+                    Header: "Brand",
+                    accessor: "brand"
+                  },
+                  {
+                    Header: "Number",
+                    id: "card",
+                    accessor: d => (d.card) ? "**** **** **** " + d.card : 'unknown'
+                  },
+                  {
+                    Header: "Expiration Date",
+                    accessor: 'date'
+                  }
+                ]}
+                defaultPageSize={15}
+                className="-striped -highlight"
+              />}
+
+          </TabContainer>
         </SwipeableViews>
       </div>
     );

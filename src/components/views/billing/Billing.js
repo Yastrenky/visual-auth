@@ -4,8 +4,8 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import Alert from '../alert/Alert';
 import { Elements, StripeProvider } from 'react-stripe-elements';
-import ReactTable from "react-table";
 
+import Tabs from './Tabs';
 import StripeCard from '../stripeElem';
 import server, { stripekey } from '../../../config';
 import './billing.css';
@@ -129,41 +129,16 @@ class Billing extends Component {
                 <div className="example">
                   <h1>React Stripe Elements Example</h1>
                   <Elements>
-                    <StripeCard customerid = {this.state.user.customerid}/>
+                    <StripeCard customerid={this.state.user.customerid} />
                   </Elements>
                 </div>
               </StripeProvider>
 
             </div>
             <div className="table-card">
-              <ReactTable
-                data={this.state.data}
-                columns={[
-                  {
-                    Header: "Cardholder Name",
-                    accessor: "name"
-                  },
-                  {
-                    Header: "Card id",
-                    accessor: "id"
-                  },
-                  {
-                    Header: "Brand",
-                    accessor: "brand"
-                  },
-                  {
-                    Header: "Number",
-                    id: "card",
-                    accessor: d => (d.card) ? "**** **** **** " + d.card : 'unknown'
-                  },
-                  {
-                    Header: "Expiration Date",
-                    accessor: 'date'
-                  }
-                ]}
-                defaultPageSize={15}
-                className="-striped -highlight"
-              />
+
+            <Tabs data = {this.state.data}/>
+
             </div>
           </div>
 
