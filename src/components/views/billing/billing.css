@@ -42,8 +42,6 @@
   justify-content: center;
 }
 
-
-
 footer h5 a {
   color: #3f51b5
 }
@@ -64,4 +62,8 @@ footer h5 a {
   padding: 10px;
   width: 100px;
   text-align: center;
+}
+
+.checkout{
+  width: 55%
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { CardElement, injectStripe } from 'react-stripe-elements';
+import Button from '@material-ui/core/Button';
 import server from '../../../config';
+import { withStyles } from '@material-ui/core/styles';
 
 const createOptions = () => {
   return {
@@ -20,6 +22,17 @@ const createOptions = () => {
     }
   }
 };
+
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  button: {
+    margin: 15,
+    width: 100,
+  }
+});
 
 class CheckoutForm extends Component {
   constructor(props) {
@@ -59,17 +72,24 @@ class CheckoutForm extends Component {
 
   render() {
     // console.log(this.props)
-    if (this.state.complete) return <h1>Purchase Complete</h1>;
+    const { classes } = this.props;
+
     return (
       <div className="checkout">
-        <p>Would you like to complete the purchase?</p>
+        <h4>Save your cards to have more options to pay your invoices</h4>
         <CardElement
           {...createOptions()}
         />
-        <button onClick={this.submit}>Send</button>
+        <Button
+          onClick={this.submit}
+          variant="contained"
+          color="primary"
+          className={classes.button}>
+          Save
+        </Button>
       </div>
     );
   }
 }
 
-export default injectStripe(CheckoutForm);
+export default injectStripe(withStyles(styles)(CheckoutForm));

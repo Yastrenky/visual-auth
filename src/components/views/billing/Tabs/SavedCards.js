@@ -4,6 +4,7 @@ import ReactTable from "react-table";
 import { Elements, StripeProvider } from 'react-stripe-elements';
 import StripeCard from '../../stripeElem';
 import server, { stripekey } from '../../../../config';
+import Icon from '@material-ui/core/Icon';
 
 const styles = theme => ({
   container: {
@@ -88,21 +89,19 @@ class SavedCards extends Component {
 
   render() {
     console.log("state", this.state)
+    const { classes } = this.props;
 
     return (
       <div>
         <div className="stripe-card">
 
           <StripeProvider apiKey={stripekey}>
-            <div className="example">
-              <h1>React Stripe Elements Example</h1>
               <Elements>
                 <StripeCard
                   customerid={this.props.customerid}
                   getSavedCards={this.getSavedCards}
                 />
               </Elements>
-            </div>
           </StripeProvider>
 
         </div>
@@ -137,8 +136,12 @@ class SavedCards extends Component {
             },
             {
               Header: "Delete Card",
-              id:"click-me-button",
-              Cell: ({ row }) => (<button onClick={(e) => this.deletCard(row.id)}>Delete</button>)
+              id: "click-me-button",
+              Cell: ({ row }) => (<Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
+                delete_forever
+           </Icon>
+                //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
+              )
             }
           ]}
           defaultPageSize={15}
