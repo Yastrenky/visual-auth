@@ -6,10 +6,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import ReactTable from "react-table";
-import { Elements, StripeProvider } from 'react-stripe-elements';
-import StripeCard from '../stripeElem';
-import { stripekey } from '../../../config';
+import SavedCards from './Tabs/SavedCards'
 
 function TabContainer({ children, dir }) {
   return (
@@ -46,7 +43,7 @@ class FullWidthTabs extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-    console.log(this.props.data)
+
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -71,59 +68,7 @@ class FullWidthTabs extends React.Component {
           <TabContainer dir={theme.direction}>Make a Payment</TabContainer>
           <TabContainer dir={theme.direction}>Payment History</TabContainer>
           <TabContainer dir={theme.direction}>{
-
-            <div>
-              <div className="stripe-card">
-
-                <StripeProvider apiKey={stripekey}>
-                  <div className="example">
-                    <h1>React Stripe Elements Example</h1>
-                    <Elements>
-                      <StripeCard 
-                      customerid={this.props.customerid}
-                        getSavedCards = {this.props.getSavedCards}
-                      />
-                    </Elements>
-                  </div>
-                </StripeProvider>
-
-              </div>
-              <ReactTable
-                data={this.props.data}
-                columns={[
-                  {
-                    Header: "Cardholder Name",
-                    accessor: "name"
-                  },
-                  {
-                    Header: "Card id",
-                    accessor: "id"
-                  },
-                  {
-                    Header: "Brand",
-                    accessor: "brand"
-                  },
-                  {
-                    Header: "Number",
-                    id: "card",
-                    accessor: d => (d.card) ? "**** **** **** " + d.card : 'unknown'
-                  },
-                  {
-                    Header: "Expiration Date",
-                    accessor: 'date'
-                  }
-                  ,
-                  {
-                    Header: "Zipcode",
-                    accessor: 'zipcode'
-                  }
-                ]}
-                defaultPageSize={15}
-                className="-striped -highlight"
-              />
-
-
-            </div>
+            <SavedCards customerid={this.props.customerid} />
           }
 
           </TabContainer>

@@ -3,7 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import Alert from '../alert/Alert';
-import server from '../../../config';
 import Tabs from './Tabs';
 import './billing.css';
 import "react-table/react-table.css";
@@ -58,7 +57,6 @@ class Billing extends Component {
         text: ''
       },
       anchorEl: null,
-      data: []
     };
   }
   resetAlert = () => {
@@ -77,35 +75,9 @@ class Billing extends Component {
     });
   };
 
-  getSavedCards = () => {
-    fetch(server + '/getAllCards', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-        var list = result.cards.data
-        var newData = [];
-
-        list.forEach((card => newData.push({
-          name: card.name,
-          id: card.id,
-          brand: card.brand,
-          card: card.last4,
-          date: card.exp_month + "/" + card.exp_year,
-          zipcode: card.address_zip
-        })));
-
-        this.setState({
-          data: newData
-        })
-      })
-      .catch(e => console.log(e));
-  }
-  componentDidMount() {
-    this.getSavedCards();
-  }
 
   render() {
-    console.log("state", this.state.user)
+    // console.log("state", this.state.user)
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
@@ -123,15 +95,12 @@ class Billing extends Component {
         <div className="auth-container">
 
           <div className={"Billing-card auht-view"}>
-
-            <div className="table-card">
-
+            <div className="tabs-card">
               <Tabs
                 data={this.state.data}
                 customerid={this.state.user.customerid}
                 getSavedCards = {this.getSavedCards}
               />
-
             </div>
           </div>
 
