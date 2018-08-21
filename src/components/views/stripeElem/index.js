@@ -46,7 +46,10 @@ class CheckoutForm extends Component {
         })
       })
         .then(response => response.json())
-        .then(response => { console.log(response) })
+        .then(response => {
+          console.log(response)
+          this.props.getSavedCards();
+        })
         .catch((error) => { console.log(error) })
     }
 

@@ -3,11 +3,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import Alert from '../alert/Alert';
-import { Elements, StripeProvider } from 'react-stripe-elements';
-
+import server from '../../../config';
 import Tabs from './Tabs';
-import StripeCard from '../stripeElem';
-import server, { stripekey } from '../../../config';
 import './billing.css';
 import "react-table/react-table.css";
 
@@ -80,7 +77,7 @@ class Billing extends Component {
     });
   };
 
-  componentDidMount() {
+  getSavedCards = () => {
     fetch(server + '/getAllCards', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
@@ -93,7 +90,8 @@ class Billing extends Component {
           id: card.id,
           brand: card.brand,
           card: card.last4,
-          date: card.exp_month + "/" + card.exp_year
+          date: card.exp_month + "/" + card.exp_year,
+          zipcode: card.address_zip
         })));
 
         this.setState({
@@ -101,6 +99,9 @@ class Billing extends Component {
         })
       })
       .catch(e => console.log(e));
+  }
+  componentDidMount() {
+    this.getSavedCards();
   }
 
   render() {
@@ -123,21 +124,13 @@ class Billing extends Component {
 
           <div className={"Billing-card auht-view"}>
 
-            <div className="stripe-card">
-
-              <StripeProvider apiKey={stripekey}>
-                <div className="example">
-                  <h1>React Stripe Elements Example</h1>
-                  <Elements>
-                    <StripeCard customerid={this.state.user.customerid} />
-                  </Elements>
-                </div>
-              </StripeProvider>
-
-            </div>
             <div className="table-card">
 
-            <Tabs data = {this.state.data}/>
+              <Tabs
+                data={this.state.data}
+                customerid={this.state.user.customerid}
+                getSavedCards = {this.getSavedCards}
+              />
 
             </div>
           </div>
