@@ -1,9 +1,9 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
 import { Elements, StripeProvider } from 'react-stripe-elements';
 import StripeCard from '../../stripeElem';
-import server,{ stripekey } from '../../../../config';
+import server, { stripekey } from '../../../../config';
 
 const styles = theme => ({
   container: {
@@ -25,16 +25,38 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
-  });
+});
 
 
 class SavedCards extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       data: []
     };
+  }
+
+  deletCard = (sourceid) => {
+    fetch(server + "/removeCard", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        sourceid: sourceid,
+        customerid: this.props.customerid
+
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+        this.getSavedCards();
+      })
+      .catch((error) => { console.log(error) })
   }
 
   getSavedCards = () => {
@@ -65,7 +87,7 @@ class SavedCards extends Component {
   }
 
   render() {
-    // console.log("state", this.state.user)
+    console.log("state", this.state)
 
     return (
       <div>
@@ -112,6 +134,11 @@ class SavedCards extends Component {
             {
               Header: "Zipcode",
               accessor: 'zipcode'
+            },
+            {
+              Header: "Delete Card",
+              id:"click-me-button",
+              Cell: ({ row }) => (<button onClick={(e) => this.deletCard(row.id)}>Delete</button>)
             }
           ]}
           defaultPageSize={15}
