@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { CardElement, injectStripe } from 'react-stripe-elements';
+import {
+  injectStripe, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement
+} from 'react-stripe-elements';
 import Button from '@material-ui/core/Button';
 import server from '../../../config';
 import { withStyles } from '@material-ui/core/styles';
+import './stripe.css'
 
 const createOptions = () => {
   return {
@@ -43,7 +46,7 @@ class CheckoutForm extends Component {
   }
 
   async submit(ev) {
-    let { token } = await this.props.stripe.createToken({ name: "Name" });
+    let { token, error } = await this.props.stripe.createToken({ name: "Test" });
     if (token) {
       await fetch(server + "/addCard", {
         method: "POST",
@@ -66,7 +69,7 @@ class CheckoutForm extends Component {
         .catch((error) => { console.log(error) })
     }
 
-    else console.log("Error token")
+    else console.log("Error token", error)
 
   }
 
@@ -77,16 +80,26 @@ class CheckoutForm extends Component {
     return (
       <div className="checkout">
         <h4>Save your cards to have more options to pay your invoices</h4>
-        <CardElement
-          {...createOptions()}
-        />
-        <Button
-          onClick={this.submit}
-          variant="contained"
-          color="primary"
-          className={classes.button}>
-          Save
+        <div>
+          <input className= "StripeElement Cardholder" placeholder ="Cardholder"/>
+          <CardNumberElement
+            {...createOptions()}
+          />
+          <div className="card-info">
+            <CardExpiryElement className="card-info-element" {...createOptions()} />
+            <CardCVCElement className="card-info-element" {...createOptions()} />
+            <PostalCodeElement className="card-info-element" {...createOptions()} placeholder="Zipcode"/>
+          </div>
+
+          <Button
+            onClick={this.submit}
+            variant="contained"
+            color="primary"
+            className={classes.button}>
+            Save
         </Button>
+        </div>
+
       </div>
     );
   }

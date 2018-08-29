@@ -84,7 +84,7 @@ class PaymentHistory extends Component {
           data={this.state.data}
           columns={[
             {
-              Header: "Posted date",
+              Header: "Posted",
               id: "date",
               accessor: t => this.formatStripeDate(t.date)
             },
