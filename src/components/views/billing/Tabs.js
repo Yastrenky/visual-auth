@@ -6,7 +6,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import SavedCards from './Tabs/SavedCards'
+import SavedCards from './Tabs/SavedCards';
+import PaymentHistory from './Tabs/PaymentHistory';
 
 function TabContainer({ children, dir }) {
   return (
@@ -66,12 +67,15 @@ class FullWidthTabs extends React.Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>Make a Payment</TabContainer>
-          <TabContainer dir={theme.direction}>Payment History</TabContainer>
-          <TabContainer dir={theme.direction}>{
-            <SavedCards customerid={this.props.customerid} />
-          }
 
+          <TabContainer dir={theme.direction}>
+            {<PaymentHistory customerid={this.props.customerid} />}
           </TabContainer>
+
+          <TabContainer dir={theme.direction}>
+            {<SavedCards customerid={this.props.customerid} />}
+          </TabContainer>
+
         </SwipeableViews>
       </div>
     );
