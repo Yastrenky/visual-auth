@@ -74,8 +74,7 @@ class Billing extends Component {
       [value]: event.target.value,
     });
   };
-
-
+  
   render() {
     // console.log("state", this.state.user)
     const { classes } = this.props;

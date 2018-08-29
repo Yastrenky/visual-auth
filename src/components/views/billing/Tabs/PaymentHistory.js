@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
 import server from '../../../../config';
-import Icon from '@material-ui/core/Icon';
+import format from '../../../../assets/format'
+// import Icon from '@material-ui/core/Icon';
 
 const styles = theme => ({
   container: {
@@ -36,21 +37,23 @@ class PaymentHistory extends Component {
     };
   }
 
-  getSavedCards = () => {
-    fetch(server + '/getAllCards', { credentials: 'include' })
+  getCharges = () => {
+    fetch(server + '/getAllCharges', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
         console.log(result)
-        var list = result.cards.data
+        var list = result.charge.data
         var newData = [];
 
-        list.forEach((card => newData.push({
-          name: card.name,
-          id: card.id,
-          brand: card.brand,
-          card: card.last4,
-          date: card.exp_month + "/" + card.exp_year,
-          zipcode: card.address_zip
+        list.forEach((charge => newData.push({
+          date: charge.created,
+          card_id: charge.source.id,
+          charge_id: charge.id,
+          card: charge.source.last4,
+          status: charge.status,
+          amount: charge.amount,
+          currency: charge.currency
+
         })));
 
         this.setState({
@@ -59,13 +62,20 @@ class PaymentHistory extends Component {
       })
       .catch(e => console.log(e));
   }
+
+  formatStripeDate = (unix_timestamp) => {
+    var date = new Date(unix_timestamp * 1000);
+    var objtime = format.date(date)
+    return objtime.date +" || "+ objtime.time
+  }
+
   componentDidMount() {
-    this.getSavedCards();
+    this.getCharges();
   }
 
   render() {
     console.log("state", this.state)
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     return (
       <div>
@@ -74,40 +84,38 @@ class PaymentHistory extends Component {
           data={this.state.data}
           columns={[
             {
-              Header: "Cardholder Name",
-              accessor: "name"
+              Header: "Posted date",
+              id: "date",
+              accessor: t => this.formatStripeDate(t.date)
             },
             {
-              Header: "Card id",
-              accessor: "id"
-            },
-            {
-              Header: "Brand",
-              accessor: "brand"
-            },
-            {
-              Header: "Number",
+              Header: "Card",
               id: "card",
               accessor: d => (d.card) ? "**** **** **** " + d.card : 'unknown'
             },
             {
-              Header: "Expiration Date",
-              accessor: 'date'
-            }
-            ,
-            {
-              Header: "Zipcode",
-              accessor: 'zipcode'
+              Header: "Currency",
+              id: "currency",
+              accessor: c => c.currency.toUpperCase()
             },
             {
-              Header: "Delete Card",
-              id: "click-me-button",
-              Cell: ({ row }) => (<Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
-                delete_forever
-           </Icon>
-                //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
-              )
-            }
+              Header: "Amount",
+              id: "amount",
+              accessor: a => format.money(a.amount.toString())
+            },
+            {
+              Header: "Status",
+              accessor: 'status'
+            },
+            //   {
+            //     Header: "Delete Card",
+            //     id: "click-me-button",
+            //     Cell: ({ row }) => (<Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
+            //       delete_forever
+            //  </Icon>
+            //       //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
+            //     )
+            //   }
           ]}
           defaultPageSize={15}
           className="-striped -highlight"

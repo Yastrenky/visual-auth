@@ -64,7 +64,7 @@ class SavedCards extends Component {
     fetch(server + '/getAllCards', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
-        console.log(result)
+        // console.log(result)
         var list = result.cards.data
         var newData = [];
 
@@ -88,7 +88,7 @@ class SavedCards extends Component {
   }
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
     const { classes } = this.props;
 
     return (
