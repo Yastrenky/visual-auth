@@ -40,13 +40,21 @@ const styles = theme => ({
 class CheckoutForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { complete: false };
+    this.state = {
+      complete: false,
+      cardholder: ""
+
+    };
 
     this.submit = this.submit.bind(this);
   }
 
+  cardholderHandler = (ev) => {
+    this.setState({ cardholder: ev.target.value.toUpperCase() })
+  }
+
   async submit(ev) {
-    let { token, error } = await this.props.stripe.createToken({ name: "Test" });
+    let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
     if (token) {
       await fetch(server + "/addCard", {
         method: "POST",
@@ -74,21 +82,21 @@ class CheckoutForm extends Component {
   }
 
   render() {
-    // console.log(this.props)
+    console.log(this.state)
     const { classes } = this.props;
 
     return (
       <div className="checkout">
-        <h4>Save your cards to have more options to pay your invoices</h4>
+        <p>Save your cards to have more options to pay your invoices</p>
         <div>
-          <input className= "StripeElement Cardholder" placeholder ="Cardholder"/>
+          <input className="StripeElement Cardholder" placeholder="CARDHOLDER" onChange={this.cardholderHandler} value={this.state.cardholder}/>
           <CardNumberElement
             {...createOptions()}
           />
           <div className="card-info">
             <CardExpiryElement className="card-info-element" {...createOptions()} />
             <CardCVCElement className="card-info-element" {...createOptions()} />
-            <PostalCodeElement className="card-info-element" {...createOptions()} placeholder="Zipcode"/>
+            <PostalCodeElement className="card-info-element" {...createOptions()} placeholder="ZIPCODE" />
           </div>
 
           <Button
