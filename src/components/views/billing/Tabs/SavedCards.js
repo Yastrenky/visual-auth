@@ -163,7 +163,7 @@ class SavedCards extends Component {
               )
             }
           ]}
-          defaultPageSize={15}
+          defaultPageSize={20}
           className="-striped -highlight"
           loading={this.state.loadingdata}
         />

@@ -64,5 +64,29 @@ footer h5 a {
   text-align: center;
 }
 
+.makepayment-container {
+  padding: 24px;
+}
 
+.invoice-container {
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 1px solid #e8e8fb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+.invoice-container p {
+  display: inline-table;
+  margin-top: -22px;
+  padding: 2px 10px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 25px;
+  font-size: 1.029em;
+}
+
+.MuiIconButton-root-207{
+  height: 0px;
+}

@@ -66,9 +66,10 @@ class CheckoutForm extends Component {
     this.setState({ cardholder: "" })
   }
 
-  submit = async (ev) => {
+  async submit(ev) {
     ev.preventDefault();
     this.setState({ loading: true })
+
     let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
     if (token) {
       await fetch(server + "/addCard", {
@@ -105,7 +106,7 @@ class CheckoutForm extends Component {
   }
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     const { classes } = this.props;
 
     return (

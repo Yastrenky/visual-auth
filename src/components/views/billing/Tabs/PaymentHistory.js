@@ -43,7 +43,7 @@ class PaymentHistory extends Component {
     fetch(server + '/getAllCharges', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
-        console.log(result)
+        // console.log(result)
         var list = result.charge.data
         var newData = [];
 
@@ -80,7 +80,7 @@ class PaymentHistory extends Component {
   }
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
     // const { classes } = this.props;
 
     return (
@@ -111,10 +111,11 @@ class PaymentHistory extends Component {
             },
             {
               Header: "Status",
-              accessor: 'status'
+              id: 'status',
+              accessor: s => s.status.toUpperCase()
             }
           ]}
-          defaultPageSize={15}
+          defaultPageSize={30}
           className="-striped -highlight"
           loading={this.state.loadingdata}
         />

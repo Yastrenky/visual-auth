@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import SavedCards from './Tabs/SavedCards';
 import PaymentHistory from './Tabs/PaymentHistory';
+import MakePayment from './Tabs/MakePayment';
 
 function TabContainer({ children, dir }) {
   return (
@@ -31,7 +32,7 @@ const styles = theme => ({
 
 class FullWidthTabs extends React.Component {
   state = {
-    value: 1,
+    value: 0,
   };
 
   handleChange = (event, value) => {
@@ -66,7 +67,9 @@ class FullWidthTabs extends React.Component {
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
         >
-          <TabContainer dir={theme.direction}>Make a Payment</TabContainer>
+          <TabContainer dir={theme.direction}>
+            {<MakePayment customerid={this.props.customerid} />}
+          </TabContainer>
 
           <TabContainer dir={theme.direction}>
             {<PaymentHistory customerid={this.props.customerid} />}
