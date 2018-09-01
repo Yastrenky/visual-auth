@@ -33,11 +33,13 @@ class PaymentHistory extends Component {
     super(props);
 
     this.state = {
-      data: []
+      data: [],
+      loadingdata: false
     };
   }
 
   getCharges = () => {
+    this.setState({ loadingdata: true })
     fetch(server + '/getAllCharges', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
@@ -57,16 +59,20 @@ class PaymentHistory extends Component {
         })));
 
         this.setState({
-          data: newData
+          data: newData,
+          loadingdata: false
         })
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        this.setState({ loadingdata: false })
+        console.log(e)
+      });
   }
 
   formatStripeDate = (unix_timestamp) => {
     var date = new Date(unix_timestamp * 1000);
     var objtime = format.date(date)
-    return objtime.date +" || "+ objtime.time
+    return objtime.date + " || " + objtime.time
   }
 
   componentDidMount() {
@@ -106,19 +112,11 @@ class PaymentHistory extends Component {
             {
               Header: "Status",
               accessor: 'status'
-            },
-            //   {
-            //     Header: "Delete Card",
-            //     id: "click-me-button",
-            //     Cell: ({ row }) => (<Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
-            //       delete_forever
-            //  </Icon>
-            //       //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
-            //     )
-            //   }
+            }
           ]}
           defaultPageSize={15}
           className="-striped -highlight"
+          loading={this.state.loadingdata}
         />
 
 

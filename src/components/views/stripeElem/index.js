@@ -5,6 +5,7 @@ import {
 import Button from '@material-ui/core/Button';
 import server from '../../../config';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import './stripe.css'
 
 const createOptions = () => {
@@ -27,6 +28,10 @@ const createOptions = () => {
 };
 
 const styles = theme => ({
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
+
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -42,8 +47,8 @@ class CheckoutForm extends Component {
     super(props);
     this.state = {
       complete: false,
-      cardholder: ""
-
+      cardholder: "",
+      loading: false
     };
 
     this.submit = this.submit.bind(this);
@@ -53,7 +58,17 @@ class CheckoutForm extends Component {
     this.setState({ cardholder: ev.target.value.toUpperCase() })
   }
 
-  async submit(ev) {
+  cleanForm = () => {
+    this.cardNumber.clear();
+    this.carExp.clear();
+    this.cardCVC.clear();
+    this.cardPostal.clear();
+    this.setState({ cardholder: "" })
+  }
+
+  submit = async (ev) => {
+    ev.preventDefault();
+    this.setState({ loading: true })
     let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
     if (token) {
       await fetch(server + "/addCard", {
@@ -73,11 +88,19 @@ class CheckoutForm extends Component {
         .then(response => {
           console.log(response)
           this.props.getSavedCards();
+          this.cleanForm();
+          this.setState({ loading: false })
         })
-        .catch((error) => { console.log(error) })
+        .catch((error) => {
+          this.setState({ loading: false })
+          console.log(error)
+        })
     }
 
-    else console.log("Error token", error)
+    else {
+      console.log("Error token", error)
+      this.setState({ loading: false })
+    }
 
   }
 
@@ -89,26 +112,31 @@ class CheckoutForm extends Component {
       <div className="checkout">
         <p>Save your cards to have more options to pay your invoices</p>
         <div>
-          <input className="StripeElement Cardholder" placeholder="CARDHOLDER" onChange={this.cardholderHandler} value={this.state.cardholder}/>
-          <CardNumberElement
-            {...createOptions()}
-          />
-          <div className="card-info">
-            <CardExpiryElement className="card-info-element" {...createOptions()} />
-            <CardCVCElement className="card-info-element" {...createOptions()} />
-            <PostalCodeElement className="card-info-element" {...createOptions()} placeholder="ZIPCODE" />
-          </div>
+          <form>
+            <input className="StripeElement Cardholder" placeholder="CARDHOLDER" onChange={this.cardholderHandler} value={this.state.cardholder} />
+            <CardNumberElement {...createOptions()} onReady={el => this.cardNumber = el} />
+            <div className="card-info">
+              <CardExpiryElement className="card-info-element" {...createOptions()} onReady={el => this.carExp = el} />
+              <CardCVCElement className="card-info-element" {...createOptions()} onReady={el => this.cardCVC = el} />
+              <PostalCodeElement className="card-info-element" {...createOptions()} placeholder="ZIPCODE" onReady={el => this.cardPostal = el} />
+            </div>
+            {!this.state.loading ?
+              <Button
+                onClick={this.submit}
+                variant="contained"
+                color="primary"
+                className={classes.button}>
 
-          <Button
-            onClick={this.submit}
-            variant="contained"
-            color="primary"
-            className={classes.button}>
-            Save
-        </Button>
+                Save
+             </Button>
+              :
+              <CircularProgress className={classes.progress} />
+            }
+          </form>
+
         </div>
 
-      </div>
+      </div >
     );
   }
 }

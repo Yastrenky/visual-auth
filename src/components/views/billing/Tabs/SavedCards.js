@@ -4,9 +4,13 @@ import ReactTable from "react-table";
 import { Elements, StripeProvider } from 'react-stripe-elements';
 import StripeCard from '../../stripeElem';
 import server, { stripekey } from '../../../../config';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 
 const styles = theme => ({
+  progress: {
+    margin: 5,
+  },
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -34,11 +38,14 @@ class SavedCards extends Component {
     super(props);
 
     this.state = {
-      data: []
+      data: [],
+      loadremove: null,
+      loadingdata: false
     };
   }
 
   deletCard = (sourceid) => {
+    this.setState({ loadremove: sourceid })
     fetch(server + "/removeCard", {
       method: "POST",
       headers: {
@@ -56,11 +63,16 @@ class SavedCards extends Component {
       .then(response => {
         console.log(response)
         this.getSavedCards();
+        this.setState({ loadremove: null })
       })
-      .catch((error) => { console.log(error) })
+      .catch((error) => {
+        console.log(error)
+        this.setState({ loadremove: null })
+      })
   }
 
   getSavedCards = () => {
+    this.setState({ loadingdata: true })
     fetch(server + '/getAllCards', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
@@ -78,10 +90,14 @@ class SavedCards extends Component {
         })));
 
         this.setState({
-          data: newData
+          data: newData,
+          loadingdata: false
         })
       })
-      .catch(e => console.log(e));
+      .catch(e => {
+        console.log(e)
+      this.setState({loadingdata: false})
+      });
   }
   componentDidMount() {
     this.getSavedCards();
@@ -96,12 +112,12 @@ class SavedCards extends Component {
         <div className="stripe-card">
 
           <StripeProvider apiKey={stripekey}>
-              <Elements>
-                <StripeCard
-                  customerid={this.props.customerid}
-                  getSavedCards={this.getSavedCards}
-                />
-              </Elements>
+            <Elements>
+              <StripeCard
+                customerid={this.props.customerid}
+                getSavedCards={this.getSavedCards}
+              />
+            </Elements>
           </StripeProvider>
 
         </div>
@@ -137,15 +153,19 @@ class SavedCards extends Component {
             {
               Header: "Delete Card",
               id: "click-me-button",
-              Cell: ({ row }) => (<Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
-                delete_forever
-           </Icon>
+              Cell: ({ row }) => (this.state.loadremove === row.id ?
+                <CircularProgress className={classes.progress} size={20} />
+                :
+                <Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
+                  delete_forever
+               </Icon>
                 //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
               )
             }
           ]}
           defaultPageSize={15}
           className="-striped -highlight"
+          loading={this.state.loadingdata}
         />
 
 
