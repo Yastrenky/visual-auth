@@ -115,7 +115,7 @@ class PaymentHistory extends Component {
               accessor: s => s.status.toUpperCase()
             }
           ]}
-          defaultPageSize={30}
+          defaultPageSize={20}
           className="-striped -highlight"
           loading={this.state.loadingdata}
         />

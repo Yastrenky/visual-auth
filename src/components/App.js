@@ -124,11 +124,12 @@ class App extends Component {
         alert.text = 'Server connection lost. Please contact your service provider. ' + e;
         this.setState({ alert: alert })
       });
+      
   }
 
   render() {
 
-    // console.log("App state", this.state.user.imageName)
+    // console.log("App state", this.state)
     const { classes } = this.props;
     const alert = this.state.alert.show;
 

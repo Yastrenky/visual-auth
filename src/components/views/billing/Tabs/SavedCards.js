@@ -77,18 +77,18 @@ class SavedCards extends Component {
       .then(response => response.json())
       .then(result => {
         // console.log(result)
-        var list = result.cards.data
         var newData = [];
-
-        list.forEach((card => newData.push({
-          name: card.name,
-          id: card.id,
-          brand: card.brand,
-          card: card.last4,
-          date: card.exp_month + "/" + card.exp_year,
-          zipcode: card.address_zip
-        })));
-
+        if (!result.err) {
+          var list = result.cards.data
+          list.forEach((card => newData.push({
+            name: card.name,
+            id: card.id,
+            brand: card.brand,
+            card: card.last4,
+            date: card.exp_month + "/" + card.exp_year,
+            zipcode: card.address_zip
+          })));
+        }
         this.setState({
           data: newData,
           loadingdata: false
@@ -96,7 +96,7 @@ class SavedCards extends Component {
       })
       .catch(e => {
         console.log(e)
-      this.setState({loadingdata: false})
+        this.setState({ loadingdata: false })
       });
   }
   componentDidMount() {
@@ -163,7 +163,7 @@ class SavedCards extends Component {
               )
             }
           ]}
-          defaultPageSize={20}
+          defaultPageSize={10}
           className="-striped -highlight"
           loading={this.state.loadingdata}
         />

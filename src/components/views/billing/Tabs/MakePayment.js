@@ -4,10 +4,33 @@ import ReactTable from "react-table";
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
+import { Button } from '@material-ui/core';
+import NumberFormat from 'react-number-format';
+
 import List from '../Lists/List'
 // import server from '../../../../config';
 // import format from '../../../../assets/format'
 // import Icon from '@material-ui/core/Icon';
+
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      prefix="$"
+    />
+  );
+}
 
 const styles = theme => ({
   textField: {
@@ -32,6 +55,43 @@ const styles = theme => ({
   input: {
     display: 'none',
   },
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  bootstrapRoot: {
+    padding: 0,
+    'label + &': {
+      marginTop: theme.spacing.unit * 3,
+    },
+  },
+  bootstrapInput: {
+    borderRadius: 4,
+    backgroundColor: theme.palette.common.white,
+    border: '1px solid #ced4da',
+    fontSize: 16,
+    padding: '10px 12px',
+    width: 'calc(100% - 24px)',
+    transition: theme.transitions.create(['border-color', 'box-shadow']),
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    '&:focus': {
+      borderColor: '#80bdff',
+      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+    },
+  },
+  bootstrapFormLabel: {
+    fontSize: 18,
+  },
 });
 
 
@@ -43,8 +103,13 @@ class MakePayment extends Component {
       invoices: [],
       loadingInvoices: false,
       slected: null,
+      amount: ''
     };
   }
+
+  handleChange = prop => event => {
+    this.setState({ [prop]: event.target.value });
+  };
 
   selectInvoice = inv => {
     if (this.state.slected === inv) {
@@ -72,7 +137,7 @@ class MakePayment extends Component {
                 apr: "15",
                 balance: 1000,
                 billed: 1000,
-                payments:[]
+                payments: []
               },
               {
                 invoice: "FF25NM",
@@ -80,8 +145,8 @@ class MakePayment extends Component {
                 due: "8/7/2019",
                 apr: "15",
                 balance: 1000,
-                billed:1000,
-                payments:[]
+                billed: 1000,
+                payments: []
               },
               {
                 invoice: "LK45ML",
@@ -90,7 +155,7 @@ class MakePayment extends Component {
                 apr: "15",
                 balance: 1000,
                 billed: 1000,
-                payments:[]
+                payments: []
               },
             ]}
             columns={[
@@ -134,29 +199,46 @@ class MakePayment extends Component {
                   />
               }
             ]}
-            defaultPageSize={5}
+            defaultPageSize={10}
             className="-striped -highlight"
             loading={this.state.loadingInvoices}
           />
 
 
         </div>
-        <div>
-          <form className={classes.container} noValidate>
-            <TextField
-              id="date"
-              label="Birthday"
-              type="date"
-              defaultValue="2017-05-24"
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </form>
-          </div>
 
-          <List/>
+
+        <div className="invoice-container">
+          <p>Make a payment</p>
+          <div className="invoice-schedule">
+            <List />
+            <div className="payment-checkout">
+              <TextField
+                label="Amount"
+                value={this.state.amount}
+                id="bootstrap-input"
+                onChange={this.handleChange('amount')}
+                InputProps={{
+                  inputComponent: NumberFormatCustom,
+                  disableUnderline: true,
+                  classes: {
+                    root: classes.bootstrapRoot,
+                    input: classes.bootstrapInput,
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                  className: classes.bootstrapFormLabel,
+                }}
+              />
+              <Button variant="contained" color="secondary" className={classes.button}>
+                PAY
+              </Button>
+            </div>
+          </div>
+        </div>
+
+
       </div>
     );
   }

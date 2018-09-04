@@ -12,50 +12,57 @@ const styles = theme => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
+  listoverflow:{
+    overflow: "auto",
+    height: 245
+  }
+
 });
 
 class CheckboxList extends React.Component {
   state = {
-    checked: [0],
+    checked: null,
   };
 
   handleToggle = value => () => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+    if(this.state.checked === value){
+      this.setState({
+        checked: null,
+      });
     }
-
+    else{
     this.setState({
-      checked: newChecked,
+      checked: value,
     });
+  }
   };
 
   render() {
+
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-        <List>
-          {[0, 1, 2, 3].map(value => (
+      <p>Select card</p>
+        <List
+         className={classes.listoverflow}
+        >
+          {[0, 1, 2, 3].map((value, index) => (
             <ListItem
-              key={value}
+              key={index}
               role={undefined}
               dense
               button
-              onClick={this.handleToggle(value)}
+              onClick={this.handleToggle(index)}
               className={classes.listItem}
             >
               <Checkbox
-                checked={this.state.checked.indexOf(value) !== -1}
+                checked={this.state.checked === index}
                 tabIndex={-1}
                 disableRipple
+                color="primary"
               />
-              <ListItemText primary={`Line item ${value + 1}`} />
+              <ListItemText primary={`Credit number ${value + 1}/ exp date `} />
             </ListItem>
           ))}
         </List>
