@@ -102,7 +102,8 @@ class MakePayment extends Component {
     this.state = {
       invoices: [],
       loadingInvoices: false,
-      slected: null,
+      inv_slected: null,
+      card_selected: null,
       amount: ''
     };
   }
@@ -112,11 +113,11 @@ class MakePayment extends Component {
   };
 
   selectInvoice = inv => {
-    if (this.state.slected === inv) {
-      this.setState({ slected: null });
+    if (this.state.inv_slected === inv) {
+      this.setState({ inv_slected: null });
     }
     else {
-      this.setState({ slected: inv });
+      this.setState({ inv_slected: inv });
     }
   };
 
@@ -190,7 +191,7 @@ class MakePayment extends Component {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={this.state.slected === b.invoice ? true : false}
+                        checked={this.state.inv_slected === b.invoice ? true : false}
                         onChange={e => this.selectInvoice(b.invoice)}
                         value="checkedB"
                         color="primary"
@@ -231,7 +232,7 @@ class MakePayment extends Component {
                   className: classes.bootstrapFormLabel,
                 }}
               />
-              <Button variant="contained" color="secondary" className={classes.button}>
+              <Button variant="contained" color="secondary" className={classes.button} onClick={e =>this.props.goToTab(2)}>
                 PAY
               </Button>
             </div>

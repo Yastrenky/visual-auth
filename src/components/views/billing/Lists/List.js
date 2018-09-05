@@ -12,7 +12,7 @@ const styles = theme => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
-  listoverflow:{
+  listoverflow: {
     overflow: "auto",
     height: 245
   }
@@ -20,21 +20,25 @@ const styles = theme => ({
 });
 
 class CheckboxList extends React.Component {
-  state = {
-    checked: null,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      checked: null,
+      data: this.props.data || []
+    };
+  }
 
   handleToggle = value => () => {
-    if(this.state.checked === value){
+    if (this.state.checked === value) {
       this.setState({
         checked: null,
       });
     }
-    else{
-    this.setState({
-      checked: value,
-    });
-  }
+    else {
+      this.setState({
+        checked: value,
+      });
+    }
   };
 
   render() {
@@ -43,11 +47,11 @@ class CheckboxList extends React.Component {
 
     return (
       <div className={classes.root}>
-      <p>Select card</p>
+        <p>Select card</p>
         <List
-         className={classes.listoverflow}
+          className={classes.listoverflow}
         >
-          {[0, 1, 2, 3].map((value, index) => (
+          {this.state.data.map((value, index) => (
             <ListItem
               key={index}
               role={undefined}
