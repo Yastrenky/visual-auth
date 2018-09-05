@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
+import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@material-ui/core';
 import NumberFormat from 'react-number-format';
-
-import List from '../Lists/List'
+import server from '../../../../config';
+import List from '../Lists/List';
+import CircularProgress from '@material-ui/core/CircularProgress';
 // import server from '../../../../config';
 // import format from '../../../../assets/format'
 // import Icon from '@material-ui/core/Icon';
@@ -33,6 +30,9 @@ function NumberFormatCustom(props) {
 }
 
 const styles = theme => ({
+  progress: {
+    margin: theme.spacing.unit * 2,
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -100,6 +100,8 @@ class MakePayment extends Component {
     super(props);
 
     this.state = {
+      cards: [],
+      loadincards: false,
       invoices: [],
       loadingInvoices: false,
       inv_slected: null,
@@ -121,6 +123,74 @@ class MakePayment extends Component {
     }
   };
 
+  selectCard = card => {
+    this.setState({ card_selected: card });
+
+  };
+
+  getSavedCards = () => {
+    this.setState({ loadincards: true })
+    fetch(server + '/getAllCards', { credentials: 'include' })
+      .then(response => response.json())
+      .then(result => {
+        // console.log(result)
+        var newData = [];
+        if (!result.err) {
+          var list = result.cards.data
+          list.forEach((card => newData.push({
+            name: card.name,
+            id: card.id,
+            brand: card.brand,
+            card: card.last4,
+            date: card.exp_month + "/" + card.exp_year,
+            zipcode: card.address_zip
+          })));
+        }
+        this.setState({
+          cards: newData,
+          loadincards: false
+        })
+      })
+      .catch(e => {
+        console.log(e)
+        this.setState({ loadincards: false })
+      });
+  }
+
+  componentDidMount() {
+    this.getSavedCards();
+    this.setState({
+      invoices: [
+        {
+          invoice: "AX235F",
+          product: "UI Company Design",
+          due: "8/7/2019",
+          apr: "15",
+          balance: 1000,
+          billed: 1000,
+          payments: []
+        },
+        {
+          invoice: "FF25NM",
+          product: "UI Company Design",
+          due: "8/7/2019",
+          apr: "15",
+          balance: 1000,
+          billed: 1000,
+          payments: []
+        },
+        {
+          invoice: "LK45ML",
+          product: "UI Company Design",
+          due: "8/7/2019",
+          apr: "15",
+          balance: 1000,
+          billed: 1000,
+          payments: []
+        },
+      ]
+    })
+  }
   render() {
     console.log("state", this.state)
     const { classes } = this.props;
@@ -130,35 +200,7 @@ class MakePayment extends Component {
         <div className="invoice-container">
           <p>Select the invoice you will like to pay</p>
           <ReactTable
-            data={[
-              {
-                invoice: "AX235F",
-                product: "UI Company Design",
-                due: "8/7/2019",
-                apr: "15",
-                balance: 1000,
-                billed: 1000,
-                payments: []
-              },
-              {
-                invoice: "FF25NM",
-                product: "UI Company Design",
-                due: "8/7/2019",
-                apr: "15",
-                balance: 1000,
-                billed: 1000,
-                payments: []
-              },
-              {
-                invoice: "LK45ML",
-                product: "UI Company Design",
-                due: "8/7/2019",
-                apr: "15",
-                balance: 1000,
-                billed: 1000,
-                payments: []
-              },
-            ]}
+            data={this.state.invoices}
             columns={[
               {
                 Header: "Invoice",
@@ -204,15 +246,22 @@ class MakePayment extends Component {
             className="-striped -highlight"
             loading={this.state.loadingInvoices}
           />
-
-
         </div>
 
 
         <div className="invoice-container">
           <p>Make a payment</p>
           <div className="invoice-schedule">
-            <List />
+            {!this.state.loadincards ?
+              <div>
+                <List data={this.state.cards} selectCard={this.selectCard} />
+                <Button variant="contained" color="primary" className={classes.button} onClick={e => this.props.goToTab(2)}>
+                  ADD CARD
+                </Button>
+              </div>
+              :
+              <CircularProgress className={classes.progress} />
+            }
             <div className="payment-checkout">
               <TextField
                 label="Amount"
@@ -232,9 +281,10 @@ class MakePayment extends Component {
                   className: classes.bootstrapFormLabel,
                 }}
               />
-              <Button variant="contained" color="secondary" className={classes.button} onClick={e =>this.props.goToTab(2)}>
+              <Button variant="contained" color="secondary"  onClick={e => this.props.goToTab(1)} className={classes.button} >
                 PAY
               </Button>
+
             </div>
           </div>
         </div>

@@ -41,6 +41,7 @@ class FullWidthTabs extends React.Component {
 
   handleChangeIndex = index => {
     this.setState({ value: index });
+    window.scroll(0, 0)
   };
 
   render() {

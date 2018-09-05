@@ -47,7 +47,7 @@ class CheckoutForm extends Component {
     super(props);
     this.state = {
       complete: false,
-      cardholder: "",
+      cardholder: null,
       loading: false
     };
 
@@ -63,13 +63,13 @@ class CheckoutForm extends Component {
     this.carExp.clear();
     this.cardCVC.clear();
     this.cardPostal.clear();
-    this.setState({ cardholder: "" })
+    this.setState({ cardholder: null })
   }
 
   async submit(ev) {
     ev.preventDefault();
+    if(this.state.cardholder){
     this.setState({ loading: true })
-
     let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
     if (token) {
       await fetch(server + "/addCard", {
@@ -102,7 +102,10 @@ class CheckoutForm extends Component {
       console.log("Error token", error)
       this.setState({ loading: false })
     }
-
+  }
+  else{
+    console.log("Needs cardholder")
+  }
   }
 
   render() {
@@ -114,7 +117,7 @@ class CheckoutForm extends Component {
         <p>Save your cards to have more options to pay your invoices</p>
         <div>
           <form>
-            <input className="StripeElement Cardholder" placeholder="CARDHOLDER" onChange={this.cardholderHandler} value={this.state.cardholder} />
+            <input className="StripeElement Cardholder" placeholder="CARDHOLDER" onChange={this.cardholderHandler} value={this.state.cardholder || ""} />
             <CardNumberElement {...createOptions()} onReady={el => this.cardNumber = el} />
             <div className="card-info">
               <CardExpiryElement className="card-info-element" {...createOptions()} onReady={el => this.carExp = el} />

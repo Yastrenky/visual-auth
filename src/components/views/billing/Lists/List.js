@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
+import PaymentIcon from 'react-payment-icons';
 
 const styles = theme => ({
   root: {
@@ -14,7 +15,8 @@ const styles = theme => ({
   },
   listoverflow: {
     overflow: "auto",
-    height: 245
+    height: 245,
+    margin:20
   }
 
 });
@@ -22,51 +24,58 @@ const styles = theme => ({
 class CheckboxList extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       checked: null,
       data: this.props.data || []
     };
   }
 
-  handleToggle = value => () => {
-    if (this.state.checked === value) {
+  handleToggle = card => () => {
+    if (this.state.checked === card) {
       this.setState({
         checked: null,
       });
+      this.props.selectCard(null)
     }
     else {
       this.setState({
-        checked: value,
+        checked: card,
       });
+      this.props.selectCard(card)
     }
   };
 
   render() {
-
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-        <p>Select card</p>
+        <p>Select Card</p>
         <List
           className={classes.listoverflow}
         >
-          {this.state.data.map((value, index) => (
+          {this.state.data.map((value) => (
             <ListItem
-              key={index}
+              key={value.id}
               role={undefined}
               dense
               button
-              onClick={this.handleToggle(index)}
+              onClick={this.handleToggle(value.id)}
               className={classes.listItem}
             >
               <Checkbox
-                checked={this.state.checked === index}
+                checked={this.state.checked === value.id}
                 tabIndex={-1}
                 disableRipple
                 color="primary"
               />
-              <ListItemText primary={`Credit number ${value + 1}/ exp date `} />
+              <PaymentIcon
+                id={value.brand === "American Express" ? "amex" : value.brand.toLowerCase()}
+                style={{ margin: 5, width: 60 }}
+                className="payment-icon"
+              />
+              <ListItemText primary={`****  ${value.card} (${value.date}) `} />
             </ListItem>
           ))}
         </List>
