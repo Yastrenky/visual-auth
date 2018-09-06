@@ -98,7 +98,6 @@ const styles = theme => ({
 class MakePayment extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       cards: [],
       loadincards: false,
@@ -157,7 +156,7 @@ class MakePayment extends Component {
       });
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.getSavedCards();
     this.setState({
       invoices: [
@@ -192,7 +191,7 @@ class MakePayment extends Component {
     })
   }
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
     const { classes } = this.props;
 
     return (
@@ -253,7 +252,7 @@ class MakePayment extends Component {
           <p>Make a payment</p>
           <div className="invoice-schedule">
             {!this.state.loadincards ?
-              <div>
+              <div className="invoice-container payment-options-list">
                 <List data={this.state.cards} selectCard={this.selectCard} />
                 <Button variant="contained" color="primary" className={classes.button} onClick={e => this.props.goToTab(2)}>
                   ADD CARD

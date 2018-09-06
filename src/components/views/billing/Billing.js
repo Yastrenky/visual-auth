@@ -45,6 +45,7 @@ class Billing extends Component {
 
     var data = this.props.data;
     this.state = {
+      cards_qty: 0,
       user: {
         id: '' || data.id,
         name: '' || data.name,
@@ -69,14 +70,18 @@ class Billing extends Component {
     this.setState({ alert: alert })
   }
 
+cardsQtyHandle = num =>{
+  this.setState({cards_qty: num})
+}
+
   handleChange = value => event => {
     this.setState({
       [value]: event.target.value,
     });
   };
-  
+
   render() {
-    // console.log("state", this.state.user)
+    // console.log("state", this.state)
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
@@ -98,7 +103,6 @@ class Billing extends Component {
               <Tabs
                 data={this.state.data}
                 customerid={this.state.user.customerid}
-                getSavedCards = {this.getSavedCards}
               />
             </div>
           </div>

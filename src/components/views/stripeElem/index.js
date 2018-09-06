@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import server from '../../../config';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Alert from '../../views/alert/Alert';
 import './stripe.css'
 
 const createOptions = () => {
@@ -48,7 +49,12 @@ class CheckoutForm extends Component {
     this.state = {
       complete: false,
       cardholder: null,
-      loading: false
+      loading: false,
+      alert: {
+        show: false,
+        title: '',
+        text: ''
+      }
     };
 
     this.submit = this.submit.bind(this);
@@ -66,8 +72,19 @@ class CheckoutForm extends Component {
     this.setState({ cardholder: null })
   }
 
+  resetAlert = () => {
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
+    alert = {
+      show: false,
+      title: '',
+      text: ''
+    }
+    this.setState({ alert: alert })
+  }
+
   async submit(ev) {
     ev.preventDefault();
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
     if(this.state.cardholder){
     this.setState({ loading: true })
     let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
@@ -92,28 +109,45 @@ class CheckoutForm extends Component {
           this.cleanForm();
           this.setState({ loading: false })
         })
-        .catch((error) => {
-          this.setState({ loading: false })
-          console.log(error)
+        .catch((e) => {
+          alert.show = true;
+          alert.title = "Connection lost";
+          alert.text = 'Server connection lost. Please contact your service provider. ' + e;
+          this.setState({ 
+            loading: false,
+            alert: alert })
         })
     }
 
     else {
-      console.log("Error token", error)
-      this.setState({ loading: false })
+      alert.show = true;
+      alert.title = "Card Error";
+      alert.text = error.message;
+      this.setState({
+        loading: false,
+        alert: alert
+      })
     }
   }
   else{
-    console.log("Needs cardholder")
+      alert.show = true;
+      alert.title = "Card Error";
+      alert.text = 'Needs cardholder.';
+      this.setState({
+        loading: false,
+        alert: alert
+      })
   }
   }
 
   render() {
     // console.log(this.state)
     const { classes } = this.props;
-
+    const alert = this.state.alert.show;
+    
     return (
       <div className="checkout">
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
         <p>Save your cards to have more options to pay your invoices</p>
         <div>
           <form>

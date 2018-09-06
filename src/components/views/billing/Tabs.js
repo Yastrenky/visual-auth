@@ -31,10 +31,12 @@ const styles = theme => ({
 });
 
 class FullWidthTabs extends React.Component {
-  state = {
-    value: 0,
-  };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 0,
+    };
+  }
   handleChange = (event, value) => {
     this.setState({ value });
   };
@@ -45,7 +47,7 @@ class FullWidthTabs extends React.Component {
   };
 
   render() {
-
+    // console.log("tab props", this.props)
     const { classes, theme } = this.props;
 
     return (
