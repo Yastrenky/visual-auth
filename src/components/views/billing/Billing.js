@@ -6,6 +6,7 @@ import Alert from '../alert/Alert';
 import Tabs from './Tabs';
 import './billing.css';
 import "react-table/react-table.css";
+import server from '../../../config';
 
 const styles = theme => ({
   container: {
@@ -45,7 +46,7 @@ class Billing extends Component {
 
     var data = this.props.data;
     this.state = {
-      cards_qty: 0,
+      cardslist: [],
       user: {
         id: '' || data.id,
         name: '' || data.name,
@@ -70,15 +71,50 @@ class Billing extends Component {
     this.setState({ alert: alert })
   }
 
-cardsQtyHandle = num =>{
-  this.setState({cards_qty: num})
-}
+  cardsQtyHandle = num => {
+    this.setState({ cards_qty: num })
+  }
 
   handleChange = value => event => {
     this.setState({
       [value]: event.target.value,
     });
   };
+
+
+
+  getSavedCards = (callback) => {
+    this.setState({ loadingdata: true })
+    fetch(server + '/getAllCards', { credentials: 'include' })
+      .then(response => response.json())
+      .then(result => {
+        // console.log(result)
+        var newData = [];
+        if (!result.err) {
+          var list = result.cards.data
+          list.forEach((card => newData.push({
+            name: card.name,
+            id: card.id,
+            brand: card.brand,
+            card: card.last4,
+            date: card.exp_month + "/" + card.exp_year,
+            zipcode: card.address_zip
+          })));
+        }
+        callback(null , newData)
+        this.setState({
+          cardslist: newData,
+        })
+      })
+      .catch(e => {
+        callback(e, null)
+        console.log(e)
+      });
+  }
+
+  // componentDidMount() {
+  //   this.getSavedCards();
+  // }
 
   render() {
     // console.log("state", this.state)
@@ -103,6 +139,8 @@ cardsQtyHandle = num =>{
               <Tabs
                 data={this.state.data}
                 customerid={this.state.user.customerid}
+                cardslist = {this.state.cardslist}
+                getSavedCards ={this.getSavedCards}
               />
             </div>
           </div>

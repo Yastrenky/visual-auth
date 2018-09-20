@@ -44,7 +44,7 @@ class SavedCards extends Component {
     };
   }
 
-  deletCard = (sourceid) => {
+  deletCard = (sourceid, callback) => {
     this.setState({ loadremove: sourceid })
     fetch(server + "/removeCard", {
       method: "POST",
@@ -73,37 +73,26 @@ class SavedCards extends Component {
 
   getSavedCards = () => {
     this.setState({ loadingdata: true })
-    fetch(server + '/getAllCards', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => {
-        // console.log(result)
-        var newData = [];
-        if (!result.err) {
-          var list = result.cards.data
-          list.forEach((card => newData.push({
-            name: card.name,
-            id: card.id,
-            brand: card.brand,
-            card: card.last4,
-            date: card.exp_month + "/" + card.exp_year,
-            zipcode: card.address_zip
-          })));
-        }
+    this.props.getSavedCards((err, response) => {
+      if (err) {
+        console.log(err)
+        this.setState({ loadingdata: false })
+      }
+      else if (response) {
         this.setState({
-          data: newData,
+          data: response,
           loadingdata: false
         })
-      })
-      .catch(e => {
-        console.log(e)
-        this.setState({ loadingdata: false })
-      });
+      }
+    });
   }
+
   componentDidMount() {
     this.getSavedCards();
   }
 
   render() {
+    console.log("state", this.state)
     // console.log("props", this.props)
     const { classes } = this.props;
 
