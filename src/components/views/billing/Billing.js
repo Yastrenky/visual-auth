@@ -46,7 +46,11 @@ class Billing extends Component {
 
     var data = this.props.data;
     this.state = {
-      cardslist: [],
+      cards: {
+        list: [],
+        loading: false
+      },
+
       user: {
         id: '' || data.id,
         name: '' || data.name,
@@ -84,7 +88,14 @@ class Billing extends Component {
 
 
   getSavedCards = (callback) => {
-    this.setState({ loadingdata: true })
+    var newcards = JSON.parse(JSON.stringify(this.state.cards));
+    newcards.loading = true;
+
+    this.setState({
+      loadingdata: true,
+      cards: newcards
+    });
+
     fetch(server + '/getAllCards', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
@@ -101,9 +112,13 @@ class Billing extends Component {
             zipcode: card.address_zip
           })));
         }
-        callback(null , newData)
+        var newcards = JSON.parse(JSON.stringify(this.state.cards));
+        newcards.list = newData;
+        newcards.loading = false;
+
+        callback(null, newData)
         this.setState({
-          cardslist: newData,
+          cards: newcards,
         })
       })
       .catch(e => {
@@ -139,8 +154,8 @@ class Billing extends Component {
               <Tabs
                 data={this.state.data}
                 customerid={this.state.user.customerid}
-                cardslist = {this.state.cardslist}
-                getSavedCards ={this.getSavedCards}
+                cards={this.state.cards}
+                getSavedCards={this.getSavedCards}
               />
             </div>
           </div>

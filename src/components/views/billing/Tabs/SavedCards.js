@@ -92,7 +92,7 @@ class SavedCards extends Component {
   }
 
   render() {
-    console.log("state", this.state)
+    // console.log("state", this.state)
     // console.log("props", this.props)
     const { classes } = this.props;
 

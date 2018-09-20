@@ -72,7 +72,7 @@ class FullWidthTabs extends React.Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-            {<MakePayment goToTab={this.handleChangeIndex} customerid={this.props.customerid} cardslist={this.props.cardslist} />}
+            {<MakePayment goToTab={this.handleChangeIndex} customerid={this.props.customerid} cards={this.props.cards} />}
           </TabContainer>
 
           <TabContainer dir={theme.direction}>

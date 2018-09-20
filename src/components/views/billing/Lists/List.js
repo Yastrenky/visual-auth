@@ -26,7 +26,7 @@ class CheckboxList extends React.Component {
 
     this.state = {
       checked: null,
-      data: this.props.data || []
+
     };
   }
 
@@ -54,7 +54,7 @@ class CheckboxList extends React.Component {
         <List
           className={classes.listoverflow}
         >
-          {this.state.data.map((value) => (
+          {this.props.data.map((value) => (
             <ListItem
               key={value.id}
               role={undefined}

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ReactTable from "react-table";
 import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@material-ui/core';
 import NumberFormat from 'react-number-format';
-import server from '../../../../config';
 import List from '../Lists/List';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // import server from '../../../../config';
@@ -99,8 +98,6 @@ class MakePayment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: [],
-      loadincards: false,
       invoices: [],
       loadingInvoices: false,
       inv_slected: null,
@@ -127,37 +124,7 @@ class MakePayment extends Component {
 
   };
 
-  getSavedCards = () => {
-    this.setState({ loadincards: true })
-    fetch(server + '/getAllCards', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => {
-        // console.log(result)
-        var newData = [];
-        if (!result.err) {
-          var list = result.cards.data
-          list.forEach((card => newData.push({
-            name: card.name,
-            id: card.id,
-            brand: card.brand,
-            card: card.last4,
-            date: card.exp_month + "/" + card.exp_year,
-            zipcode: card.address_zip
-          })));
-        }
-        this.setState({
-          cards: newData,
-          loadincards: false
-        })
-      })
-      .catch(e => {
-        console.log(e)
-        this.setState({ loadincards: false })
-      });
-  }
-
   componentWillMount() {
-    this.getSavedCards();
     this.setState({
       invoices: [
         {
@@ -191,7 +158,7 @@ class MakePayment extends Component {
     })
   }
   render() {
-    // console.log("state", this.state)
+    // console.log("props", this.props)
     const { classes } = this.props;
 
     return (
@@ -251,9 +218,9 @@ class MakePayment extends Component {
         <div className="invoice-container">
           <p>Make a payment</p>
           <div className="invoice-schedule">
-            {!this.state.loadincards ?
+            {!this.props.cards.loading ?
               <div className="invoice-container payment-options-list">
-                <List data={this.state.cards} selectCard={this.selectCard} />
+                <List data={this.props.cards.list} selectCard={this.selectCard} />
                 <Button variant="contained" color="primary" className={classes.button} onClick={e => this.props.goToTab(2)}>
                   ADD CARD
                 </Button>
