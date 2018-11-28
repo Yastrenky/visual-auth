@@ -11,6 +11,7 @@ import Alert from '../alert/Alert';
 import server, { secure, recaptcha } from '../../../config';
 import Cryptr from 'cryptr';
 import Recaptcha from 'react-recaptcha';
+import Footer from '../footer/Footer';
 import './login.css';
 
 
@@ -161,7 +162,7 @@ class Login extends Component {
     const alert = this.state.alert.show;
 
     return (
-      <div className = 'view-container'>
+      <div className='view-container'>
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
 
         <header className="Login-header">
@@ -203,7 +204,6 @@ class Login extends Component {
               onloadCallback={this.callback}
               verifyCallback={this.verifyCallback}
             />
-
             <Button
               variant="contained"
               color="primary"
@@ -216,9 +216,7 @@ class Login extends Component {
             <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>
           </div>
         </div>
-        <footer className="auth-footer">
-          <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
-        </footer>
+        <Footer />
       </div>
     );
   }

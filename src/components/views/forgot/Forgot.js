@@ -8,7 +8,7 @@ import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
 import server from '../../../config';
-
+import Footer from '../footer/Footer';
 import './forgot.css';
 
 
@@ -156,9 +156,7 @@ class Forgot extends Component {
             <h5>Don't have an account? <Link to='/signup'> Signup </Link></h5>
           </div>
         </div>
-        <footer className="auth-footer">
-          <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
-        </footer>
+        <Footer />
       </div>
     );
   }

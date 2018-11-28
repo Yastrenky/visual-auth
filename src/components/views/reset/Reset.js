@@ -8,7 +8,7 @@ import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
 import server from '../../../config';
-
+import Footer from '../footer/Footer';
 import './reset.css';
 
 
@@ -146,7 +146,7 @@ class Reset extends Component {
     const alert = this.state.alert.show;
 
     return (
-      <div className = 'view-container'>
+      <div className='view-container'>
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
 
         <header className="Reset-header">
@@ -194,9 +194,7 @@ class Reset extends Component {
             <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>
           </div>
         </div>
-        <footer className="auth-footer">
-          <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
-        </footer>
+      <Footer />
       </div>
     );
   }

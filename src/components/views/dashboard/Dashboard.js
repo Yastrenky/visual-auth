@@ -4,6 +4,7 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import Alert from '../alert/Alert';
 import "react-table/react-table.css";
+import Footer from '../footer/Footer';
 import './dashboard.css';
 
 
@@ -100,13 +101,8 @@ class Dashboard extends Component {
           <div className={"Dashboard-card auht-view"}>
 
           </div>
-
-
         </div>
-
-        <footer className="auth-footer">
-          <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
-        </footer>
+        <Footer />
       </div >
     );
   }

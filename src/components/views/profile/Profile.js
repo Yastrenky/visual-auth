@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
 import server from '../../../config';
+import Footer from '../footer/Footer';
 import './profile.css';
 
 
@@ -233,7 +234,7 @@ class Profile extends Component {
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
-      <div>
+      <div className='view-container'>
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut ={this.props.logOut}/> : null}
 
         <header className="Profile-header">
@@ -357,9 +358,7 @@ class Profile extends Component {
             </div>
           </div>
         </div>
-        <footer className="footer auth-footer">
-          <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
-        </footer>
+        <Footer />
       </div>
     );
   }

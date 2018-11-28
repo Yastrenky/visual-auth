@@ -6,6 +6,7 @@ import Alert from '../alert/Alert';
 import Tabs from './Tabs';
 import './billing.css';
 import "react-table/react-table.css";
+import Footer from '../footer/Footer';
 import server from '../../../config';
 
 const styles = theme => ({
@@ -163,9 +164,7 @@ class Billing extends Component {
 
         </div>
 
-        <footer className="footer auth-footer">
-          <h5>Copyright © 2018 : <a href="http://www.directbravo.com"> Y.Bravo </a></h5>
-        </footer>
+        <Footer />
       </div >
     );
   }
