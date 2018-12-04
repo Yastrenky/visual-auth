@@ -4,6 +4,7 @@ import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@mate
 import NumberFormat from 'react-number-format';
 import List from '../Lists/List';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Alert from '../../alert/Alert';
 // import server from '../../../../config';
 // import format from '../../../../assets/format'
 // import Icon from '@material-ui/core/Icon';
@@ -98,12 +99,27 @@ class MakePayment extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      alert: {
+        show: false,
+        title: '',
+        text: ''
+      },
       invoices: [],
       loadingInvoices: false,
       inv_slected: null,
       card_selected: null,
       amount: ''
     };
+  }
+
+  resetAlert = () => {
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
+    alert = {
+      show: false,
+      title: '',
+      text: ''
+    }
+    this.setState({ alert: alert })
   }
 
   handleChange = prop => event => {
@@ -124,6 +140,31 @@ class MakePayment extends Component {
 
   };
 
+  pay = e => {
+    var alert = JSON.parse(JSON.stringify(this.state.alert));
+    if (this.state.inv_slected === null) {
+      alert.show = true;
+      alert.title = "Select Invoice";
+      alert.text = 'Please select one of the invoices to pake a payment';
+      this.setState({ alert: alert })
+    }
+    else if (this.state.card_selected === null) {
+      alert.show = true;
+      alert.title = "Select Card";
+      alert.text = 'Please select one of the cards to pake a payment';
+      this.setState({ alert: alert })
+    }
+    else {
+      var inv_amount = null;
+      this.state.invoices.forEach(inv => {
+       if(inv.invoice === this.state.inv_slected){inv_amount = inv.balance}
+      });
+
+      console.log(inv_amount);
+      console.log("PAY")
+    }
+  }
+
   componentWillMount() {
     this.setState({
       invoices: [
@@ -131,8 +172,8 @@ class MakePayment extends Component {
           invoice: "AX235F",
           product: "UI Company Design",
           due: "8/7/2019",
-          apr: "15",
-          balance: 1000,
+          fee: 12,
+          balance: 500,
           billed: 1000,
           payments: []
         },
@@ -140,7 +181,7 @@ class MakePayment extends Component {
           invoice: "FF25NM",
           product: "UI Company Design",
           due: "8/7/2019",
-          apr: "15",
+          fee: 15,
           balance: 1000,
           billed: 1000,
           payments: []
@@ -149,8 +190,8 @@ class MakePayment extends Component {
           invoice: "LK45ML",
           product: "UI Company Design",
           due: "8/7/2019",
-          apr: "15",
-          balance: 1000,
+          fee: 20,
+          balance: 800,
           billed: 1000,
           payments: []
         },
@@ -159,10 +200,13 @@ class MakePayment extends Component {
   }
   render() {
     // console.log("props", this.props)
+    console.log("state", this.state)
+    const alert = this.state.alert.show;
     const { classes } = this.props;
 
     return (
       <div className="makepayment-container">
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
         <div className="invoice-container">
           <p>Select the invoice you will like to pay</p>
           <ReactTable
@@ -182,9 +226,9 @@ class MakePayment extends Component {
                 accessor: "due",
               },
               {
-                Header: "APR",
-                id: "apr",
-                accessor: i => "%" + i.apr
+                Header: "Charges by Fee",
+                id: "fee",
+                accessor: i => "$" + i.fee
               },
               {
                 Header: "Balance",
@@ -247,7 +291,7 @@ class MakePayment extends Component {
                   className: classes.bootstrapFormLabel,
                 }}
               />
-              <Button variant="contained" color="secondary"  onClick={e => this.props.goToTab(1)} className={classes.button} >
+              <Button variant="contained" color="secondary" onClick={e => this.pay()} className={classes.button} >
                 PAY
               </Button>
 
