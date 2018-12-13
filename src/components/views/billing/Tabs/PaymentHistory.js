@@ -40,28 +40,43 @@ class PaymentHistory extends Component {
 
   getCharges = () => {
     this.setState({ loadingdata: true })
-    fetch(server + '/getAllCharges', { credentials: 'include' })
+    fetch(server + '/getCustomerCharges', {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        custId: this.props.customerid,
+      })
+    })
       .then(response => response.json())
       .then(result => {
         // console.log(result)
-        var list = result.charge.data
-        var newData = [];
+        if (result.err) {
+          console.log(result.err.message)
+        }
+        else {
+          var list = result.charge.data
+          var newData = [];
 
-        list.forEach((charge => newData.push({
-          date: charge.created,
-          card_id: charge.source.id,
-          charge_id: charge.id,
-          card: charge.source.last4,
-          status: charge.status,
-          amount: charge.amount,
-          currency: charge.currency
+          list.forEach((charge => newData.push({
+            date: charge.created,
+            card_id: charge.source.id,
+            charge_id: charge.id,
+            card: charge.source.last4,
+            status: charge.status,
+            amount: charge.amount,
+            currency: charge.currency
 
-        })));
+          })));
 
-        this.setState({
-          data: newData,
-          loadingdata: false
-        })
+          this.setState({
+            data: newData,
+            loadingdata: false
+          })
+        }
       })
       .catch(e => {
         this.setState({ loadingdata: false })

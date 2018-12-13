@@ -5,8 +5,8 @@ import NumberFormat from 'react-number-format';
 import List from '../Lists/List';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../../alert/Alert';
-// import server from '../../../../config';
-// import format from '../../../../assets/format'
+import server from '../../../../config';
+import format from '../../../../assets/format'
 // import Icon from '@material-ui/core/Icon';
 
 function NumberFormatCustom(props) {
@@ -19,7 +19,7 @@ function NumberFormatCustom(props) {
       onValueChange={values => {
         onChange({
           target: {
-            value: values.value,
+            value: format.money(values.value),
           },
         });
       }}
@@ -125,7 +125,9 @@ class MakePayment extends Component {
   handleChange = prop => event => {
     this.setState({ [prop]: event.target.value });
   };
-
+  amountChange = prop => event => {
+    this.setState({ amount: event.target.value});
+  }
   selectInvoice = inv => {
     if (this.state.inv_slected === inv) {
       this.setState({ inv_slected: null });
@@ -157,11 +159,67 @@ class MakePayment extends Component {
     else {
       var inv_amount = null;
       this.state.invoices.forEach(inv => {
-       if(inv.invoice === this.state.inv_slected){inv_amount = inv.balance}
+        if (inv.invoice === this.state.inv_slected) { inv_amount = inv.balance }
       });
 
-      console.log(inv_amount);
-      console.log("PAY")
+
+      if (parseFloat(this.state.amount) <= 0) {
+        alert.show = true;
+        alert.title = "Amount error";
+        alert.text = 'The amount to pay for invoice is low. Your amount can not be cero ar a negative number. Your payment was not processed.';
+        this.setState({ alert: alert })
+      }
+      else if (inv_amount >= parseFloat(this.state.amount)) {
+                var card_date = null;
+                this.props.cards.list.forEach(card => {
+                  if (card.id === this.state.card_selected) { card_date = card.date }
+                });
+                var format_date = new Date(card_date);
+        console.log(format_date);
+        fetch(server + "/chargeCustomer", {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            custId: this.props.customerid,
+            amount: this.state.amount*100
+
+          })
+        })
+          .then(response => response.json())
+          .then(response => {
+            console.log(response)
+            if (response.charge.status === "succeeded"){
+              this.props.goToTab(1)
+            }
+            else{
+              console.log("Error in payment")
+            }
+          })
+          .catch((e) => {
+            alert.show = true;
+            alert.title = "Connection lost";
+            alert.text = 'Server connection lost. Please contact your service provider. ' + e;
+            this.setState({
+              loading: false,
+              alert: alert
+            })
+          })
+
+        console.log("payment amount",this.state.amount)
+        console.log("Invoice amount",inv_amount);
+
+      }
+      else {
+        alert.show = true;
+        alert.title = "Amount error";
+        alert.text = 'The amount to pay for invoice is too big. Your payment was not processed.';
+        this.setState({ alert: alert })
+      }
+
     }
   }
 
@@ -200,7 +258,7 @@ class MakePayment extends Component {
   }
   render() {
     // console.log("props", this.props)
-    console.log("state", this.state)
+    // console.log("state", this.state)
     const alert = this.state.alert.show;
     const { classes } = this.props;
 
@@ -277,7 +335,7 @@ class MakePayment extends Component {
                 label="Amount"
                 value={this.state.amount}
                 id="bootstrap-input"
-                onChange={this.handleChange('amount')}
+                onChange={this.amountChange('amount')}
                 InputProps={{
                   inputComponent: NumberFormatCustom,
                   disableUnderline: true,

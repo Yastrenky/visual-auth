@@ -8,8 +8,7 @@ import red from '@material-ui/core/colors/red';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
-import server, { secure, recaptcha } from '../../../config';
-import Cryptr from 'cryptr';
+import server, { recaptcha } from '../../../config';
 import Recaptcha from 'react-recaptcha';
 import Footer from '../footer/Footer';
 import './login.css';
@@ -93,7 +92,6 @@ class Login extends Component {
     //   this.setState({ alert: alert })
     // }
     else {
-      const cryptr = new Cryptr(secure);
       fetch(server + '/login', {
         method: 'POST',
         headers: {
@@ -103,12 +101,15 @@ class Login extends Component {
         credentials: "include",
         body: JSON.stringify({
           email: this.state.email,
-          password: cryptr.encrypt(this.state.password)
+           password: this.state.password,
+
         }),
       }).then(response => response.json())
         .then(response => {
           // console.log('Request success: ', response);
+          // console.log(response)
           if (response.success) {
+ 
             this.props.logIn(response.user)
           }
           else {
