@@ -7,3 +7,4 @@ export { default as Dashboard } from './dashboard/Dashboard';
 export { default as NavMenu } from './navMenu/NavMenu';
 export { default as Billing } from './billing/Billing';
 export{ default as Footer}  from './footer/Footer';
+export { default as Alert } from './alert/Alert';

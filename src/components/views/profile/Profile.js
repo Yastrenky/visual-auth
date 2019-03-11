@@ -6,9 +6,10 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
-import Alert from '../alert/Alert';
+import { connect } from "react-redux";
+import { USERS } from '../../../actions';
 import server from '../../../config';
-import Footer from '../footer/Footer';
+import { Alert, NavMenu, Footer } from '../';
 import './profile.css';
 
 
@@ -59,7 +60,7 @@ class Profile extends Component {
       currentpassword: '',
       newpassword: '',
       copassword: '',
-      imageName: this.props.data.imageName ? this.props.data.imageName : null,
+      imageName: this.props.users.imageName ? this.props.users.imageName : null,
       alert: {
         show: false,
         title: '',
@@ -209,15 +210,15 @@ class Profile extends Component {
     }
   }
   updateProfileApp = (newimage) => {
-    if (this.props.data.imageName !== newimage) {
-      var user = JSON.parse(JSON.stringify(this.props.data));
+    if (this.props.users.imageName !== newimage) {
+      var user = JSON.parse(JSON.stringify(this.props.users));
       user.imageName = newimage;
       this.props.updateUser(user)
     }
   }
 
   componentDidMount() {
-    var data = this.props.data;
+    var data = this.props.users;
     this.setState({
       id: data.id,
       name: data.name,
@@ -229,12 +230,13 @@ class Profile extends Component {
   render() {
 
     // console.log("Profile state", this.state.imageName)
-    // console.log("Profile props", this.props.data.imageName)
+    // console.log("Profile props", this.props.users.imageName)
 
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
       <div className='view-container'>
+        <NavMenu variant="contained" />
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut ={this.props.logOut}/> : null}
 
         <header className="Profile-header">
@@ -296,7 +298,7 @@ class Profile extends Component {
               <Button
                 variant="contained"
                 className={classes.button}
-                onClick={this.props.logOut}
+                onClick={this.props.logout}
               >
                 Logout
               </Button>
@@ -364,4 +366,11 @@ class Profile extends Component {
   }
 }
 
-export default withStyles(styles)(Profile);
+const mapStateToProps = state => ({
+  users: state.users
+});
+
+const mapDispatchToProps = dispatch => USERS(dispatch)
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Profile));
+

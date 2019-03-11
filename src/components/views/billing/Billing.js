@@ -6,6 +6,7 @@ import Alert from '../alert/Alert';
 import Tabs from './Tabs';
 import './billing.css';
 import "react-table/react-table.css";
+import { NavMenu } from '../';
 import Footer from '../footer/Footer';
 import server from '../../../config';
 
@@ -173,12 +174,13 @@ class Billing extends Component {
 
 
   render() {
-    
+
     // console.log("state", this.state)
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
       <div className='view-container'>
+        <NavMenu variant="contained" />
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
 
         <header className="Billing-header">

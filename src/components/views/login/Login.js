@@ -8,7 +8,9 @@ import red from '@material-ui/core/colors/red';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
-import server, { recaptcha } from '../../../config';
+import { recaptcha } from '../../../config';
+import { connect } from "react-redux";
+import { USERS } from '../../../actions';
 import Recaptcha from 'react-recaptcha';
 import Footer from '../footer/Footer';
 import './login.css';
@@ -84,7 +86,7 @@ class Login extends Component {
       this.setState({ alert: alert })
     }
     // else if (!this.state.recaptcha) {
-    //   // console.log("Invalid Password")
+    //   // console.log("Invalid recaptcha")
     //   this.resetRecaptcha();
     //   alert.show = true;
     //   alert.title = 'Bot verification fail';
@@ -92,51 +94,16 @@ class Login extends Component {
     //   this.setState({ alert: alert })
     // }
     else {
-      fetch(server + '/login', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email: this.state.email,
-           password: this.state.password,
-
-        }),
-      }).then(response => response.json())
-        .then(response => {
-          // console.log('Request success: ', response);
-          // console.log(response)
-          if (response.success) {
- 
-            this.props.logIn(response.user)
-          }
-          else {
-            alert.show = true;
-            alert.title = response.title;
-            alert.text = response.message
-            this.setState({ alert: alert })
-          }
-        })
-        .catch(
-          (error) => {
-            alert.show = true;
-            alert.title = 'Connection lost';
-            alert.text = "Server connection lost. Please contact your service provider.";
-            this.setState({ alert: alert })
-          })
+      this.props.login({ email, password }, (show, title, text) => {
+        if (show) {
+          this.setState({alert:{show, title, text}})
+        }
+      })
     }
   }
 
   resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
+     this.setState({ alert: { show: false, title: '', text: ''}})
   }
 
   handleChange = value => event => {
@@ -222,5 +189,11 @@ class Login extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  users: state.users
+});
 
-export default withStyles(styles)(Login);
+const mapDispatchToProps = dispatch => USERS(dispatch)
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Login));
+

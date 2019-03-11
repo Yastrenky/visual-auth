@@ -7,6 +7,8 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Fade from '@material-ui/core/Fade';
+import { connect } from "react-redux";
+import { USERS } from '../../../actions';
 import './navmenu.css';
 
 
@@ -80,11 +82,11 @@ class NavMenu extends Component {
             Profile
            </MenuItem>
 
-          <MenuItem onClick={this.props.logOut}>
+          <MenuItem onClick={this.props.logout}>
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               cancel
            </Icon>
-          Logout
+            Logout
           </MenuItem>
         </Menu>
       </div>
@@ -92,4 +94,10 @@ class NavMenu extends Component {
   }
 }
 
-export default withStyles(styles)(NavMenu);
+const mapStateToProps = state => ({
+  users: state.users
+});
+
+const mapDispatchToProps = dispatch => USERS(dispatch)
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(NavMenu));

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Switch, Route,Redirect } from 'react-router-dom'
-import { Dashboard, Signup, Login, Forgot, Reset, Profile, NavMenu, Billing } from './views';
+import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom'
+import { Dashboard, Signup, Login, Forgot, Reset, Profile, Billing } from './views';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
+import { connect } from "react-redux";
 import server from '../config';
+import { USERS } from '../actions';
 import './App.css';
 
 
@@ -66,79 +68,33 @@ class App extends Component {
       user: user
     })
   }
-  logIn = (data) => {
-    let user = {
-      acces: true,
-      id: data._id,
-      name: data.username,
-      email: data.email,
-      password: data.password,
-      imageName: data.imageName,
-      customerid: data.stripeCustId
-    }
-    this.setState({
-      user: user
-    });
-  }
-
-
-  logOut = () => {
-    const user = {
-      acces: false,
-      id: null,
-      name: null,
-      email: null,
-      password: null,
-    }
-    fetch(server + '/logout', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => console.log(result))
-      .catch(e => console.log(e));
-
-    this.setState({
-      user: user,
-    });
-  };
 
   resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
+    this.setState({ alert: { show: false, title: '', text: '' } })
   }
 
 
 
   componentDidMount() {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
     fetch(server + '/getSecret', { credentials: 'include' })
       .then(response => response.json())
       .then(result => this.setState({ key: result.publicKey }))
       .catch(e => {
-
-        alert.show = true;
-        alert.title = "Connection lost";
-        alert.text = 'Server connection lost. Please contact your service provider. ' + e;
-        this.setState({ alert: alert })
+        this.setState({ alert: { show: true, title: "Connection lost", text: 'Server connection lost. Please contact your service provider. ' + e } })
       });
-      
+
   }
 
   render() {
 
-    // console.log("App state", this.state)
+    console.log("USER props", this.props.users)
     const { classes } = this.props;
     const alert = this.state.alert.show;
 
     return (
       <div className="App">
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
-        {this.state.user.acces ? <NavMenu logOut={this.logOut} variant="contained" /> : null}
+        <BrowserRouter>
         <Switch>
-
           <Route exact path='/'
             render={() => <div>
               <Button variant="contained" color="secondary" href="/signup" className={classes.button}>
@@ -154,17 +110,8 @@ class App extends Component {
 
           <Route exact path='/dashboard'
             render={() =>
-              this.state.user.acces ?
-                <Dashboard logOut={this.logOut} data={this.state.user} />
-                :
-                <Redirect to='/login' />
-            }
-          />
-
-          <Route exact path='/billing'
-            render={() =>
-              this.state.user.acces ?
-                <Billing data={this.state.user} />
+              this.props.users.acces ?
+                <Dashboard data={this.props.users} />
                 :
                 <Redirect to='/login' />
             }
@@ -172,11 +119,9 @@ class App extends Component {
 
           <Route exact path='/profile'
             render={() =>
-              this.state.user.acces ?
+              this.props.users.acces ?
                 <Profile
-                  logOut={this.logOut}
-                  data={this.state.user}
-                  updateUser={this.updateUser}
+                 updateUser={this.updateUser}
                 />
                 :
                 <Redirect to='/login' />
@@ -185,14 +130,23 @@ class App extends Component {
 
           <Route exact path='/login'
             render={() =>
-              this.state.user.acces ?
+              this.props.users.acces ?
                 <Redirect to='/billing' />
                 :
-                <Login logIn={this.logIn} handleRoute={this.handleRoute} />}
+                <Login />}
           />
 
           <Route exact path='/signup'
             render={() => <Signup />}
+          />
+
+          <Route exact path='/billing'
+            render={() =>
+              this.props.users.acces ?
+                <Billing data={this.props.users} />
+                :
+                <Redirect to='/login' />
+            }
           />
 
           <Route exact path='/forgot'
@@ -202,10 +156,17 @@ class App extends Component {
             component={Reset}
           />
         </Switch>
-
+        </BrowserRouter>
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
       </div>
     );
   }
 }
 
-export default withStyles(styles)(App);
+const mapStateToProps = state => ({
+  users: state.users
+});
+
+const mapDispatchToProps = dispatch => USERS(dispatch)
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));
