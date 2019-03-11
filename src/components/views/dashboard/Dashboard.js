@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
-import Alert from '../alert/Alert';
 import "react-table/react-table.css";
-import Footer from '../footer/Footer';
+import { Alert, NavMenu, Footer } from '../';
 import './dashboard.css';
 
 
@@ -44,29 +43,17 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    var data = this.props.data;
     this.state = {
-      user: {
-        id: '' || data.id,
-        name: '' || data.name,
-        email: '' || data.email,
-      },
       alert: {
         show: false,
         title: '',
         text: ''
       },
-      anchorEl: null,
     };
   }
+
   resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
+    this.setState({ alert: { show: false, title: '', text: '' } })
   }
 
   handleChange = value => event => {
@@ -86,6 +73,7 @@ class Dashboard extends Component {
 
     return (
       <div className='view-container'>
+        <NavMenu variant="contained" />
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
 
         <header className="Dashboard-header">

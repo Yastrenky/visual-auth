@@ -70,13 +70,7 @@ class Profile extends Component {
   }
 
   resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
+    this.setState({ alert: { show: false, title: '', text: '' } })
   }
 
   handleChange = value => event => {
@@ -237,7 +231,7 @@ class Profile extends Component {
     return (
       <div className='view-container'>
         <NavMenu variant="contained" />
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut ={this.props.logOut}/> : null}
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut={this.props.logOut} /> : null}
 
         <header className="Profile-header">
           <h1 className="Profile-title">

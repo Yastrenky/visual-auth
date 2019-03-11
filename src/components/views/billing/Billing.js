@@ -69,14 +69,9 @@ class Billing extends Component {
       anchorEl: null,
     };
   }
+
   resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
+    this.setState({ alert: { show: false, title: '', text: '' } })
   }
 
   cardsQtyHandle = num => {

@@ -89,73 +89,70 @@ class App extends Component {
 
     console.log("USER props", this.props.users)
     const { classes } = this.props;
+    var acces = this.props.users.acces;
     const alert = this.state.alert.show;
 
     return (
       <div className="App">
         <BrowserRouter>
-        <Switch>
-          <Route exact path='/'
-            render={() => <div>
-              <Button variant="contained" color="secondary" href="/signup" className={classes.button}>
-                Signup
+          <Switch>
+            <Route exact path='/'
+              render={() => <div>
+                <Button variant="contained" color="secondary" href="/signup" className={classes.button}>
+                  Signup
               </Button>
 
-              <br />
-              <Button variant="contained" color="primary" href="/login" className={classes.button}>
-                Login
+                <br />
+                <Button variant="contained" color="primary" href="/login" className={classes.button}>
+                  Login
               </Button>
-            </div>}
-          />
+              </div>}
+            />
 
-          <Route exact path='/dashboard'
-            render={() =>
-              this.props.users.acces ?
-                <Dashboard data={this.props.users} />
+            <Route exact path='/dashboard'
+              render={() => acces ?
+                <Dashboard />
                 :
                 <Redirect to='/login' />
-            }
-          />
+              }
+            />
 
-          <Route exact path='/profile'
-            render={() =>
-              this.props.users.acces ?
+            <Route exact path='/profile'
+              render={() => acces ?
                 <Profile
-                 updateUser={this.updateUser}
+                  updateUser={this.updateUser}
                 />
                 :
                 <Redirect to='/login' />
-            }
-          />
+              }
+            />
 
-          <Route exact path='/login'
-            render={() =>
-              this.props.users.acces ?
-                <Redirect to='/billing' />
+            <Route exact path='/login'
+              render={() => acces ?
+                <Redirect to='/profile' />
                 :
                 <Login />}
-          />
+            />
 
-          <Route exact path='/signup'
-            render={() => <Signup />}
-          />
+            <Route exact path='/signup'
+              render={() => <Signup />}
+            />
 
-          <Route exact path='/billing'
-            render={() =>
-              this.props.users.acces ?
+            <Route exact path='/billing'
+              render={() => acces ?
                 <Billing data={this.props.users} />
                 :
                 <Redirect to='/login' />
-            }
-          />
+              }
+            />
 
-          <Route exact path='/forgot'
-            render={() => <Forgot />}
-          />
-          <Route path='/reset/:handle'
-            component={Reset}
-          />
-        </Switch>
+            <Route exact path='/forgot'
+              render={() => <Forgot />}
+            />
+            <Route path='/reset/:handle'
+              component={Reset}
+            />
+          </Switch>
         </BrowserRouter>
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
       </div>
