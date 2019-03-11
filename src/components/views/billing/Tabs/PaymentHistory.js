@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
-import server from '../../../../config';
 import format from '../../../../assets/format'
 // import Icon from '@material-ui/core/Icon';
 
@@ -29,72 +28,16 @@ const styles = theme => ({
 
 
 class PaymentHistory extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      data: [],
-      loadingdata: false
-    };
-  }
-
-  getCharges = () => {
-    this.setState({ loadingdata: true })
-    fetch(server + '/getCustomerCharges', {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        custId: this.props.customerid,
-      })
-    })
-      .then(response => response.json())
-      .then(result => {
-        // console.log(result)
-        if (result.err) {
-          console.log(result.err.message)
-        }
-        else {
-          var list = result.charge.data
-          var newData = [];
-
-          list.forEach((charge => newData.push({
-            date: charge.created,
-            card_id: charge.source.id,
-            charge_id: charge.id,
-            card: charge.source.last4,
-            status: charge.status,
-            amount: charge.amount,
-            currency: charge.currency
-
-          })));
-
-          this.setState({
-            data: newData,
-            loadingdata: false
-          })
-        }
-      })
-      .catch(e => {
-        this.setState({ loadingdata: false })
-        console.log(e)
-      });
-  }
-
   formatStripeDate = (unix_timestamp) => {
     var date = new Date(unix_timestamp * 1000);
     var objtime = format.date(date)
     return objtime.date + " || " + objtime.time
   }
-
-  componentDidMount() {
-    this.getCharges();
+  componentDidMount(){
+    this.props.getCharges();
   }
-
   render() {
+    // console.log("props", this.props)
     // console.log("state", this.state)
     // const { classes } = this.props;
 
@@ -102,7 +45,7 @@ class PaymentHistory extends Component {
       <div>
 
         <ReactTable
-          data={this.state.data}
+          data={this.props.chargedlist}
           columns={[
             {
               Header: "Posted",
@@ -132,7 +75,7 @@ class PaymentHistory extends Component {
           ]}
           defaultPageSize={20}
           className="-striped -highlight"
-          loading={this.state.loadingdata}
+          loading={this.props.loadingchargedcardlist}
         />
 
 

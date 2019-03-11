@@ -47,6 +47,8 @@ class Billing extends Component {
 
     var data = this.props.data;
     this.state = {
+      chargedlist: [],
+      loadingchargedcardlist: true,
       cards: {
         list: [],
         loading: false
@@ -86,7 +88,48 @@ class Billing extends Component {
     });
   };
 
+  getCharges = () => {
+    fetch(server + '/getCustomerCharges', {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        custId: this.state.user.customerid,
+      })
+    })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        if (result.err) {
+          console.log(result.err.message)
+        }
+        else {
+          var list = result.charge.data
+          var newData = [];
 
+          list.forEach((charge => newData.push({
+            date: charge.created,
+            card_id: charge.source.id,
+            charge_id: charge.id,
+            card: charge.source.last4,
+            status: charge.status,
+            amount: charge.amount,
+            currency: charge.currency
+
+          })));
+          this.setState({
+            chargedlist: newData,
+            loadingchargedcardlist: false,
+          })
+        }
+      }).catch(e => {
+        this.setState({ loadingchargedcardlist: false, })
+        console.log(e)
+      });
+  }
 
   getSavedCards = (callback) => {
     var newcards = JSON.parse(JSON.stringify(this.state.cards));
@@ -128,11 +171,9 @@ class Billing extends Component {
       });
   }
 
-  // componentDidMount() {
-  //   this.getSavedCards();
-  // }
 
   render() {
+    
     // console.log("state", this.state)
     const { classes } = this.props;
     const alert = this.state.alert.show;
@@ -157,6 +198,9 @@ class Billing extends Component {
                 customerid={this.state.user.customerid}
                 cards={this.state.cards}
                 getSavedCards={this.getSavedCards}
+                getCharges={this.getCharges}
+                chargedlist={this.state.chargedlist}
+                loadingchargedcardlist={this.state.loadingchargedcardlist}
               />
             </div>
           </div>

@@ -126,7 +126,7 @@ class MakePayment extends Component {
     this.setState({ [prop]: event.target.value });
   };
   amountChange = prop => event => {
-    this.setState({ amount: event.target.value});
+    this.setState({ amount: event.target.value });
   }
   selectInvoice = inv => {
     if (this.state.inv_slected === inv) {
@@ -170,12 +170,12 @@ class MakePayment extends Component {
         this.setState({ alert: alert })
       }
       else if (inv_amount >= parseFloat(this.state.amount)) {
-                var card_date = null;
-                this.props.cards.list.forEach(card => {
-                  if (card.id === this.state.card_selected) { card_date = card.date }
-                });
-                var format_date = new Date(card_date);
-        console.log(format_date);
+        // var card_date = null;
+        // this.props.cards.list.forEach(card => {
+        //   if (card.id === this.state.card_selected) { card_date = card.date }
+        // });
+        //         var format_date = new Date(card_date);
+        // console.log(format_date);
         fetch(server + "/chargeCustomer", {
           method: "POST",
           headers: {
@@ -185,19 +185,22 @@ class MakePayment extends Component {
           credentials: "include",
           body: JSON.stringify({
             custId: this.props.customerid,
-            amount: this.state.amount*100
+            amount: this.state.amount * 100
 
           })
         })
           .then(response => response.json())
           .then(response => {
-            console.log(response)
-            if (response.charge.status === "succeeded"){
-              this.props.goToTab(1)
+            console.log("charge response", response)
+            if (response.charge.status === "succeeded") {
+                 this.props.getCharges();
+                 this.props.goToTab(1)
             }
-            else{
+            else {
               console.log("Error in payment")
             }
+
+
           })
           .catch((e) => {
             alert.show = true;
@@ -209,8 +212,8 @@ class MakePayment extends Component {
             })
           })
 
-        console.log("payment amount",this.state.amount)
-        console.log("Invoice amount",inv_amount);
+        // console.log("payment amount",this.state.amount)
+        // console.log("Invoice amount",inv_amount);
 
       }
       else {

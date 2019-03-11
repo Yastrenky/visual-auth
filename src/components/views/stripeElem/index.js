@@ -85,51 +85,63 @@ class CheckoutForm extends Component {
   async submit(ev) {
     ev.preventDefault();
     var alert = JSON.parse(JSON.stringify(this.state.alert));
-    if(this.state.cardholder){
-    this.setState({ loading: true })
-    let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
-    if (token) {
-      await fetch(server + "/addCard", {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          token: token.id,
-          customerid: this.props.customerid
+    if (this.state.cardholder) {
+      this.setState({ loading: true })
+      let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
+      if (token) {
+        await fetch(server + "/addCard", {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            token: token.id,
+            customerid: this.props.customerid
 
+          })
         })
-      })
-        .then(response => response.json())
-        .then(response => {
-          console.log(response)
-          this.props.getSavedCards();
-          this.cleanForm();
-          this.setState({ loading: false })
+          .then(response => response.json())
+          .then(response => {
+            console.log(response)
+            if (response.err) {
+              alert.show = true;
+              alert.title = "Card error";
+              alert.text = response.err.message;
+              this.setState({
+                loading: false,
+                alert: alert
+              })
+            }
+            else {
+              this.props.getSavedCards();
+              this.cleanForm();
+              this.setState({ loading: false })
+            }
+          })
+          .catch((e) => {
+            alert.show = true;
+            alert.title = "Connection lost";
+            alert.text = 'Server connection lost. Please contact your service provider. ' + e;
+            this.setState({
+              loading: false,
+              alert: alert
+            })
+          })
+      }
+
+      else {
+        alert.show = true;
+        alert.title = "Card Error";
+        alert.text = error.message;
+        this.setState({
+          loading: false,
+          alert: alert
         })
-        .catch((e) => {
-          alert.show = true;
-          alert.title = "Connection lost";
-          alert.text = 'Server connection lost. Please contact your service provider. ' + e;
-          this.setState({ 
-            loading: false,
-            alert: alert })
-        })
+      }
     }
-
     else {
-      alert.show = true;
-      alert.title = "Card Error";
-      alert.text = error.message;
-      this.setState({
-        loading: false,
-        alert: alert
-      })
-    }
-  }
-  else{
       alert.show = true;
       alert.title = "Card Error";
       alert.text = 'Needs cardholder.';
@@ -137,14 +149,14 @@ class CheckoutForm extends Component {
         loading: false,
         alert: alert
       })
-  }
+    }
   }
 
   render() {
     // console.log(this.state)
     const { classes } = this.props;
     const alert = this.state.alert.show;
-    
+
     return (
       <div className="checkout">
         {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}

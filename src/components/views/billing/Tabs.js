@@ -58,7 +58,7 @@ class FullWidthTabs extends React.Component {
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
-            fullWidth={true}
+            variant="fullWidth"
             centered={true}
           >
             <Tab label="Make a Payment" />
@@ -72,11 +72,11 @@ class FullWidthTabs extends React.Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-            {<MakePayment goToTab={this.handleChangeIndex} customerid={this.props.customerid} cards={this.props.cards} />}
+            {<MakePayment goToTab={this.handleChangeIndex} customerid={this.props.customerid} cards={this.props.cards} getCharges={this.props.getCharges}/>}
           </TabContainer>
 
           <TabContainer dir={theme.direction}>
-            {<PaymentHistory goToTab={this.handleChangeIndex} customerid={this.props.customerid} />}
+            {<PaymentHistory goToTab={this.handleChangeIndex}  getCharges={this.props.getCharges} chargedlist={this.props.chargedlist} loadingchargedcardlist={this.props.loadingchargedcardlist} />}
           </TabContainer>
 
           <TabContainer dir={theme.direction}>
