@@ -80,33 +80,18 @@ class Profile extends Component {
   };
 
   changePassword = () => {
+    var {currentpassword, newpassword, copassword} = this.state
 
-    var password = this.state.currentpassword;
-    var newpassword = this.state.newpassword;
-    var copassword = this.state.copassword;
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-
-
-    if (!validate.password(password)) {
-      // console.log("Invalid Password")
-      alert.show = true;
-      alert.title = 'Invalid Password';
-      alert.text = 'Please enter a password with the valid parameters.'
-      this.setState({ alert: alert })
+    if (!validate.password(currentpassword)) {
+      this.setState({ alert: { show: true, title: 'Invalid Password', text:'Please enter a password with the valid parameters.' } })
     }
     else if (!validate.password(newpassword)) {
       // console.log("Invalid Confirmed Password")
-      alert.show = true;
-      alert.title = 'Invalid Confirmed Password';
-      alert.text = 'Please enter a confirmed password with the valid parameters.'
-      this.setState({ alert: alert })
+      this.setState({ alert: { show: true, title: 'Invalid Confirmed Password', text: 'Please enter a confirmed password with the valid parameters.' } })
     }
-    else if (!validate.password(copassword) && newpassword !== copassword) {
+    else if (newpassword !== copassword) {
       // console.log("Invalid Confirmed Password")
-      alert.show = true;
-      alert.title = 'Invalid Confirmed Password';
-      alert.text = 'Please enter a confirmed password with the valid parameters.'
-      this.setState({ alert: alert })
+      this.setState({ alert: { show: true, title: 'Invalid Confirmed Password', text: 'Please enter a confirmed password with the valid parameters.' } })
     }
     else {
       fetch(server + '/changepassword', {
@@ -117,57 +102,31 @@ class Profile extends Component {
         },
         body: JSON.stringify({
           id: this.state.id,
-          password: password,
+          password: currentpassword,
           newpassword: newpassword
         }),
         credentials: "include",
       }).then(response => response.json())
         .then(response => {
-          alert.show = true;
-          alert.title = response.title;
-          alert.text = response.message
-          this.setState({ alert: alert })
+          this.setState({ alert: { show: true, title: response.title, text: response.message }})
         })
         .catch(
           (error) => {
-            alert.show = true;
-            alert.title = 'Connection lost';
-            alert.text = "Server connection lost. Please contact your service provider." + error;
-            this.setState({ alert: alert })
+            this.setState({ alert: { show: true, title: 'Connection lost', text: "Server connection lost. Please contact your service provider." + error}})
           });
     }
   }
 
 
   deleteUser = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    fetch(server + '/deleteuser', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: "include",
-    }).then(response => response.json())
-      .then(response => {
-        alert.show = true;
-        alert.title = response.title;
-        alert.text = response.message
-        alert.action = 'loguot'
-
-        this.setState({ alert: alert })
-      })
-      .catch(
-        (error) => {
-          alert.show = true;
-          alert.title = 'Connection lost';
-          alert.text = "Server connection lost. Please contact your service provider.";
-
-          this.setState({ alert: alert })
-        });
+    this.props.delete((show, title, text, action) => {
+      if (show) {
+        this.setState({ alert: { show, title, text, action} })
+      }
+    })
   }
 
-  fileChangedHandler = (event) => {
+  imageChanger = (event) => {
     var file = event.target.files[0];
     // console.log(this.state.selectedFile)
     var alert = JSON.parse(JSON.stringify(this.state.alert));
@@ -185,7 +144,6 @@ class Profile extends Component {
           alert.show = true;
           alert.title = response.title;
           alert.text = response.message;
-          this.updateProfileApp(response.value)
           this.setState({
             alert: alert,
             imageName: response.value,
@@ -193,21 +151,11 @@ class Profile extends Component {
         })
         .catch(
           (error) => {
-            alert.show = true;
-            alert.title = 'Connection lost';
-            alert.text = "Server connection lost. Please contact your service provider.";
-            this.setState({ alert: alert })
+            this.setState({ alert: { show: true, title: 'Connection lost', text: "Server connection lost. Please contact your service provider." + error } })
           });
     }
     else {
       console.log("No file selected")
-    }
-  }
-  updateProfileApp = (newimage) => {
-    if (this.props.users.imageName !== newimage) {
-      var user = JSON.parse(JSON.stringify(this.props.users));
-      user.imageName = newimage;
-      this.props.updateUser(user)
     }
   }
 
@@ -231,7 +179,7 @@ class Profile extends Component {
     return (
       <div className='view-container'>
         <NavMenu variant="contained" />
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut={this.props.logOut} /> : null}
+        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut={this.props.logout} /> : null}
 
         <header className="Profile-header">
           <h1 className="Profile-title">
@@ -263,7 +211,7 @@ class Profile extends Component {
 
                   <input
                     type="file"
-                    onChange={this.fileChangedHandler}
+                    onChange={this.imageChanger}
                     accept="image/*"
                     className={classes.input}
                     id="contained-button-file"

@@ -1,6 +1,7 @@
 import server from '../config/index';
 
 export const USERS = (dispatch) => ({
+
   login: async (data, alert) => {
     await fetch(server + '/login', {
       method: 'POST',
@@ -21,20 +22,38 @@ export const USERS = (dispatch) => ({
         }
         else {
           alert(true, response.title, response.message)
-        }
-      })
+        }})
       .catch(
         (error) => {
           alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
         })
   },
-  logout: async()=>{
-    fetch(server + '/logout', { credentials: 'include' })
+
+  logout: async () => {
+    await fetch(server + '/logout', { credentials: 'include' })
       .then(response => response.json())
       .then(response => {
         dispatch({ type: "LOGOUT_USER", response })
       })
       .catch(e => console.log(e));
+  },
+
+  delete: async (alert) => {
+    await fetch(server + '/deleteuser', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+    }).then(response => response.json())
+      .then(response => {
+        alert(true, response.title, response.message, 'loguot' )
+      })
+      .catch(
+        (error) => {
+          alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+        });
   }
 });
 

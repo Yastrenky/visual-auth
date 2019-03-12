@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
-import Alert from '../alert/Alert';
 import Tabs from './Tabs';
+import { USERS } from '../../../actions';
 import './billing.css';
 import "react-table/react-table.css";
-import { NavMenu } from '../';
-import Footer from '../footer/Footer';
+import { NavMenu, Footer, Alert} from '../';
 import server from '../../../config';
 
 const styles = theme => ({
@@ -46,7 +46,7 @@ class Billing extends Component {
   constructor(props) {
     super(props);
 
-    var data = this.props.data;
+    var data = this.props.users;
     this.state = {
       chargedlist: [],
       loadingchargedcardlist: true,
@@ -211,4 +211,11 @@ class Billing extends Component {
   }
 }
 
-export default withStyles(styles)(Billing);
+const mapStateToProps = state => ({
+  users: state.users
+});
+
+const mapDispatchToProps = dispatch => USERS(dispatch)
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Billing));
+

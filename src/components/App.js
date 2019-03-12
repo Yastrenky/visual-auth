@@ -46,27 +46,12 @@ class App extends Component {
     super(props);
     this.state = {
       key: null,
-      user: {
-        acces: false,
-        id: null,
-        name: null,
-        email: null,
-        password: null,
-        imageName: null,
-        customerid: null
-      },
       alert: {
         show: false,
         title: '',
         text: ''
       }
     };
-  }
-
-  updateUser = (user) => {
-    this.setState({
-      user: user
-    })
   }
 
   resetAlert = () => {
@@ -119,9 +104,7 @@ class App extends Component {
 
             <Route exact path='/profile'
               render={() => acces ?
-                <Profile
-                  updateUser={this.updateUser}
-                />
+                <Profile/>
                 :
                 <Redirect to='/login' />
               }
@@ -140,7 +123,7 @@ class App extends Component {
 
             <Route exact path='/billing'
               render={() => acces ?
-                <Billing data={this.props.users} />
+                <Billing />
                 :
                 <Redirect to='/login' />
               }

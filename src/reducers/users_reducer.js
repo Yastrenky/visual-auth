@@ -20,7 +20,7 @@ const update = (state, { devices }) => ({
 
 const remove = (state, { device }) => ({
   ...state,
-  devicetoedit: device
+  ...initialState()
 });
 
 const login = (state, { user }) => ({
