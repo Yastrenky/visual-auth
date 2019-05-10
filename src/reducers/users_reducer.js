@@ -34,12 +34,12 @@ const login = (state, { user }) => ({
   customerid: user.stripeCustId
 });
 
-const logout = (state, { device }) => (
+const logout = (state) => (
   { ...state,
   ...initialState()
  })
 
-function usersReducer(state = initialState(), action) {
+const usersReducer = (state = initialState(), action) =>{
   switch (action.type) {
     case "SIGNUP_USER":
       return signup(state, action)

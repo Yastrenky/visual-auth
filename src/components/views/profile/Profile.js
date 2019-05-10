@@ -7,7 +7,7 @@ import red from '@material-ui/core/colors/red';
 import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
 import { connect } from "react-redux";
-import { USERS } from '../../../actions';
+import { USERS, PROFILE } from '../../../actions';
 import server from '../../../config';
 import { Alert, NavMenu, Footer } from '../';
 import './profile.css';
@@ -80,10 +80,10 @@ class Profile extends Component {
   };
 
   changePassword = () => {
-    var {currentpassword, newpassword, copassword} = this.state
+    var { currentpassword, newpassword, copassword } = this.state
 
     if (!validate.password(currentpassword)) {
-      this.setState({ alert: { show: true, title: 'Invalid Password', text:'Please enter a password with the valid parameters.' } })
+      this.setState({ alert: { show: true, title: 'Invalid Password', text: 'Please enter a password with the valid parameters.' } })
     }
     else if (!validate.password(newpassword)) {
       // console.log("Invalid Confirmed Password")
@@ -108,11 +108,11 @@ class Profile extends Component {
         credentials: "include",
       }).then(response => response.json())
         .then(response => {
-          this.setState({ alert: { show: true, title: response.title, text: response.message }})
+          this.setState({ alert: { show: true, title: response.title, text: response.message } })
         })
         .catch(
           (error) => {
-            this.setState({ alert: { show: true, title: 'Connection lost', text: "Server connection lost. Please contact your service provider." + error}})
+            this.setState({ alert: { show: true, title: 'Connection lost', text: "Server connection lost. Please contact your service provider." + error } })
           });
     }
   }
@@ -121,7 +121,7 @@ class Profile extends Component {
   deleteUser = () => {
     this.props.delete((show, title, text, action) => {
       if (show) {
-        this.setState({ alert: { show, title, text, action} })
+        this.setState({ alert: { show, title, text, action } })
       }
     })
   }
@@ -200,7 +200,7 @@ class Profile extends Component {
                     <CardMedia
                       className={classes.media}
                       image={
-                        this.state.imageName ?
+                        this.props.imageName ?
                           server + '/uploads/users/' + this.state.id + '/' + this.state.imageName
                           :
                           server + '/uploads/users/default/user.png'
@@ -308,11 +308,19 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  users: state.users
-});
+function mapStateToProps(state) {
+  return {
+    users: state.users,
+    profile: state.profile
+  }
+};
 
-const mapDispatchToProps = dispatch => USERS(dispatch)
+function mapDispatchToProps(dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...PROFILE(dispatch)
+  }
+}
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Profile));
 

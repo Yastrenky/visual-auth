@@ -1,6 +1,6 @@
 import server from '../config/index';
 
-export const USERS = (dispatch) => ({
+const USERS = dispatch => ({
 
   login: async (data, alert) => {
     await fetch(server + '/login', {
@@ -57,3 +57,4 @@ export const USERS = (dispatch) => ({
   }
 });
 
+export default USERS;
