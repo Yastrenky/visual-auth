@@ -53,14 +53,9 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: '',
-      name: '',
-      email: '',
-      password: '',
       currentpassword: '',
       newpassword: '',
       copassword: '',
-      imageName: this.props.users.imageName ? this.props.users.imageName : null,
       alert: {
         show: false,
         title: '',
@@ -80,7 +75,8 @@ class Profile extends Component {
   };
 
   changePassword = () => {
-    var { currentpassword, newpassword, copassword } = this.state
+    const { currentpassword, newpassword, copassword } = this.state
+    const user_id = this.props.users.id
 
     if (!validate.password(currentpassword)) {
       this.setState({ alert: { show: true, title: 'Invalid Password', text: 'Please enter a password with the valid parameters.' } })
@@ -94,26 +90,12 @@ class Profile extends Component {
       this.setState({ alert: { show: true, title: 'Invalid Confirmed Password', text: 'Please enter a confirmed password with the valid parameters.' } })
     }
     else {
-      fetch(server + '/changepassword', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: this.state.id,
-          password: currentpassword,
-          newpassword: newpassword
-        }),
-        credentials: "include",
-      }).then(response => response.json())
-        .then(response => {
-          this.setState({ alert: { show: true, title: response.title, text: response.message } })
-        })
-        .catch(
-          (error) => {
-            this.setState({ alert: { show: true, title: 'Connection lost', text: "Server connection lost. Please contact your service provider." + error } })
-          });
+
+      this.props.updatePsw({ user_id, currentpassword, newpassword }, (show, title, text) => {
+        if (show) {
+          this.setState({ alert: { show, title, text } })
+        }
+      })
     }
   }
 
@@ -127,53 +109,14 @@ class Profile extends Component {
   }
 
   imageChanger = (event) => {
-    var file = event.target.files[0];
-    // console.log(this.state.selectedFile)
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    if (file) {
-      const formData = new FormData();
-      formData.append('myFile', file, file.name);
-
-      fetch(server + '/uploadprofileimage', {
-        method: 'POST',
-        body: formData,
-        credentials: "include",
-      }).then(response => response.json())
-        .then(response => {
-          // console.log(response)
-          alert.show = true;
-          alert.title = response.title;
-          alert.text = response.message;
-          this.setState({
-            alert: alert,
-            imageName: response.value,
-          })
-        })
-        .catch(
-          (error) => {
-            this.setState({ alert: { show: true, title: 'Connection lost', text: "Server connection lost. Please contact your service provider." + error } })
-          });
-    }
-    else {
-      console.log("No file selected")
-    }
-  }
-
-  componentDidMount() {
-    var data = this.props.users;
-    this.setState({
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      password: data.password,
+    this.props.updateProfileImage(event, (show, title, text) => {
+      if (show) {
+        this.setState({ alert: { show, title, text } })
+      }
     })
   }
 
   render() {
-
-    // console.log("Profile state", this.state.imageName)
-    // console.log("Profile props", this.props.users.imageName)
-
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (
@@ -200,8 +143,8 @@ class Profile extends Component {
                     <CardMedia
                       className={classes.media}
                       image={
-                        this.props.imageName ?
-                          server + '/uploads/users/' + this.state.id + '/' + this.state.imageName
+                        this.props.users.imageName ?
+                          server + '/uploads/users/' + this.props.users.id + '/' + this.props.users.imageName
                           :
                           server + '/uploads/users/default/user.png'
                       }
@@ -231,9 +174,9 @@ class Profile extends Component {
                   {/* <button onClick={this.uploadHandler}>Upload!</button> */}
                 </div>
                 <div>
-                  <h5>Id: {this.state.id}</h5>
-                  <h5>Name: {this.state.name}</h5>
-                  <h5>Email: {this.state.email}</h5>
+                  <h5>Id: {this.props.users.id}</h5>
+                  <h5>Name: {this.props.users.name}</h5>
+                  <h5>Email: {this.props.users.email}</h5>
                 </div>
 
               </div>
@@ -310,15 +253,13 @@ class Profile extends Component {
 
 function mapStateToProps(state) {
   return {
-    users: state.users,
-    profile: state.profile
+    users: state.users
   }
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    ...USERS(dispatch),
-    ...PROFILE(dispatch)
+    ...USERS(dispatch)
   }
 }
 

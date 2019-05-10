@@ -6,14 +6,13 @@ import registerServiceWorker from './registerServiceWorker';
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 
-import reducers from "./reducers"
+import reducers from "./reducers";
 
-
-export const store = createStore(combineReducers({...reducers }))
+export const store = createStore(combineReducers({ ...reducers }))
 
 ReactDOM.render(
   <Provider store={store}>
-      <App />
+    <App />
   </Provider>,
   document.getElementById('root'));
 registerServiceWorker();
