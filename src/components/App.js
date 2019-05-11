@@ -5,8 +5,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
 import { connect } from "react-redux";
-import server from '../config';
-import { USERS, PROFILE } from '../actions';
+import { USERS, CREDENTIALS } from '../actions';
 import './App.css';
 
 
@@ -42,7 +41,7 @@ const styles = theme => ({
 });
 
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       key: null,
@@ -58,21 +57,16 @@ class App extends Component {
     this.setState({ alert: { show: false, title: '', text: '' } })
   }
 
-
-
-  componentDidMount() {
-    fetch(server + '/getSecret', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => this.setState({ key: result.publicKey }))
-      .catch(e => {
-        this.setState({ alert: { show: true, title: "Connection lost", text: 'Server connection lost. Please contact your service provider. ' + e } })
-      });
-
+  componentDidMount () {
+    this.props.load((show, title, text) => {
+      if (show) {
+        this.setState({ alert: { show, title, text } })
+      }
+    })
   }
 
-  render() {
-
-    console.log("USER props", this.props.users)
+  render () {
+    // console.log("USER props", this.props)
     const { classes } = this.props;
     var acces = this.props.users.acces;
     const alert = this.state.alert.show;
@@ -143,10 +137,18 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  users: state.users
-});
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    credentials: state.credentials
+  }
+};
 
-const mapDispatchToProps = dispatch => USERS(dispatch)
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CREDENTIALS(dispatch)
+  }
+}
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));

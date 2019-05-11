@@ -1,7 +1,7 @@
-import profile from './profile_reducer';
+import credentials from './credentials_reducer';
 import users from './users_reducer';
 
 export default ({
-  profile,
+  credentials,
   users
 })
