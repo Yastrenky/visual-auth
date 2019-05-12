@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
 import format from '../../../../assets/format'
+import { USERS, CARDS } from '../../../../actions';
 // import Icon from '@material-ui/core/Icon';
 
 const styles = theme => ({
@@ -33,19 +35,12 @@ class PaymentHistory extends Component {
     var objtime = format.date(date)
     return objtime.date + " || " + objtime.time
   }
-  componentDidMount(){
-    this.props.getCharges();
-  }
   render() {
-    // console.log("props", this.props)
-    // console.log("state", this.state)
-    // const { classes } = this.props;
-
     return (
       <div>
 
         <ReactTable
-          data={this.props.chargedlist}
+          data={this.props.cards.chargedList}
           columns={[
             {
               Header: "Posted",
@@ -75,7 +70,7 @@ class PaymentHistory extends Component {
           ]}
           defaultPageSize={20}
           className="-striped -highlight"
-          loading={this.props.loadingchargedcardlist}
+          loading={this.props.cards.chargesList_loading}
         />
 
 
@@ -84,4 +79,18 @@ class PaymentHistory extends Component {
   }
 }
 
-export default withStyles(styles)(PaymentHistory);
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    cards: state.cards
+  }
+};
+
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CARDS(dispatch)
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(PaymentHistory));

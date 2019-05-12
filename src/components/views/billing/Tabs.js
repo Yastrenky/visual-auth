@@ -10,7 +10,7 @@ import SavedCards from './Tabs/SavedCards';
 import PaymentHistory from './Tabs/PaymentHistory';
 import MakePayment from './Tabs/MakePayment';
 
-function TabContainer({ children, dir }) {
+function TabContainer ({ children, dir }) {
   return (
     <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
       {children}
@@ -31,7 +31,7 @@ const styles = theme => ({
 });
 
 class FullWidthTabs extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       value: 0,
@@ -46,7 +46,7 @@ class FullWidthTabs extends React.Component {
     window.scroll(0, 0)
   };
 
-  render() {
+  render () {
     // console.log("tab props", this.props)
     const { classes, theme } = this.props;
 
@@ -72,15 +72,15 @@ class FullWidthTabs extends React.Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-            {<MakePayment goToTab={this.handleChangeIndex} customerid={this.props.customerid} cards={this.props.cards} getCharges={this.props.getCharges}/>}
+            {<MakePayment goToTab={this.handleChangeIndex} />}
           </TabContainer>
 
           <TabContainer dir={theme.direction}>
-            {<PaymentHistory goToTab={this.handleChangeIndex}  getCharges={this.props.getCharges} chargedlist={this.props.chargedlist} loadingchargedcardlist={this.props.loadingchargedcardlist} />}
+            {<PaymentHistory goToTab={this.handleChangeIndex}/>}
           </TabContainer>
 
           <TabContainer dir={theme.direction}>
-            {<SavedCards goToTab={this.handleChangeIndex} customerid={this.props.customerid} getSavedCards={this.props.getSavedCards} />}
+            {<SavedCards goToTab={this.handleChangeIndex}/>}
           </TabContainer>
 
         </SwipeableViews>

@@ -7,8 +7,7 @@ import Tabs from './Tabs';
 import { USERS, CARDS } from '../../../actions';
 import './billing.css';
 import "react-table/react-table.css";
-import { NavMenu, Footer, Alert } from '../';
-import server from '../../../config';
+import { NavMenu, Footer } from '../';
 
 const styles = theme => ({
   container: {
@@ -43,30 +42,6 @@ const styles = theme => ({
 
 
 class Billing extends Component {
-  constructor (props) {
-    super(props);
-
-    var data = this.props.users;
-    this.state = {
-      loadingchargedcardlist: true,
-      cards: {
-        list: [],
-        loading: false
-      },
-
-      user: {
-        id: '' || data.id,
-        name: '' || data.name,
-        email: '' || data.email,
-        customerid: data.customerid || null
-      },
-      alert: {
-        show: false,
-        title: '',
-        text: ''
-      }
-    };
-  }
 
   resetAlert = () => {
     this.setState({ alert: { show: false, title: '', text: '' } })
@@ -84,62 +59,20 @@ class Billing extends Component {
 
   getCharges = () => {
     const customerid = this.props.users.customerid
-    this.props.loadCharges(customerid, () => {
-      this.setState({ loadingchargedcardlist: false })
-    })
+    this.props.loadCharges(customerid)
   }
 
-  getSavedCards = (callback) => {
-    var newcards = JSON.parse(JSON.stringify(this.state.cards));
-    newcards.loading = true;
-
-    this.setState({
-      loadingdata: true,
-      cards: newcards
-    });
-
-    fetch(server + '/getAllCards', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => {
-        // console.log(result)
-        var newData = [];
-        if (!result.err) {
-          var list = result.cards.data
-          list.forEach((card => newData.push({
-            name: card.name,
-            id: card.id,
-            brand: card.brand,
-            card: card.last4,
-            date: card.exp_month + "/" + card.exp_year,
-            zipcode: card.address_zip
-          })));
-        }
-        var newcards = JSON.parse(JSON.stringify(this.state.cards));
-        newcards.list = newData;
-        newcards.loading = false;
-
-        callback(null, newData)
-        this.setState({
-          cards: newcards,
-        })
-      })
-      .catch(e => {
-        callback(e, null)
-        console.log(e)
-      });
+  componentDidMount () {
+    this.props.getCards()
+    this.props.loadCharges()
   }
-
 
   render () {
-
-    // console.log("state", this.state)
+    // console.log("billing props", this.props)
     const { classes } = this.props;
-    const alert = this.state.alert.show;
     return (
       <div className='view-container'>
         <NavMenu variant="contained" />
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
-
         <header className="Billing-header">
           <h1 className="Billing-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
@@ -152,15 +85,7 @@ class Billing extends Component {
 
           <div className={"Billing-card auht-view"}>
             <div className="tabs-card">
-              <Tabs
-                data={this.state.data}
-                customerid={this.state.user.customerid}
-                cards={this.state.cards}
-                getSavedCards={this.getSavedCards}
-                getCharges={this.getCharges}
-                chargedlist={this.props.cards.chargedlist}
-                loadingchargedcardlist={this.state.loadingchargedcardlist}
-              />
+              <Tabs />
             </div>
           </div>
         </div>

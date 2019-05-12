@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
 import { Elements, StripeProvider } from 'react-stripe-elements';
 import StripeCard from '../../stripeElem';
-import server, { stripekey } from '../../../../config';
+import { stripekey } from '../../../../config';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
+import { USERS, CARDS } from '../../../../actions';
 
 const styles = theme => ({
   progress: {
@@ -38,62 +40,20 @@ class SavedCards extends Component {
     super(props);
 
     this.state = {
-      data: [],
       loadremove: null,
-      loadingdata: false
     };
   }
 
-  deletCard = (sourceid, callback) => {
+  deletCard = (sourceid) => {
+    const customerid = this.props.users.customerid
     this.setState({ loadremove: sourceid })
-    fetch(server + "/removeCard", {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        sourceid: sourceid,
-        customerid: this.props.customerid
-
-      })
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        this.getSavedCards();
-        this.setState({ loadremove: null })
-      })
-      .catch((error) => {
-        console.log(error)
-        this.setState({ loadremove: null })
-      })
-  }
-
-  getSavedCards = () => {
-    this.setState({ loadingdata: true })
-    this.props.getSavedCards((err, response) => {
-      if (err) {
-        console.log(err)
-        this.setState({ loadingdata: false })
-      }
-      else if (response) {
-        this.setState({
-          data: response,
-          loadingdata: false
-        })
-      }
-    });
-  }
-
-  componentDidMount() {
-    this.getSavedCards();
+    this.props.deletCard(sourceid, customerid, (status) => {
+      this.setState({loadremove: status })
+      this.props.getCards()
+     })
   }
 
   render() {
-    // console.log("state", this.state)
-    // console.log("props", this.props)
     const { classes } = this.props;
 
     return (
@@ -103,15 +63,15 @@ class SavedCards extends Component {
           <StripeProvider apiKey={stripekey}>
             <Elements>
               <StripeCard
-                customerid={this.props.customerid}
-                getSavedCards={this.getSavedCards}
+                customerid={this.props.users.customerid}
+                getSavedCards={this.props.getCards}
               />
             </Elements>
           </StripeProvider>
 
         </div>
         <ReactTable
-          data={this.state.data}
+          data={this.props.cards.cardsList}
           columns={[
             {
               Header: "Cardholder Name",
@@ -154,7 +114,7 @@ class SavedCards extends Component {
           ]}
           defaultPageSize={10}
           className="-striped -highlight"
-          loading={this.state.loadingdata}
+          loading={this.props.cards.cardsList_loading}
         />
 
 
@@ -163,4 +123,18 @@ class SavedCards extends Component {
   }
 }
 
-export default withStyles(styles)(SavedCards);
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    cards: state.cards
+  }
+};
+
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CARDS(dispatch)
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SavedCards));

@@ -104,7 +104,7 @@ class CheckoutForm extends Component {
         })
           .then(response => response.json())
           .then(response => {
-            console.log(response)
+            // console.log(response)
             if (response.err) {
               alert.show = true;
               alert.title = "Card error";
@@ -176,7 +176,6 @@ class CheckoutForm extends Component {
                 variant="contained"
                 color="primary"
                 className={classes.button}>
-
                 Save
              </Button>
               :

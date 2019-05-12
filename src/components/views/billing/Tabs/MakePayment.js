@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import ReactTable from "react-table";
 import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@material-ui/core';
 import NumberFormat from 'react-number-format';
@@ -7,9 +8,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../../alert/Alert';
 import server from '../../../../config';
 import format from '../../../../assets/format'
+import { USERS, CARDS } from '../../../../actions';
 // import Icon from '@material-ui/core/Icon';
 
-function NumberFormatCustom(props) {
+function NumberFormatCustom (props) {
   const { inputRef, onChange, ...other } = props;
 
   return (
@@ -96,7 +98,7 @@ const styles = theme => ({
 
 
 class MakePayment extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       alert: {
@@ -170,12 +172,6 @@ class MakePayment extends Component {
         this.setState({ alert: alert })
       }
       else if (inv_amount >= parseFloat(this.state.amount)) {
-        // var card_date = null;
-        // this.props.cards.list.forEach(card => {
-        //   if (card.id === this.state.card_selected) { card_date = card.date }
-        // });
-        //         var format_date = new Date(card_date);
-        // console.log(format_date);
         fetch(server + "/chargeCustomer", {
           method: "POST",
           headers: {
@@ -184,17 +180,17 @@ class MakePayment extends Component {
           },
           credentials: "include",
           body: JSON.stringify({
-            custId: this.props.customerid,
+            custId: this.props.users.customerid,
             amount: this.state.amount * 100
 
           })
         })
           .then(response => response.json())
           .then(response => {
-            console.log("charge response", response)
+            // console.log("charge response", response)
             if (response.charge.status === "succeeded") {
-                 this.props.getCharges();
-                 this.props.goToTab(1)
+              this.props.loadCharges();
+              this.props.goToTab(1)
             }
             else {
               console.log("Error in payment")
@@ -203,6 +199,7 @@ class MakePayment extends Component {
 
           })
           .catch((e) => {
+            console.log(e)
             alert.show = true;
             alert.title = "Connection lost";
             alert.text = 'Server connection lost. Please contact your service provider. ' + e;
@@ -214,7 +211,6 @@ class MakePayment extends Component {
 
         // console.log("payment amount",this.state.amount)
         // console.log("Invoice amount",inv_amount);
-
       }
       else {
         alert.show = true;
@@ -226,7 +222,7 @@ class MakePayment extends Component {
     }
   }
 
-  componentWillMount() {
+  componentWillMount () {
     this.setState({
       invoices: [
         {
@@ -259,7 +255,7 @@ class MakePayment extends Component {
       ]
     })
   }
-  render() {
+  render () {
     // console.log("props", this.props)
     // console.log("state", this.state)
     const alert = this.state.alert.show;
@@ -323,9 +319,9 @@ class MakePayment extends Component {
         <div className="invoice-container">
           <p>Make a payment</p>
           <div className="invoice-schedule">
-            {!this.props.cards.loading ?
+            {!this.props.cards.cardsList_loading ?
               <div className="invoice-container payment-options-list">
-                <List data={this.props.cards.list} selectCard={this.selectCard} />
+                <List data={this.props.cards.cardsList} selectCard={this.selectCard} />
                 <Button variant="contained" color="primary" className={classes.button} onClick={e => this.props.goToTab(2)}>
                   ADD CARD
                 </Button>
@@ -366,4 +362,18 @@ class MakePayment extends Component {
   }
 }
 
-export default withStyles(styles)(MakePayment);
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    cards: state.cards
+  }
+};
+
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CARDS(dispatch)
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MakePayment));
