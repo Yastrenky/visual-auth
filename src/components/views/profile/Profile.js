@@ -7,7 +7,7 @@ import red from '@material-ui/core/colors/red';
 import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
 import { connect } from "react-redux";
-import { USERS, PROFILE } from '../../../actions';
+import { USERS } from '../../../actions';
 import server from '../../../config';
 import { Alert, NavMenu, Footer } from '../';
 import './profile.css';

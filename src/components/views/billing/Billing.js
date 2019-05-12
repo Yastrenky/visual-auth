@@ -4,10 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import Tabs from './Tabs';
-import { USERS } from '../../../actions';
+import { USERS, CARDS } from '../../../actions';
 import './billing.css';
 import "react-table/react-table.css";
-import { NavMenu, Footer, Alert} from '../';
+import { NavMenu, Footer, Alert } from '../';
 import server from '../../../config';
 
 const styles = theme => ({
@@ -43,12 +43,11 @@ const styles = theme => ({
 
 
 class Billing extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     var data = this.props.users;
     this.state = {
-      chargedlist: [],
       loadingchargedcardlist: true,
       cards: {
         list: [],
@@ -65,8 +64,7 @@ class Billing extends Component {
         show: false,
         title: '',
         text: ''
-      },
-      anchorEl: null,
+      }
     };
   }
 
@@ -85,46 +83,10 @@ class Billing extends Component {
   };
 
   getCharges = () => {
-    fetch(server + '/getCustomerCharges', {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        custId: this.state.user.customerid,
-      })
+    const customerid = this.props.users.customerid
+    this.props.loadCharges(customerid, () => {
+      this.setState({ loadingchargedcardlist: false })
     })
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-        if (result.err) {
-          console.log(result.err.message)
-        }
-        else {
-          var list = result.charge.data
-          var newData = [];
-
-          list.forEach((charge => newData.push({
-            date: charge.created,
-            card_id: charge.source.id,
-            charge_id: charge.id,
-            card: charge.source.last4,
-            status: charge.status,
-            amount: charge.amount,
-            currency: charge.currency
-
-          })));
-          this.setState({
-            chargedlist: newData,
-            loadingchargedcardlist: false,
-          })
-        }
-      }).catch(e => {
-        this.setState({ loadingchargedcardlist: false, })
-        console.log(e)
-      });
   }
 
   getSavedCards = (callback) => {
@@ -168,7 +130,7 @@ class Billing extends Component {
   }
 
 
-  render() {
+  render () {
 
     // console.log("state", this.state)
     const { classes } = this.props;
@@ -196,26 +158,31 @@ class Billing extends Component {
                 cards={this.state.cards}
                 getSavedCards={this.getSavedCards}
                 getCharges={this.getCharges}
-                chargedlist={this.state.chargedlist}
+                chargedlist={this.props.cards.chargedlist}
                 loadingchargedcardlist={this.state.loadingchargedcardlist}
               />
             </div>
           </div>
-
-
         </div>
-
         <Footer />
       </div >
     );
   }
 }
 
-const mapStateToProps = state => ({
-  users: state.users
-});
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    cards: state.cards
+  }
+};
 
-const mapDispatchToProps = dispatch => USERS(dispatch)
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CARDS(dispatch)
+  }
+}
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Billing));
 

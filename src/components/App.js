@@ -106,7 +106,7 @@ class App extends Component {
 
             <Route exact path='/login'
               render={() => acces ?
-                <Redirect to='/profile' />
+                <Redirect to='/billing' />
                 :
                 <Login />}
             />
