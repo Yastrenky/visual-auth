@@ -8,12 +8,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../../alert/Alert';
 import server from '../../../../config';
 import format from '../../../../assets/format'
-import { USERS, CARDS } from '../../../../actions';
+import { USERS, CARDS, ALERTS } from '../../../../actions';
 import styles from '../../../../styles';
+
 
 function NumberFormatCustom (props) {
   const { inputRef, onChange, ...other } = props;
-
   return (
     <NumberFormat
       {...other}
@@ -31,7 +31,6 @@ function NumberFormatCustom (props) {
   );
 }
 
-
 class MakePayment extends Component {
   constructor (props) {
     super(props);
@@ -45,7 +44,7 @@ class MakePayment extends Component {
       loadingInvoices: false,
       inv_slected: null,
       card_selected: null,
-      amount: ''
+      amount: 0
     };
   }
 
@@ -103,7 +102,7 @@ class MakePayment extends Component {
       if (parseFloat(this.state.amount) <= 0) {
         alert.show = true;
         alert.title = "Amount error";
-        alert.text = 'The amount to pay for invoice is low. Your amount can not be cero ar a negative number. Your payment was not processed.';
+        alert.text = 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.';
         this.setState({ alert: alert })
       }
       else if (inv_amount >= parseFloat(this.state.amount)) {
@@ -122,7 +121,7 @@ class MakePayment extends Component {
         })
           .then(response => response.json())
           .then(response => {
-            // console.log("charge response", response)
+            console.log("charge response", response)
             if (response.charge.status === "succeeded") {
               this.props.loadCharges();
               this.props.goToTab(1)
@@ -153,6 +152,16 @@ class MakePayment extends Component {
       }
 
     }
+  }
+
+  CheckoutCal = (amount) => {
+    let fees = 0, taxes = 0, total = 0
+    if (amount > 0) {
+      fees = ((0.029 * amount) + 0.30).toFixed(2)
+      taxes = (0.06 * amount).toFixed(2)
+      total = (parseFloat(amount) + parseFloat(fees) + parseFloat(taxes)).toFixed(2)
+    }
+    return { amount, fees, taxes, total }
   }
 
   componentWillMount () {
@@ -193,6 +202,7 @@ class MakePayment extends Component {
     // console.log("state", this.state)
     const alert = this.state.alert.show;
     const { classes } = this.props;
+    const { amount, fees, taxes, total } = this.CheckoutCal(this.state.amount)
 
     return (
       <div className="makepayment-container">
@@ -281,6 +291,12 @@ class MakePayment extends Component {
                   className: classes.bootstrapFormLabel,
                 }}
               />
+              <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Amount: </span><span>$ {amount}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Fees: </span><span>$ {fees}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Taxes: </span><span>$ {taxes}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Total: </span><span>$ {total}</span></div>
+              </div>
               <Button variant="contained" color="secondary" onClick={e => this.pay()} className={classes.button} >
                 PAY
               </Button>
@@ -305,7 +321,8 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     ...USERS(dispatch),
-    ...CARDS(dispatch)
+    ...CARDS(dispatch),
+    ...ALERTS(dispatch)
   }
 }
 
