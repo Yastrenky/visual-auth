@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -6,9 +7,8 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
-import Alert from '../alert/Alert';
-import server from '../../../config';
 import Footer from '../footer/Footer';
+import { ALERTS, USERS } from '../../../actions';
 import './forgot.css';
 
 
@@ -48,63 +48,21 @@ class Forgot extends Component {
 
   state = {
     email: '',
-    alert: {
-      show: false,
-      title: '',
-      text: ''
-    }
   };
 
   onSubmit = event => {
     var email = this.state.email;
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.email(email)) {
-      // console.log("Invalid Email")
-      alert.show = true;
-      alert.title = 'Invalid Email';
-      alert.text = 'Please enter a email with the valid parameters.'
-      this.setState({ alert: alert })
+      this.props.showAlert('Invalid Email', 'Please enter a email with the valid parameters.')
     }
     else {
-      fetch(server + '/forgot', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email: this.state.email,
-        }),
-      }).then(response => response.json())
-        .then(response => {
-          // console.log('Request success: ', response);
-            alert.show = true;
-            alert.title = response.title;
-            alert.text = response.message
-            this.setState({ alert: alert })
-          
-        })
-        .catch(
-          (error) => {
-            alert.show = true;
-            alert.title = 'Request failure';
-            alert.text = "Server connection lost. Please contact your service provider.";
-            this.setState({ alert: alert })
-          })
-
+      this.props.forgot(email, (show, title, text) => {
+        if (show) {
+          this.props.showAlert(title, text)
+        }
+      })
     }
-  }
-
-  resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
   }
 
   handleChange = value => event => {
@@ -114,15 +72,10 @@ class Forgot extends Component {
   };
 
   render() {
-    // console.log("state", this.state)
-
     const { classes } = this.props;
-    const alert = this.state.alert.show;
 
     return (
       <div className = 'view-container'>
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
-
         <header className="Forgot-header">
           <h1 className="Forgot-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
@@ -162,4 +115,9 @@ class Forgot extends Component {
   }
 }
 
-export default withStyles(styles)(Forgot);
+const mapDispatchToProps = dispatch => ({
+  ...ALERTS(dispatch),
+  ...USERS(dispatch)
+})
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(Forgot));

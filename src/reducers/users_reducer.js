@@ -8,11 +8,6 @@ const initialState = () => ({
   customerid: null
 });
 
-const signup = (state, { device }) => ({
-  ...state,
-  devices: state.devices.concat(device)
-});
-
 const update = (state, { devices }) => ({
   ...state,
   devices
@@ -47,8 +42,6 @@ const logout = (state, { device }) => (
 
 function usersReducer(state = initialState(), action) {
   switch (action.type) {
-    case "SIGNUP_USER":
-      return signup(state, action)
     case "LOGIN_USER":
       return login(state, action)
     case "UPDATE_USER":

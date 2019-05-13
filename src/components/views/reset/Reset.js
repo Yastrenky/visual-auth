@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -7,8 +8,8 @@ import Icon from '@material-ui/core/Icon';
 import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
-import server from '../../../config';
 import Footer from '../footer/Footer';
+import { ALERTS, USERS } from '../../../actions';
 import './reset.css';
 
 
@@ -46,7 +47,7 @@ const styles = theme => ({
 
 
 class Reset extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -62,75 +63,29 @@ class Reset extends Component {
     };
   }
   onSubmit = event => {
-    var password = this.state.password;
-    var copassword = this.state.copassword;
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
+    const password = this.state.password;
+    const copassword = this.state.copassword;
+    const token = this.props.match.params.handle;
 
     if (!validate.password(password)) {
-      // console.log("Invalid Password")
-      alert.show = true;
-      alert.title = 'Invalid Password';
-      alert.text = 'Please enter a password with the valid parameters.'
-      this.setState({ alert: alert })
+      this.props.showAlert('Invalid Password', 'Please enter a password with the valid parameters.')
     }
-    else if (!validate.password(copassword) && password !== copassword) {
-      // console.log("Invalid Confirmed Password")
-      alert.show = true;
-      alert.title = 'Invalid Confirmed Password';
-      alert.text = 'Please enter a confirmed password with the valid parameters.'
-      this.setState({ alert: alert })
+    else if (!validate.password(copassword)) {
+      this.props.showAlert('Invalid Password', 'Please enter a confirmed password with the valid parameters.')
+    }
+    else if (password !== copassword) {
+      this.props.showAlert('Invalid Password', 'The confirmed password is not the same.')
     }
     else {
 
-      var token = this.props.match.params.handle;
+      this.props.reset(token, password, (show, title, text) => {
+        if (show) {
+          this.props.showAlert(title, text)
+        }
+      })
 
-      fetch(server + '/reset/' + token, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          password: this.state.password
-        }),
-      }).then(response => response.json())
-        .then(response => {
-          // console.log('Request success: ', response);
-          if (response.success) {
-            alert.show = true;
-            alert.title = response.title;
-            alert.text = response.message
-            this.setState({ alert: alert })
-
-          }
-          else {
-            alert.show = true;
-            alert.title = response.title;
-            alert.text = response.message
-            this.setState({ alert: alert })
-          }
-        })
-        .catch(
-          (error) => {
-            // console.log(error)
-            alert.show = true;
-            alert.title = 'Request failure';
-            alert.text = "Server connection lost. Please contact your service provider.";
-            this.setState({ alert: alert })
-          })
 
     }
-  }
-
-  resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
   }
 
   handleChange = value => event => {
@@ -139,7 +94,7 @@ class Reset extends Component {
     });
   };
 
-  render() {
+  render () {
     // console.log("state", this.state)
 
     const { classes } = this.props;
@@ -194,10 +149,15 @@ class Reset extends Component {
             <h5>Opss! I remember my password now. <Link to='/login'> Login </Link></h5>
           </div>
         </div>
-      <Footer />
+        <Footer />
       </div>
     );
   }
 }
 
-export default withStyles(styles)(Reset);
+const mapDispatchToProps = dispatch => ({
+  ...ALERTS(dispatch),
+  ...USERS(dispatch)
+})
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(Reset));

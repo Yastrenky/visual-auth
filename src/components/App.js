@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
 import { connect } from "react-redux";
-import { USERS, CREDENTIALS } from '../actions';
+import { USERS, CREDENTIALS, ALERTS } from '../actions';
 import './App.css';
 
 
@@ -45,22 +45,13 @@ class App extends Component {
     super(props);
     this.state = {
       key: null,
-      alert: {
-        show: false,
-        title: '',
-        text: ''
-      }
     };
-  }
-
-  resetAlert = () => {
-    this.setState({ alert: { show: false, title: '', text: '' } })
   }
 
   componentDidMount () {
     this.props.load((show, title, text) => {
       if (show) {
-        this.setState({ alert: { show, title, text } })
+        this.props.showAlert( title, text )
       }
     })
   }
@@ -69,10 +60,11 @@ class App extends Component {
     // console.log("USER props", this.props)
     const { classes } = this.props;
     var acces = this.props.users.acces;
-    const alert = this.state.alert.show;
+    const alert = this.props.alert.show;
 
     return (
       <div className="App">
+        {alert ? <Alert data={this.props.alert} resetAlert={this.props.closeAlert} /> : null}
         <BrowserRouter>
           <Switch>
             <Route exact path='/'
@@ -131,7 +123,6 @@ class App extends Component {
             />
           </Switch>
         </BrowserRouter>
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
       </div>
     );
   }
@@ -140,14 +131,17 @@ class App extends Component {
 function mapStateToProps (state) {
   return {
     users: state.users,
-    credentials: state.credentials
+    credentials: state.credentials,
+    alert: state.alerts
   }
 };
 
 function mapDispatchToProps (dispatch) {
   return {
     ...USERS(dispatch),
-    ...CREDENTIALS(dispatch)
+    ...CREDENTIALS(dispatch),
+    ...ALERTS(dispatch)
+
   }
 }
 
