@@ -3,7 +3,6 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import red from '@material-ui/core/colors/red';
 import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
 import { connect } from "react-redux";
@@ -11,43 +10,7 @@ import { USERS } from '../../../actions';
 import server from '../../../config';
 import { Alert, NavMenu, Footer } from '../';
 import './profile.css';
-
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  media: {
-    backgroundPosition: 'center',
-    backgroundSize: 142,
-    height: 140,
-    width: 140,
-    borderRadius: 100,
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  icon: {
-    margin: theme.spacing.unit * 2,
-  },
-  iconHover: {
-    margin: theme.spacing.unit * 2,
-    '&:hover': {
-      color: red[800],
-    },
-  },
-});
-
+import styles from '../../../styles'
 
 class Profile extends Component {
   constructor(props) {

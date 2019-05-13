@@ -6,27 +6,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import PaymentIcon from 'react-payment-icons';
-
-const styles = theme => ({
-  root: {
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-  listoverflow: {
-    overflow: "auto",
-    height: 245,
-    margin:20
-  }
-
-});
+import styles from '../../../../styles';
 
 class CheckboxList extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       checked: null,
-
     };
   }
 

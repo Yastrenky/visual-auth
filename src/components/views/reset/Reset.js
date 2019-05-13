@@ -5,46 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import red from '@material-ui/core/colors/red';
 import validate from '../../../assets/validate';
 import Alert from '../alert/Alert';
 import Footer from '../footer/Footer';
 import { ALERTS, USERS } from '../../../actions';
 import './reset.css';
-
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  menu: {
-    width: 200,
-  },
-  button: {
-    margin: 15,
-    marginTop: 40,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  icon: {
-    margin: theme.spacing.unit * 2,
-  },
-  iconHover: {
-    margin: theme.spacing.unit * 2,
-    '&:hover': {
-      color: red[800],
-    },
-  },
-});
-
+import styles from '../../../styles'
 
 class Reset extends Component {
   constructor (props) {
@@ -62,6 +28,7 @@ class Reset extends Component {
       }
     };
   }
+  
   onSubmit = event => {
     const password = this.state.password;
     const copassword = this.state.copassword;

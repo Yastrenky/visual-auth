@@ -8,6 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../../views/alert/Alert';
 import './stripe.css'
+import styles from '../../../styles'
 
 const createOptions = () => {
   return {
@@ -27,21 +28,6 @@ const createOptions = () => {
     }
   }
 };
-
-const styles = theme => ({
-  progress: {
-    margin: theme.spacing.unit * 2,
-  },
-
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  }
-});
 
 class CheckoutForm extends Component {
   constructor(props) {

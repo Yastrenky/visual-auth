@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import SavedCards from './Tabs/SavedCards';
 import PaymentHistory from './Tabs/PaymentHistory';
 import MakePayment from './Tabs/MakePayment';
+import styles from '../../../styles'
 
 function TabContainer ({ children, dir }) {
   return (
@@ -22,13 +23,6 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
   dir: PropTypes.string.isRequired,
 };
-
-const styles = theme => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-
-  },
-});
 
 class FullWidthTabs extends React.Component {
   constructor (props) {

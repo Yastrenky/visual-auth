@@ -6,39 +6,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
 import { connect } from "react-redux";
 import { USERS, CREDENTIALS, ALERTS } from '../actions';
+import styles from '../styles'
 import './App.css';
-
-
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  media: {
-    backgroundPosition: 'center',
-    backgroundSize: 142,
-    height: 140,
-    width: 140,
-    borderRadius: 100,
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  initial: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  }
-});
 
 class App extends Component {
   constructor (props) {

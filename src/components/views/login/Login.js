@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import red from '@material-ui/core/colors/red';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import validate from '../../../assets/validate';
 import { recaptcha } from '../../../config';
@@ -13,43 +12,7 @@ import { USERS, ALERTS } from '../../../actions';
 import Recaptcha from 'react-recaptcha';
 import Footer from '../footer/Footer';
 import './login.css';
-
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  menu: {
-    width: 200,
-  },
-  button: {
-    margin: 15,
-    marginTop: 40,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  icon: {
-    margin: theme.spacing.unit * 2,
-  },
-  iconHover: {
-    margin: theme.spacing.unit * 2,
-    '&:hover': {
-      color: red[800],
-    },
-  },
-  progress: {
-    margin: theme.spacing.unit * 2,
-  },
-});
-
+import styles from '../../../styles'
 
 class Login extends Component {
 

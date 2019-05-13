@@ -9,7 +9,7 @@ import Alert from '../../alert/Alert';
 import server from '../../../../config';
 import format from '../../../../assets/format'
 import { USERS, CARDS } from '../../../../actions';
-// import Icon from '@material-ui/core/Icon';
+import styles from '../../../../styles';
 
 function NumberFormatCustom (props) {
   const { inputRef, onChange, ...other } = props;
@@ -30,71 +30,6 @@ function NumberFormatCustom (props) {
     />
   );
 }
-
-const styles = theme => ({
-  progress: {
-    margin: theme.spacing.unit * 2,
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
-  size: {
-    width: 40,
-    height: 0,
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  menu: {
-    width: 200,
-  },
-  button: {
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  margin: {
-    margin: theme.spacing.unit,
-  },
-  bootstrapRoot: {
-    padding: 0,
-    'label + &': {
-      marginTop: theme.spacing.unit * 3,
-    },
-  },
-  bootstrapInput: {
-    borderRadius: 4,
-    backgroundColor: theme.palette.common.white,
-    border: '1px solid #ced4da',
-    fontSize: 16,
-    padding: '10px 12px',
-    width: 'calc(100% - 24px)',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:focus': {
-      borderColor: '#80bdff',
-      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-    },
-  },
-  bootstrapFormLabel: {
-    fontSize: 18,
-  },
-});
 
 
 class MakePayment extends Component {
@@ -195,8 +130,6 @@ class MakePayment extends Component {
             else {
               console.log("Error in payment")
             }
-
-
           })
           .catch((e) => {
             console.log(e)

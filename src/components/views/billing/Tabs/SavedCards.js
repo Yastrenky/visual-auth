@@ -8,31 +8,7 @@ import { stripekey } from '../../../../config';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import { USERS, CARDS } from '../../../../actions';
-
-const styles = theme => ({
-  progress: {
-    margin: 5,
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  menu: {
-    width: 200,
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-});
+import styles from '../../../../styles';
 
 
 class SavedCards extends Component {
@@ -103,9 +79,9 @@ class SavedCards extends Component {
               Header: "Delete Card",
               id: "click-me-button",
               Cell: ({ row }) => (this.state.loadremove === row.id ?
-                <CircularProgress className={classes.progress} size={20} />
+                <CircularProgress className={classes.progress} size={30} style={{ margin: 0 }}/>
                 :
-                <Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
+                <Icon className={classes.icon} color="secondary" style={{ fontSize: 30, margin: 0 , color: '#f50057' }} onClick={(e) => this.deletCard(row.id)}>
                   delete_forever
                </Icon>
                 //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
