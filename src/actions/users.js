@@ -1,18 +1,7 @@
 import server from '../config/index';
+import { cryptr } from '../index'
 
 const USERS = (dispatch) => ({
-
-  loadProfile: async () => {
-    fetch(server + '/profile', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => {
-        // console.log(result)
-        dispatch({ type: "UPDATE_USER", user: result.user })
-      })
-      .catch(e => {
-        alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
-      });
-  },
 
   login: async (data, alert) => {
     await fetch(server + '/login', {
@@ -30,7 +19,7 @@ const USERS = (dispatch) => ({
       .then(response => {
         // console.log(response)
         if (response.success) {
-          sessionStorage.setItem('session', JSON.stringify(response.sessionID));
+          sessionStorage.setItem('session', JSON.stringify(cryptr.encrypt(response.sessionID)));
           dispatch({ type: "LOGIN_USER" })
         }
         else {
@@ -95,32 +84,7 @@ const USERS = (dispatch) => ({
           alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
         });
   },
-
-  updateProfileImage: async (event, alert) => {
-    var file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('myFile', file, file.name);
-
-      fetch(server + '/uploadprofileimage', {
-        method: 'POST',
-        body: formData,
-        credentials: "include",
-      }).then(response => response.json())
-        .then(response => {
-          alert(true, response.title, response.message)
-          dispatch({ type: "UPDATE_USER_IMG", value: response.value })
-        })
-        .catch(
-          (error) => {
-            alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
-          });
-    }
-    else {
-      console.log("No file selected")
-    }
-  },
-
+  
   signup: async (name, email, password, alert) => {
     fetch(server + '/signup', {
       method: 'POST',

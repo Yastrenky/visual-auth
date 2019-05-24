@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import Tabs from './Tabs';
-import { USERS, CARDS } from '../../../actions';
+import { USERS, CARDS, ALERTS, PROFILE } from '../../../actions';
 import './billing.css';
 import "react-table/react-table.css";
 import { NavMenu, Footer } from '../';
@@ -33,7 +33,11 @@ class Billing extends Component {
   componentDidMount () {
     this.props.getCards()
     this.props.loadCharges()
-    this.props.loadProfile()
+    this.props.loadProfile((show, title, text) => {
+      if (show) {
+        this.props.showAlert(title, text)
+      }
+    })
   }
 
   render () {
@@ -74,7 +78,9 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     ...USERS(dispatch),
-    ...CARDS(dispatch)
+    ...CARDS(dispatch),
+    ...ALERTS(dispatch),
+    ...PROFILE(dispatch)
   }
 }
 

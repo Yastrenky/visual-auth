@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
 import { connect } from "react-redux";
 import { USERS, CREDENTIALS, ALERTS } from '../actions';
+import { cryptr } from '../index'
 import styles from '../styles'
 import './App.css';
 
@@ -18,22 +19,24 @@ class App extends Component {
   }
 
   componentDidMount () {
-    this.props.load((show, title, text) => {
-      if (show) {
-        this.props.showAlert(title, text)
-      }
-    })
+    // this.props.load((show, title, text) => {
+    //   if (show) {
+    //     this.props.showAlert(title, text)
+    //   }
+    // })
 
     this.props.getSessionID(sessionId => {
-      const localSessionId = JSON.parse(sessionStorage.getItem('session'))
+      const localSessionId = cryptr.decrypt((JSON.parse(sessionStorage.getItem('session'))))
       if (sessionId && localSessionId && localSessionId !== sessionId) {
+        console.log('<<< AUTO LOGOUT >>>')
         this.props.logout()
-       }
+        this.props.showAlert('Session Error', 'Your session has expired, if you like to continue working please login again.')
+       }   
       })
   }
 
   render () {
-    console.log("USER props", this.props)
+    console.log("USER props", this.props.users)
     const { classes } = this.props;
     var acces = this.props.users.acces;
     const alert = this.props.alert.show;
