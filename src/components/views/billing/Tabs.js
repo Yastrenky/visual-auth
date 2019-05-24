@@ -27,19 +27,29 @@ TabContainer.propTypes = {
 class FullWidthTabs extends React.Component {
   constructor (props) {
     super(props);
+
     this.state = {
-      value: 0,
+      value: 0
     };
   }
   handleChange = (event, value) => {
+    localStorage.setItem(`billingTab:${ this.props.userId }`, value.toString()) 
     this.setState({ value });
   };
 
   handleChangeIndex = index => {
+    localStorage.setItem(`billingTab:${ this.props.userId }`, index.toString()) 
     this.setState({ value: index });
     window.scroll(0, 0)
   };
 
+  componentDidMount () {
+    const tab = localStorage.getItem(`billingTab:${this.props.userId}`)
+    if (tab) {
+      this.setState({ value: parseInt(tab, 8) })
+    }
+  }
+  
   render () {
     // console.log("tab props", this.props)
     const { classes, theme } = this.props;
@@ -70,11 +80,11 @@ class FullWidthTabs extends React.Component {
           </TabContainer>
 
           <TabContainer dir={theme.direction}>
-            {<PaymentHistory goToTab={this.handleChangeIndex}/>}
+            {<PaymentHistory goToTab={this.handleChangeIndex} />}
           </TabContainer>
 
           <TabContainer dir={theme.direction}>
-            {<SavedCards goToTab={this.handleChangeIndex}/>}
+            {<SavedCards goToTab={this.handleChangeIndex} />}
           </TabContainer>
 
         </SwipeableViews>

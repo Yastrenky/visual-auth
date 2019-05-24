@@ -7,28 +7,10 @@ import { USERS, CARDS, ALERTS, PROFILE } from '../../../actions';
 import './billing.css';
 import "react-table/react-table.css";
 import { NavMenu, Footer } from '../';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import styles from '../../../styles'
 
 class Billing extends Component {
-
-  resetAlert = () => {
-    this.setState({ alert: { show: false, title: '', text: '' } })
-  }
-
-  cardsQtyHandle = num => {
-    this.setState({ cards_qty: num })
-  }
-
-  handleChange = value => event => {
-    this.setState({
-      [value]: event.target.value,
-    });
-  };
-
-  getCharges = () => {
-    const customerid = this.props.users.customerid
-    this.props.loadCharges(customerid)
-  }
 
   componentDidMount () {
     this.props.getCards()
@@ -42,7 +24,7 @@ class Billing extends Component {
 
   render () {
     // console.log("billing props", this.props)
-    const { classes } = this.props;
+    const { classes, users } = this.props;
     return (
       <div className='view-container'>
         <NavMenu variant="contained" />
@@ -58,7 +40,7 @@ class Billing extends Component {
 
           <div className={"Billing-card auht-view"}>
             <div className="tabs-card">
-              <Tabs />
+              {users.id ? <Tabs userId={users.id} /> : <CircularProgress className={classes.progress} />}
             </div>
           </div>
         </div>

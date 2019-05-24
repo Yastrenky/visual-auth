@@ -10,7 +10,6 @@ import Icon from '@material-ui/core/Icon';
 import { USERS, CARDS } from '../../../../actions';
 import styles from '../../../../styles';
 
-
 class SavedCards extends Component {
   constructor(props) {
     super(props);

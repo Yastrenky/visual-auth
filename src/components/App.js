@@ -36,7 +36,7 @@ class App extends Component {
   }
 
   render () {
-    console.log("USER props", this.props.users)
+    // console.log("USER props", this.props.users)
     const { classes } = this.props;
     var acces = this.props.users.acces;
     const alert = this.props.alert.show;

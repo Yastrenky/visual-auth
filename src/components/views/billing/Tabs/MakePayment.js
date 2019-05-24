@@ -5,10 +5,9 @@ import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@mate
 import NumberFormat from 'react-number-format';
 import List from '../Lists/List';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Alert from '../../alert/Alert';
 import server from '../../../../config';
 import format from '../../../../assets/format'
-import { USERS, CARDS, ALERTS } from '../../../../actions';
+import { USERS, CARDS, ALERTS, INVOICES } from '../../../../actions';
 import styles from '../../../../styles';
 
 
@@ -35,32 +34,19 @@ class MakePayment extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      alert: {
-        show: false,
-        title: '',
-        text: ''
-      },
-      invoices: [],
-      loadingInvoices: false,
       inv_slected: null,
       card_selected: null,
       amount: 0
     };
   }
 
-  resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
-  }
-
-  handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
+  clearFields = ev => {
+    this.setState({
+      inv_slected: null,
+      card_selected: null,
+      amount: 0 });
   };
+
   amountChange = prop => event => {
     this.setState({ amount: event.target.value });
   }
@@ -79,31 +65,21 @@ class MakePayment extends Component {
   };
 
   pay = e => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
     if (this.state.inv_slected === null) {
-      alert.show = true;
-      alert.title = "Select Invoice";
-      alert.text = 'Please select one of the invoices to pake a payment';
-      this.setState({ alert: alert })
+      this.props.showAlert('Select Invoice', 'Please select one of the invoices to pake a payment.')
     }
     else if (this.state.card_selected === null) {
-      alert.show = true;
-      alert.title = "Select Card";
-      alert.text = 'Please select one of the cards to pake a payment';
-      this.setState({ alert: alert })
+      this.props.showAlert('Select Card', 'Please select one of the cards to pake a payment.')
     }
     else {
       var inv_amount = null;
-      this.state.invoices.forEach(inv => {
+      this.props.invoices.list.forEach(inv => {
         if (inv.invoice === this.state.inv_slected) { inv_amount = inv.balance }
       });
 
 
       if (parseFloat(this.state.amount) <= 0) {
-        alert.show = true;
-        alert.title = "Amount error";
-        alert.text = 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.';
-        this.setState({ alert: alert })
+        this.props.showAlert('Amount error', 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.')
       }
       else if (inv_amount >= parseFloat(this.state.amount)) {
         fetch(server + "/chargeCustomer", {
@@ -115,14 +91,15 @@ class MakePayment extends Component {
           credentials: "include",
           body: JSON.stringify({
             custId: this.props.users.customerid,
-            amount: this.state.amount * 100
-
+            amount: this.state.amount * 100,
+            source: this.state.card_selected
           })
         })
           .then(response => response.json())
           .then(response => {
             console.log("charge response", response)
             if (response.charge.status === "succeeded") {
+              this.clearFields()
               this.props.loadCharges();
               this.props.goToTab(1)
             }
@@ -132,23 +109,14 @@ class MakePayment extends Component {
           })
           .catch((e) => {
             console.log(e)
-            alert.show = true;
-            alert.title = "Connection lost";
-            alert.text = 'Server connection lost. Please contact your service provider. ' + e;
-            this.setState({
-              loading: false,
-              alert: alert
-            })
+            this.props.showAlert('Connection lost', 'Server connection lost. Please contact your service provider. ' + e)
           })
 
         // console.log("payment amount",this.state.amount)
         // console.log("Invoice amount",inv_amount);
       }
       else {
-        alert.show = true;
-        alert.title = "Amount error";
-        alert.text = 'The amount to pay for invoice is too big. Your payment was not processed.';
-        this.setState({ alert: alert })
+        this.props.showAlert('Amount error', 'The amount to pay for invoice is too big. Your payment was not processed.')
       }
 
     }
@@ -164,53 +132,26 @@ class MakePayment extends Component {
     return { amount, fees, taxes, total }
   }
 
-  componentWillMount () {
-    this.setState({
-      invoices: [
-        {
-          invoice: "AX235F",
-          product: "UI Company Design",
-          due: "8/7/2019",
-          fee: 12,
-          balance: 500,
-          billed: 1000,
-          payments: []
-        },
-        {
-          invoice: "FF25NM",
-          product: "UI Company Design",
-          due: "8/7/2019",
-          fee: 15,
-          balance: 1000,
-          billed: 1000,
-          payments: []
-        },
-        {
-          invoice: "LK45ML",
-          product: "UI Company Design",
-          due: "8/7/2019",
-          fee: 20,
-          balance: 800,
-          billed: 1000,
-          payments: []
-        },
-      ]
+  componentDidMount () {
+    this.props.updateInv((show, title, text) => {
+      if (show) {
+        this.props.showAlert(title, text)
+      }
     })
   }
+
   render () {
     // console.log("props", this.props)
     // console.log("state", this.state)
-    const alert = this.state.alert.show;
     const { classes } = this.props;
     const { amount, fees, taxes, total } = this.CheckoutCal(this.state.amount)
 
     return (
       <div className="makepayment-container">
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
         <div className="invoice-container">
           <p>Select the invoice you will like to pay</p>
           <ReactTable
-            data={this.state.invoices}
+            data={this.props.invoices.list}
             columns={[
               {
                 Header: "Invoice",
@@ -254,10 +195,9 @@ class MakePayment extends Component {
             ]}
             defaultPageSize={10}
             className="-striped -highlight"
-            loading={this.state.loadingInvoices}
+            loading={this.props.invoices.loadingInvoices}
           />
         </div>
-
 
         <div className="invoice-container">
           <p>Make a payment</p>
@@ -304,8 +244,6 @@ class MakePayment extends Component {
             </div>
           </div>
         </div>
-
-
       </div>
     );
   }
@@ -314,7 +252,8 @@ class MakePayment extends Component {
 function mapStateToProps (state) {
   return {
     users: state.users,
-    cards: state.cards
+    cards: state.cards,
+    invoices: state.invoices
   }
 };
 
@@ -322,7 +261,8 @@ function mapDispatchToProps (dispatch) {
   return {
     ...USERS(dispatch),
     ...CARDS(dispatch),
-    ...ALERTS(dispatch)
+    ...ALERTS(dispatch),
+    ...INVOICES(dispatch)
   }
 }
 
