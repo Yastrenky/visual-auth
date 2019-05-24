@@ -34,10 +34,16 @@ const login = (state, { user }) => ({
   customerid: user.stripeCustId
 });
 
+const update_user_img = (state, { value }) => ({
+  ...state,
+  imageName: value,
+});
+
 const logout = (state, { device }) => (
-  { ...state,
-  ...initialState()
- })
+  {
+    ...state,
+    ...initialState()
+  })
 
 function usersReducer(state = initialState(), action) {
   switch (action.type) {
@@ -51,6 +57,8 @@ function usersReducer(state = initialState(), action) {
       return remove(state, action)
     case "LOGOUT_USER":
       return logout(state, action)
+    case "UPDATE_USER_IMG":
+      return update_user_img(state, action)
     default:
       return state;
   }

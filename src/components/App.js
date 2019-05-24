@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
 import { connect } from "react-redux";
 import server from '../config';
-import { USERS } from '../actions';
+import { USERS, PROFILE } from '../actions';
 import './App.css';
 
 
@@ -104,7 +104,7 @@ class App extends Component {
 
             <Route exact path='/profile'
               render={() => acces ?
-                <Profile/>
+                <Profile />
                 :
                 <Redirect to='/login' />
               }
