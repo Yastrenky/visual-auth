@@ -20,13 +20,20 @@ class App extends Component {
   componentDidMount () {
     this.props.load((show, title, text) => {
       if (show) {
-        this.props.showAlert( title, text )
+        this.props.showAlert(title, text)
       }
     })
+
+    this.props.getSessionID(sessionId => {
+      const localSessionId = JSON.parse(sessionStorage.getItem('session'))
+      if (sessionId && localSessionId && localSessionId !== sessionId) {
+        this.props.logout()
+       }
+      })
   }
 
   render () {
-    // console.log("USER props", this.props)
+    console.log("USER props", this.props)
     const { classes } = this.props;
     var acces = this.props.users.acces;
     const alert = this.props.alert.show;

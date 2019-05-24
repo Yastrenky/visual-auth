@@ -33,6 +33,7 @@ class Billing extends Component {
   componentDidMount () {
     this.props.getCards()
     this.props.loadCharges()
+    this.props.loadProfile()
   }
 
   render () {

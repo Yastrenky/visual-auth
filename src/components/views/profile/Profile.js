@@ -79,7 +79,11 @@ class Profile extends Component {
     })
   }
 
-  render() {
+  componentDidMount () {
+    this.props.loadProfile()
+   }
+
+  render () {
     const { classes } = this.props;
     const alert = this.state.alert.show;
     return (

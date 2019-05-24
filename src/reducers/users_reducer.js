@@ -3,30 +3,27 @@ const initialState = () => ({
   id: null,
   name: null,
   email: null,
-  password: null,
   imageName: null,
   customerid: null
 });
 
-const update = (state, { devices }) => ({
+const update = (state, { user }) => ({
   ...state,
-  devices
+  id: user._id,
+  name: user.username,
+  email: user.email,
+  imageName: user.imageName,
+  customerid: user.stripeCustId
 });
 
-const remove = (state, { device }) => ({
+const remove = (state, { user }) => ({
   ...state,
   ...initialState()
 });
 
-const login = (state, { user }) => ({
+const login = (state) => ({
   ...state,
   acces: true,
-  id: user._id,
-  name: user.username,
-  email: user.email,
-  password: user.password,
-  imageName: user.imageName,
-  customerid: user.stripeCustId
 });
 
 const update_user_img = (state, { value }) => ({

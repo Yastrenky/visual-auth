@@ -10,6 +10,11 @@ import reducers from "./reducers";
 
 export const store = createStore(combineReducers({ ...reducers }))
 
+const sessionID = JSON.parse(sessionStorage.getItem('session'))
+if (sessionID) {
+    store.dispatch({ type: "LOGIN_USER" });
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

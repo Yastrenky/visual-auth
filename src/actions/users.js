@@ -2,6 +2,18 @@ import server from '../config/index';
 
 const USERS = (dispatch) => ({
 
+  loadProfile: async () => {
+    fetch(server + '/profile', { credentials: 'include' })
+      .then(response => response.json())
+      .then(result => {
+        // console.log(result)
+        dispatch({ type: "UPDATE_USER", user: result.user })
+      })
+      .catch(e => {
+        alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+      });
+  },
+
   login: async (data, alert) => {
     await fetch(server + '/login', {
       method: 'POST',
@@ -16,9 +28,10 @@ const USERS = (dispatch) => ({
       }),
     }).then(response => response.json())
       .then(response => {
+        // console.log(response)
         if (response.success) {
-          const user = response.user
-          dispatch({ type: "LOGIN_USER", user })
+          sessionStorage.setItem('session', JSON.stringify(response.sessionID));
+          dispatch({ type: "LOGIN_USER" })
         }
         else {
           alert(true, response.title, response.message)
@@ -34,6 +47,8 @@ const USERS = (dispatch) => ({
     await fetch(server + '/logout', { credentials: 'include' })
       .then(response => response.json())
       .then(response => {
+        // console.log(response)
+        sessionStorage.removeItem('session');
         dispatch({ type: "LOGOUT_USER", response })
       })
       .catch(e => console.log(e));
@@ -49,6 +64,7 @@ const USERS = (dispatch) => ({
       credentials: "include",
     }).then(response => response.json())
       .then(response => {
+        sessionStorage.removeItem('session');
         alert(true, response.title, response.message, 'loguot')
       })
       .catch(
@@ -167,7 +183,19 @@ const USERS = (dispatch) => ({
         (error) => {
           alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
         })
+  },
+
+  getSessionID: async (callback) => {
+    fetch(server + '/sessionID', { credentials: 'include' })
+      .then(response => response.json())
+      .then(result => {
+        callback(result.sessionID)
+      })
+      .catch(e => {
+        alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+      });
   }
+
 
 });
 
