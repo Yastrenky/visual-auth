@@ -1,7 +1,11 @@
-import profile from './profile_reducer';
+import credentials from './credentials_reducer';
 import users from './users_reducer';
+import cards from './cards_reducers';
+import alerts from './alerts_reducer'
 
 export default ({
-  profile,
-  users
+  credentials,
+  users,
+  cards,
+  alerts
 })

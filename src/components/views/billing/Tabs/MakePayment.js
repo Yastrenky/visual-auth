@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import ReactTable from "react-table";
 import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@material-ui/core';
 import NumberFormat from 'react-number-format';
@@ -7,11 +8,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../../alert/Alert';
 import server from '../../../../config';
 import format from '../../../../assets/format'
-// import Icon from '@material-ui/core/Icon';
+import { USERS, CARDS, ALERTS } from '../../../../actions';
+import styles from '../../../../styles';
 
-function NumberFormatCustom(props) {
+
+function NumberFormatCustom (props) {
   const { inputRef, onChange, ...other } = props;
-
   return (
     <NumberFormat
       {...other}
@@ -29,74 +31,8 @@ function NumberFormatCustom(props) {
   );
 }
 
-const styles = theme => ({
-  progress: {
-    margin: theme.spacing.unit * 2,
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
-  size: {
-    width: 40,
-    height: 0,
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  menu: {
-    width: 200,
-  },
-  button: {
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  margin: {
-    margin: theme.spacing.unit,
-  },
-  bootstrapRoot: {
-    padding: 0,
-    'label + &': {
-      marginTop: theme.spacing.unit * 3,
-    },
-  },
-  bootstrapInput: {
-    borderRadius: 4,
-    backgroundColor: theme.palette.common.white,
-    border: '1px solid #ced4da',
-    fontSize: 16,
-    padding: '10px 12px',
-    width: 'calc(100% - 24px)',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:focus': {
-      borderColor: '#80bdff',
-      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-    },
-  },
-  bootstrapFormLabel: {
-    fontSize: 18,
-  },
-});
-
-
 class MakePayment extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       alert: {
@@ -108,7 +44,7 @@ class MakePayment extends Component {
       loadingInvoices: false,
       inv_slected: null,
       card_selected: null,
-      amount: ''
+      amount: 0
     };
   }
 
@@ -166,16 +102,10 @@ class MakePayment extends Component {
       if (parseFloat(this.state.amount) <= 0) {
         alert.show = true;
         alert.title = "Amount error";
-        alert.text = 'The amount to pay for invoice is low. Your amount can not be cero ar a negative number. Your payment was not processed.';
+        alert.text = 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.';
         this.setState({ alert: alert })
       }
       else if (inv_amount >= parseFloat(this.state.amount)) {
-        // var card_date = null;
-        // this.props.cards.list.forEach(card => {
-        //   if (card.id === this.state.card_selected) { card_date = card.date }
-        // });
-        //         var format_date = new Date(card_date);
-        // console.log(format_date);
         fetch(server + "/chargeCustomer", {
           method: "POST",
           headers: {
@@ -184,7 +114,7 @@ class MakePayment extends Component {
           },
           credentials: "include",
           body: JSON.stringify({
-            custId: this.props.customerid,
+            custId: this.props.users.customerid,
             amount: this.state.amount * 100
 
           })
@@ -193,16 +123,15 @@ class MakePayment extends Component {
           .then(response => {
             console.log("charge response", response)
             if (response.charge.status === "succeeded") {
-                 this.props.getCharges();
-                 this.props.goToTab(1)
+              this.props.loadCharges();
+              this.props.goToTab(1)
             }
             else {
               console.log("Error in payment")
             }
-
-
           })
           .catch((e) => {
+            console.log(e)
             alert.show = true;
             alert.title = "Connection lost";
             alert.text = 'Server connection lost. Please contact your service provider. ' + e;
@@ -214,7 +143,6 @@ class MakePayment extends Component {
 
         // console.log("payment amount",this.state.amount)
         // console.log("Invoice amount",inv_amount);
-
       }
       else {
         alert.show = true;
@@ -226,7 +154,17 @@ class MakePayment extends Component {
     }
   }
 
-  componentWillMount() {
+  CheckoutCal = (amount) => {
+    let fees = 0, taxes = 0, total = 0
+    if (amount > 0) {
+      fees = ((0.029 * amount) + 0.30).toFixed(2)
+      taxes = (0.06 * amount).toFixed(2)
+      total = (parseFloat(amount) + parseFloat(fees) + parseFloat(taxes)).toFixed(2)
+    }
+    return { amount, fees, taxes, total }
+  }
+
+  componentWillMount () {
     this.setState({
       invoices: [
         {
@@ -259,11 +197,12 @@ class MakePayment extends Component {
       ]
     })
   }
-  render() {
+  render () {
     // console.log("props", this.props)
     // console.log("state", this.state)
     const alert = this.state.alert.show;
     const { classes } = this.props;
+    const { amount, fees, taxes, total } = this.CheckoutCal(this.state.amount)
 
     return (
       <div className="makepayment-container">
@@ -323,9 +262,9 @@ class MakePayment extends Component {
         <div className="invoice-container">
           <p>Make a payment</p>
           <div className="invoice-schedule">
-            {!this.props.cards.loading ?
+            {!this.props.cards.cardsList_loading ?
               <div className="invoice-container payment-options-list">
-                <List data={this.props.cards.list} selectCard={this.selectCard} />
+                <List data={this.props.cards.cardsList} selectCard={this.selectCard} />
                 <Button variant="contained" color="primary" className={classes.button} onClick={e => this.props.goToTab(2)}>
                   ADD CARD
                 </Button>
@@ -352,6 +291,12 @@ class MakePayment extends Component {
                   className: classes.bootstrapFormLabel,
                 }}
               />
+              <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Amount: </span><span>$ {amount}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Fees: </span><span>$ {fees}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Taxes: </span><span>$ {taxes}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ marginBottom: 5 }}>Total: </span><span>$ {total}</span></div>
+              </div>
               <Button variant="contained" color="secondary" onClick={e => this.pay()} className={classes.button} >
                 PAY
               </Button>
@@ -366,4 +311,19 @@ class MakePayment extends Component {
   }
 }
 
-export default withStyles(styles)(MakePayment);
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    cards: state.cards
+  }
+};
+
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CARDS(dispatch),
+    ...ALERTS(dispatch)
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MakePayment));

@@ -1,6 +1,7 @@
 import server from '../config/index';
+import { cryptr } from '../index'
 
- const USERS = (dispatch) => ({
+const USERS = (dispatch) => ({
 
   login: async (data, alert) => {
     await fetch(server + '/login', {
@@ -16,9 +17,10 @@ import server from '../config/index';
       }),
     }).then(response => response.json())
       .then(response => {
+        // console.log(response)
         if (response.success) {
-          const user = response.user
-          dispatch({ type: "LOGIN_USER", user })
+          sessionStorage.setItem('session', JSON.stringify(cryptr.encrypt(response.sessionID)));
+          dispatch({ type: "LOGIN_USER" })
         }
         else {
           alert(true, response.title, response.message)
@@ -34,6 +36,8 @@ import server from '../config/index';
     await fetch(server + '/logout', { credentials: 'include' })
       .then(response => response.json())
       .then(response => {
+        // console.log(response)
+        sessionStorage.removeItem('session');
         dispatch({ type: "LOGOUT_USER", response })
       })
       .catch(e => console.log(e));
@@ -49,6 +53,7 @@ import server from '../config/index';
       credentials: "include",
     }).then(response => response.json())
       .then(response => {
+        sessionStorage.removeItem('session');
         alert(true, response.title, response.message, 'loguot')
       })
       .catch(
@@ -57,53 +62,105 @@ import server from '../config/index';
         });
   },
 
-   updatePsw: async ({ user_id, currentpassword, newpassword}, alert) =>{
-     fetch(server + '/changepassword', {
-       method: 'POST',
-       headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify({
-         id: user_id,
-         password: currentpassword,
-         newpassword: newpassword
-       }),
-       credentials: "include",
-     }).then(response => response.json())
-       .then(response => {
-         alert(true, response.title, response.message)
-       })
-       .catch(
-         (error) => {
-           alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
-         });
+  updatePsw: async ({ user_id, currentpassword, newpassword }, alert) => {
+    fetch(server + '/changepassword', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: user_id,
+        password: currentpassword,
+        newpassword: newpassword
+      }),
+      credentials: "include",
+    }).then(response => response.json())
+      .then(response => {
+        alert(true, response.title, response.message)
+      })
+      .catch(
+        (error) => {
+          alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+        });
+  },
+  
+  signup: async (name, email, password, alert) => {
+    fetch(server + '/signup', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        password: password
+      }),
+    }).then(response => response.json())
+      .then(response => {
+        alert(true, response.title, response.message)
+      })
+      .catch((error) => {
+        alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+      })
   },
 
-  updateProfileImage: async(event , alert) =>{
-    var file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('myFile', file, file.name);
-
-      fetch(server + '/uploadprofileimage', {
-        method: 'POST',
-        body: formData,
-        credentials: "include",
-      }).then(response => response.json())
-        .then(response => {
-          alert(true, response.title, response.message)
-          dispatch({ type: "UPDATE_USER_IMG", value: response.value })
+  forgot: async (email, alert) => {
+    fetch(server + '/forgot', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        email: email,
+      }),
+    }).then(response => response.json())
+      .then(response => {
+        alert(true, response.title, response.message)
+      })
+      .catch(
+        (error) => {
+          alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
         })
-        .catch(
-          (error) => {
-            alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
-          });
-    }
-    else {
-      console.log("No file selected")
-    }
+  },
+
+  reset: async (token, password, alert) => {
+    fetch(server + '/reset/' + token, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        password: password
+      }),
+    }).then(response => response.json())
+      .then(response => {
+        alert(true, response.title, response.message)
+      })
+      .catch(
+        (error) => {
+          alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+        })
+  },
+
+  getSessionID: async (callback) => {
+    fetch(server + '/sessionID', { credentials: 'include' })
+      .then(response => response.json())
+      .then(result => {
+        callback(result.sessionID)
+      })
+      .catch(e => {
+        alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+      });
   }
+
+
 });
 
 export default USERS;

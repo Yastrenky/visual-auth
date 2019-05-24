@@ -1,53 +1,18 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import red from '@material-ui/core/colors/red';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import validate from '../../../assets/validate'
-import Alert from '../alert/Alert';
-import server,{recaptcha} from '../../../config';
+import { recaptcha } from '../../../config';
 import Recaptcha from 'react-recaptcha';
 import Footer from '../footer/Footer';
+import { ALERTS , USERS} from '../../../actions';
 import './signup.css';
-
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  menu: {
-    width: 200,
-  },
-  button: {
-    margin: theme.spacing.unit,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  icon: {
-    margin: theme.spacing.unit * 2,
-  },
-  iconHover: {
-    margin: theme.spacing.unit * 2,
-    '&:hover': {
-      color: red[800],
-    },
-  },
-  progress: {
-    margin: theme.spacing.unit * 2,
-  },
-});
-
+import styles from '../../../styles'
 
 class App extends Component {
 
@@ -56,12 +21,7 @@ class App extends Component {
     email: 'ybramos91@gmail.com',
     password: 'Yast56238',
     copassword: 'Yast56238',
-    alert: {
-      show: false,
-      title: '',
-      text: ''
-    },
-        loadRecaptcha: false
+    loadRecaptcha: false
   };
 
   onSubmit = event => {
@@ -69,91 +29,30 @@ class App extends Component {
     var email = this.state.email;
     var password = this.state.password;
     var copassword = this.state.copassword;
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
 
     if (!validate.name(name)) {
-      // console.log("Invalid Name")
-      alert.show = true;
-      alert.title = 'Invalid Name';
-      alert.text = 'Please enter a name with the valid parameters.'
-      this.setState({ alert: alert })
+      this.props.showAlert('Invalid Name', 'Please enter a name with the valid parameters.')
     }
     else if (!validate.email(email)) {
-      // console.log("Invalid Email")
-      alert.show = true;
-      alert.title = 'Invalid Email';
-      alert.text = 'Please enter a email with the valid parameters.'
-      this.setState({ alert: alert })
+      this.props.showAlert('Invalid Email', 'Please enter a email with the valid parameters.')
     }
     else if (!validate.password(password)) {
-      // console.log("Invalid Password")
-      alert.show = true;
-      alert.title = 'Invalid Password';
-      alert.text = 'Please enter a password with the valid parameters.'
-      this.setState({ alert: alert })
+      this.props.showAlert('Invalid Password', 'Please enter a password with the valid parameters.')
     }
     else if (!validate.password(copassword) && password !== copassword) {
-      // console.log("Invalid Confirmed Password")
-      alert.show = true;
-      alert.title = 'Invalid Confirmed Password';
-      alert.text = 'Please enter a confirmed password with the valid parameters.'
-      this.setState({ alert: alert })
+      this.props.showAlert('Invalid Password', 'Please enter a confirmed password with the valid parameters.')
     }
     else if (!this.state.recaptcha) {
-      // console.log("Invalid Password")
       this.resetRecaptcha();
-      alert.show = true;
-      alert.title = 'Bot verification fail';
-      alert.text = 'Access to login denied by google verification.'
-      this.setState({ alert: alert })
+      this.props.showAlert('Bot verification fail', 'Access to login denied by google verification.')
     }
     else {
-      fetch(server + '/signup', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          name: this.state.name,
-          email: this.state.email,
-          password: this.state.password
-        }),
-      }).then(response => response.json())
-        .then(response => {
-          // console.log('Request:', response);
-          if (response.success) {
-            alert.show = true;
-            alert.title = response.title;
-            alert.text = response.message
-            this.setState({ alert: alert })
-          }
-          else {
-            alert.show = true;
-            alert.title = response.title;
-            alert.text = response.message
-            this.setState({ alert: alert })
-          }
-
-        })
-        .catch((error) => {
-          alert.show = true;
-          alert.title = 'Request failure';
-          alert.text = "Server connection lost. Please contact your service provider.";
-          this.setState({ alert: alert })
-        })
+      this.props.signup(name, email, password, (show, title, text) => {
+        if (show) {
+          this.props.showAlert(title, text)
+        }
+      })
     }
-  }
-
-  resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
   }
 
   handleChange = value => event => {
@@ -173,16 +72,11 @@ class App extends Component {
   resetRecaptcha = () => {
     this.recaptchaInstance.reset();
   };
-  render() {
+  render () {
     // console.log(this.state)
-
     const { classes } = this.props;
-    const alert = this.state.alert.show;
-
     return (
-      <div className = 'view-container'>
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
-
+      <div className='view-container'>
         <header className="Signup-header">
           <h1 className="Signup-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
@@ -258,4 +152,9 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles)(App);
+const mapDispatchToProps = dispatch => ({
+  ...ALERTS(dispatch),
+  ...USERS(dispatch)
+})
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(App));

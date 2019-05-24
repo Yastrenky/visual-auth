@@ -3,51 +3,14 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import red from '@material-ui/core/colors/red';
 import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
 import { connect } from "react-redux";
-import { USERS, PROFILE } from '../../../actions';
+import { USERS, ALERTS, PROFILE } from '../../../actions';
 import server from '../../../config';
-import { Alert, NavMenu, Footer } from '../';
+import {  NavMenu, Footer } from '../';
 import './profile.css';
-
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  media: {
-    backgroundPosition: 'center',
-    backgroundSize: 142,
-    height: 140,
-    width: 140,
-    borderRadius: 100,
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  icon: {
-    margin: theme.spacing.unit * 2,
-  },
-  iconHover: {
-    margin: theme.spacing.unit * 2,
-    '&:hover': {
-      color: red[800],
-    },
-  },
-});
-
+import styles from '../../../styles'
 
 class Profile extends Component {
   constructor(props) {
@@ -56,16 +19,7 @@ class Profile extends Component {
       currentpassword: '',
       newpassword: '',
       copassword: '',
-      alert: {
-        show: false,
-        title: '',
-        text: ''
-      },
     };
-  }
-
-  resetAlert = () => {
-    this.setState({ alert: { show: false, title: '', text: '' } })
   }
 
   handleChange = value => event => {
@@ -79,21 +33,20 @@ class Profile extends Component {
     const user_id = this.props.users.id
 
     if (!validate.password(currentpassword)) {
-      this.setState({ alert: { show: true, title: 'Invalid Password', text: 'Please enter a password with the valid parameters.' } })
+      this.props.showAlert('Invalid Password', 'Please enter a  password with the valid parameters.')
     }
     else if (!validate.password(newpassword)) {
       // console.log("Invalid Confirmed Password")
-      this.setState({ alert: { show: true, title: 'Invalid Confirmed Password', text: 'Please enter a confirmed password with the valid parameters.' } })
+      this.props.showAlert('Invalid new password', 'Please enter a new password with the valid parameters.')
     }
     else if (newpassword !== copassword) {
       // console.log("Invalid Confirmed Password")
-      this.setState({ alert: { show: true, title: 'Invalid Confirmed Password', text: 'Please enter a confirmed password with the valid parameters.' } })
+      this.props.showAlert('Invalid confirmed password', 'Please enter a confirmed password with the valid parameters.')
     }
     else {
-
       this.props.updatePsw({ user_id, currentpassword, newpassword }, (show, title, text) => {
         if (show) {
-          this.setState({ alert: { show, title, text } })
+          this.props.showAlert(title, text)
         }
       })
     }
@@ -103,7 +56,7 @@ class Profile extends Component {
   deleteUser = () => {
     this.props.delete((show, title, text, action) => {
       if (show) {
-        this.setState({ alert: { show, title, text, action } })
+        this.props.showAlert(title, text)
       }
     })
   }
@@ -111,19 +64,24 @@ class Profile extends Component {
   imageChanger = (event) => {
     this.props.updateProfileImage(event, (show, title, text) => {
       if (show) {
-        this.setState({ alert: { show, title, text } })
+        this.props.showAlert(title, text)
       }
     })
   }
 
-  render() {
+  componentDidMount () {
+    this.props.loadProfile((show, title, text) => {
+      if (show) {
+        this.props.showAlert(title, text)
+      }
+    })
+   }
+
+  render () {
     const { classes } = this.props;
-    const alert = this.state.alert.show;
     return (
       <div className='view-container'>
         <NavMenu variant="contained" />
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} logOut={this.props.logout} /> : null}
-
         <header className="Profile-header">
           <h1 className="Profile-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
@@ -259,7 +217,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    ...USERS(dispatch)
+    ...USERS(dispatch),
+    ...ALERTS(dispatch),
+    ...PROFILE(dispatch)
   }
 }
 

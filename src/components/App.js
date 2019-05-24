@@ -5,80 +5,45 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
 import { connect } from "react-redux";
-import server from '../config';
-import { USERS, PROFILE } from '../actions';
+import { USERS, CREDENTIALS, ALERTS } from '../actions';
+import { cryptr } from '../index'
+import styles from '../styles'
 import './App.css';
 
-
-
-const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  media: {
-    backgroundPosition: 'center',
-    backgroundSize: 142,
-    height: 140,
-    width: 140,
-    borderRadius: 100,
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-  initial: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  }
-});
-
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       key: null,
-      alert: {
-        show: false,
-        title: '',
-        text: ''
-      }
     };
   }
 
-  resetAlert = () => {
-    this.setState({ alert: { show: false, title: '', text: '' } })
+  componentDidMount () {
+    // this.props.load((show, title, text) => {
+    //   if (show) {
+    //     this.props.showAlert(title, text)
+    //   }
+    // })
+
+    this.props.getSessionID(sessionId => {
+      const localSessionId = cryptr.decrypt((JSON.parse(sessionStorage.getItem('session'))))
+      if (sessionId && localSessionId && localSessionId !== sessionId) {
+        console.log('<<< AUTO LOGOUT >>>')
+        this.props.logout()
+        this.props.showAlert('Session Error', 'Your session has expired, if you like to continue working please login again.')
+       }   
+      })
   }
 
-
-
-  componentDidMount() {
-    fetch(server + '/getSecret', { credentials: 'include' })
-      .then(response => response.json())
-      .then(result => this.setState({ key: result.publicKey }))
-      .catch(e => {
-        this.setState({ alert: { show: true, title: "Connection lost", text: 'Server connection lost. Please contact your service provider. ' + e } })
-      });
-
-  }
-
-  render() {
-
+  render () {
     console.log("USER props", this.props.users)
     const { classes } = this.props;
     var acces = this.props.users.acces;
-    const alert = this.state.alert.show;
+    const alert = this.props.alert.show;
 
     return (
       <div className="App">
+        {alert ? <Alert data={this.props.alert} resetAlert={this.props.closeAlert} /> : null}
         <BrowserRouter>
           <Switch>
             <Route exact path='/'
@@ -112,7 +77,7 @@ class App extends Component {
 
             <Route exact path='/login'
               render={() => acces ?
-                <Redirect to='/profile' />
+                <Redirect to='/billing' />
                 :
                 <Login />}
             />
@@ -137,16 +102,26 @@ class App extends Component {
             />
           </Switch>
         </BrowserRouter>
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  users: state.users
-});
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    credentials: state.credentials,
+    alert: state.alerts
+  }
+};
 
-const mapDispatchToProps = dispatch => USERS(dispatch)
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CREDENTIALS(dispatch),
+    ...ALERTS(dispatch)
+
+  }
+}
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(App));

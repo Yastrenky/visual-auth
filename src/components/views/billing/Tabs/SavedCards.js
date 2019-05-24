@@ -1,36 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
 import { Elements, StripeProvider } from 'react-stripe-elements';
 import StripeCard from '../../stripeElem';
-import server, { stripekey } from '../../../../config';
+import { stripekey } from '../../../../config';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
-
-const styles = theme => ({
-  progress: {
-    margin: 5,
-  },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 320,
-  },
-  menu: {
-    width: 200,
-  },
-  button: {
-    margin: 15,
-    width: 100,
-  },
-  input: {
-    display: 'none',
-  },
-});
+import { USERS, CARDS } from '../../../../actions';
+import styles from '../../../../styles';
 
 
 class SavedCards extends Component {
@@ -38,62 +16,20 @@ class SavedCards extends Component {
     super(props);
 
     this.state = {
-      data: [],
       loadremove: null,
-      loadingdata: false
     };
   }
 
-  deletCard = (sourceid, callback) => {
+  deletCard = (sourceid) => {
+    const customerid = this.props.users.customerid
     this.setState({ loadremove: sourceid })
-    fetch(server + "/removeCard", {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        sourceid: sourceid,
-        customerid: this.props.customerid
-
-      })
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        this.getSavedCards();
-        this.setState({ loadremove: null })
-      })
-      .catch((error) => {
-        console.log(error)
-        this.setState({ loadremove: null })
-      })
-  }
-
-  getSavedCards = () => {
-    this.setState({ loadingdata: true })
-    this.props.getSavedCards((err, response) => {
-      if (err) {
-        console.log(err)
-        this.setState({ loadingdata: false })
-      }
-      else if (response) {
-        this.setState({
-          data: response,
-          loadingdata: false
-        })
-      }
-    });
-  }
-
-  componentDidMount() {
-    this.getSavedCards();
+    this.props.deletCard(sourceid, customerid, (status) => {
+      this.setState({loadremove: status })
+      this.props.getCards()
+     })
   }
 
   render() {
-    // console.log("state", this.state)
-    // console.log("props", this.props)
     const { classes } = this.props;
 
     return (
@@ -103,15 +39,15 @@ class SavedCards extends Component {
           <StripeProvider apiKey={stripekey}>
             <Elements>
               <StripeCard
-                customerid={this.props.customerid}
-                getSavedCards={this.getSavedCards}
+                customerid={this.props.users.customerid}
+                getSavedCards={this.props.getCards}
               />
             </Elements>
           </StripeProvider>
 
         </div>
         <ReactTable
-          data={this.state.data}
+          data={this.props.cards.cardsList}
           columns={[
             {
               Header: "Cardholder Name",
@@ -143,9 +79,9 @@ class SavedCards extends Component {
               Header: "Delete Card",
               id: "click-me-button",
               Cell: ({ row }) => (this.state.loadremove === row.id ?
-                <CircularProgress className={classes.progress} size={20} />
+                <CircularProgress className={classes.progress} size={30} style={{ margin: 0 }}/>
                 :
-                <Icon className={classes.icon} color="secondary" style={{ fontSize: 30 }} onClick={(e) => this.deletCard(row.id)}>
+                <Icon className={classes.icon} color="secondary" style={{ fontSize: 30, margin: 0 , color: '#f50057' }} onClick={(e) => this.deletCard(row.id)}>
                   delete_forever
                </Icon>
                 //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
@@ -154,7 +90,7 @@ class SavedCards extends Component {
           ]}
           defaultPageSize={10}
           className="-striped -highlight"
-          loading={this.state.loadingdata}
+          loading={this.props.cards.cardsList_loading}
         />
 
 
@@ -163,4 +99,18 @@ class SavedCards extends Component {
   }
 }
 
-export default withStyles(styles)(SavedCards);
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    cards: state.cards
+  }
+};
+
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CARDS(dispatch)
+  }
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SavedCards));

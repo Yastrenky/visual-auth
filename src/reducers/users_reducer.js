@@ -3,35 +3,27 @@ const initialState = () => ({
   id: null,
   name: null,
   email: null,
-  password: null,
   imageName: null,
   customerid: null
 });
 
-const signup = (state, { device }) => ({
+const update = (state, { user }) => ({
   ...state,
-  devices: state.devices.concat(device)
+  id: user._id,
+  name: user.username,
+  email: user.email,
+  imageName: user.imageName,
+  customerid: user.stripeCustId
 });
 
-const update = (state, { devices }) => ({
-  ...state,
-  devices
-});
-
-const remove = (state, { device }) => ({
+const remove = (state, { user }) => ({
   ...state,
   ...initialState()
 });
 
-const login = (state, { user }) => ({
+const login = (state) => ({
   ...state,
   acces: true,
-  id: user._id,
-  name: user.username,
-  email: user.email,
-  password: user.password,
-  imageName: user.imageName,
-  customerid: user.stripeCustId
 });
 
 const update_user_img = (state, { value }) => ({
@@ -47,8 +39,6 @@ const logout = (state, { device }) => (
 
 function usersReducer(state = initialState(), action) {
   switch (action.type) {
-    case "SIGNUP_USER":
-      return signup(state, action)
     case "LOGIN_USER":
       return login(state, action)
     case "UPDATE_USER":

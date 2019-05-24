@@ -10,14 +10,7 @@ import Fade from '@material-ui/core/Fade';
 import { connect } from "react-redux";
 import { USERS } from '../../../actions';
 import './navmenu.css';
-
-
-const styles = theme => ({
-  icon: {
-    color: '#3f51b5'
-  }
-});
-
+import styles from '../../../styles'
 
 class NavMenu extends Component {
   constructor(props) {
