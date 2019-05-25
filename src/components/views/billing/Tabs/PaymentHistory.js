@@ -12,7 +12,7 @@ class PaymentHistory extends Component {
     var objtime = format.date(date)
     return objtime.date + " || " + objtime.time
   }
-  render() {
+  render () {
     return (
       <div>
 
@@ -40,6 +40,24 @@ class PaymentHistory extends Component {
               accessor: a => format.money(a.amount.toString())
             },
             {
+              Header: 'Type',
+              id: 'type',
+              accessor: s => s.type.toUpperCase(),
+              getProps: (state, rowInfo) => {
+                if (rowInfo && rowInfo.row && rowInfo.row.type === 'CHARGE') {
+                  return {
+                    style: { backgroundColor: '#16a5168f', opacity: '0.8', fontSize: '12px' },
+                  }
+                }
+                if (rowInfo && rowInfo.row && rowInfo.row.type === 'REFUND') {
+                  return {
+                    style: { backgroundColor: '#ccc6129c', opacity: '0.8', fontSize: '12px' },
+                  }
+                }
+                return {};
+              },
+            },
+            {
               Header: "Status",
               id: 'status',
               accessor: s => s.status.toUpperCase()
@@ -48,6 +66,8 @@ class PaymentHistory extends Component {
           defaultPageSize={20}
           className="-striped -highlight"
           loading={this.props.cards.chargesList_loading}
+
+
         />
 
 

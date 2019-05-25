@@ -39,7 +39,7 @@ class CheckboxList extends React.Component {
         <List
           className={classes.listoverflow}
         >
-          {this.props.data.map((value) => (
+          {this.props.data.length > 0? this.props.data.map((value) => (
             <ListItem
               key={value.id}
               role={undefined}
@@ -61,7 +61,7 @@ class CheckboxList extends React.Component {
               />
               <ListItemText primary={`****  ${value.card} (${value.date}) `} />
             </ListItem>
-          ))}
+          )): <div>Please add payment method</div>}
         </List>
       </div>
     );

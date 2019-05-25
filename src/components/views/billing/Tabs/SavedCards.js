@@ -37,10 +37,7 @@ class SavedCards extends Component {
 
           <StripeProvider apiKey={stripekey}>
             <Elements>
-              <StripeCard
-                customerid={this.props.users.customerid}
-                getSavedCards={this.props.getCards}
-              />
+              <StripeCard />
             </Elements>
           </StripeProvider>
 

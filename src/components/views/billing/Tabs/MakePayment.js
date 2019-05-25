@@ -97,7 +97,7 @@ class MakePayment extends Component {
         })
           .then(response => response.json())
           .then(response => {
-            console.log("charge response", response)
+            // console.log("charge response", response)
             if (response.charge.status === "succeeded") {
               this.clearFields()
               this.props.loadCharges();

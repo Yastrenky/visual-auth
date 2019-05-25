@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {
   injectStripe, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement
 } from 'react-stripe-elements';
+import { USERS, CARDS, ALERTS } from '../../../actions';
+import { connect } from "react-redux";
 import Button from '@material-ui/core/Button';
 import server from '../../../config';
 import { withStyles } from '@material-ui/core/styles';
@@ -30,7 +32,7 @@ const createOptions = () => {
 };
 
 class CheckoutForm extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       complete: false,
@@ -42,8 +44,6 @@ class CheckoutForm extends Component {
         text: ''
       }
     };
-
-    this.submit = this.submit.bind(this);
   }
 
   cardholderHandler = (ev) => {
@@ -58,19 +58,9 @@ class CheckoutForm extends Component {
     this.setState({ cardholder: null })
   }
 
-  resetAlert = () => {
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
-    alert = {
-      show: false,
-      title: '',
-      text: ''
-    }
-    this.setState({ alert: alert })
-  }
-
-  async submit(ev) {
+  submit = async (ev) => {
     ev.preventDefault();
-    var alert = JSON.parse(JSON.stringify(this.state.alert));
+
     if (this.state.cardholder) {
       this.setState({ loading: true })
       let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
@@ -84,8 +74,7 @@ class CheckoutForm extends Component {
           credentials: "include",
           body: JSON.stringify({
             token: token.id,
-            customerid: this.props.customerid
-
+            customerid: this.props.users.customerid
           })
         })
           .then(response => response.json())
@@ -101,44 +90,27 @@ class CheckoutForm extends Component {
               })
             }
             else {
-              this.props.getSavedCards();
+              this.props.getCards();
               this.cleanForm();
               this.setState({ loading: false })
             }
           })
           .catch((e) => {
-            alert.show = true;
-            alert.title = "Connection lost";
-            alert.text = 'Server connection lost. Please contact your service provider. ' + e;
-            this.setState({
-              loading: false,
-              alert: alert
-            })
+            this.props.showAlert('Connection lost', 'Server connection lost. Please contact your service provider. ' + e)
           })
       }
 
       else {
-        alert.show = true;
-        alert.title = "Card Error";
-        alert.text = error.message;
-        this.setState({
-          loading: false,
-          alert: alert
-        })
+        this.props.showAlert('Card Error', error.message)
       }
     }
     else {
-      alert.show = true;
-      alert.title = "Card Error";
-      alert.text = 'Needs cardholder.';
-      this.setState({
-        loading: false,
-        alert: alert
-      })
+      this.props.showAlert('Card Error', 'Please enter cardholder name')
+
     }
   }
 
-  render() {
+  render () {
     // console.log(this.state)
     const { classes } = this.props;
     const alert = this.state.alert.show;
@@ -176,4 +148,19 @@ class CheckoutForm extends Component {
   }
 }
 
-export default injectStripe(withStyles(styles)(CheckoutForm));
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    cards: state.cards,
+  }
+};
+
+function mapDispatchToProps (dispatch) {
+  return {
+    ...USERS(dispatch),
+    ...CARDS(dispatch),
+    ...ALERTS(dispatch),
+  }
+}
+
+export default injectStripe(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(CheckoutForm)));
