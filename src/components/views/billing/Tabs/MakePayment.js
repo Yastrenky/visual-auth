@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
 import ReactTable from "react-table";
 import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@material-ui/core';
@@ -30,7 +30,7 @@ function NumberFormatCustom (props) {
   );
 }
 
-class MakePayment extends Component {
+class MakePayment extends PureComponent {
   constructor (props) {
     super(props);
     this.state = {

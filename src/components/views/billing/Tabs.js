@@ -24,7 +24,7 @@ TabContainer.propTypes = {
   dir: PropTypes.string.isRequired,
 };
 
-class FullWidthTabs extends React.Component {
+class FullWidthTabs extends React.PureComponent {
   constructor (props) {
     super(props);
 

@@ -8,7 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import PaymentIcon from 'react-payment-icons';
 import styles from '../../../../styles';
 
-class CheckboxList extends React.Component {
+class CheckboxList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,6 +33,7 @@ class CheckboxList extends React.Component {
 
   render() {
     const { classes } = this.props;
+    // console.log(this.props)
     return (
       <div className={classes.root}>
         <p>Select Card</p>

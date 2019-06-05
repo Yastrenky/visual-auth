@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,7 +12,7 @@ import { ALERTS, USERS } from '../../../actions';
 import './reset.css';
 import styles from '../../../styles'
 
-class Reset extends Component {
+class Reset extends PureComponent {
   constructor (props) {
     super(props);
 

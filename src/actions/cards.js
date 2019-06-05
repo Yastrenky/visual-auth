@@ -40,7 +40,7 @@ const CARDS = dispatch => ({
                 type: 'refund'
               })
             }))
-              
+
             charges.push({
               date: charge.created,
               card_id: charge.source.id,
@@ -48,7 +48,7 @@ const CARDS = dispatch => ({
               card: charge.source.last4 ? charge.source.last4 : charge.source.card.last4,
               status: charge.status,
               amount: charge.amount,
-              currency: charge.currency ,
+              currency: charge.currency,
               type: 'charge'
             })
           }));
@@ -61,24 +61,27 @@ const CARDS = dispatch => ({
   addCard: async () => {
 
   },
-  
+
   getCards: async () => {
     dispatch({ type: "UPDATE_CARDS_STATUS", status: true })
     fetch(server + '/getAllCards', { credentials: 'include' })
       .then(response => response.json())
       .then(result => {
-        // console.log(result)
         var newData = [];
         if (!result.err) {
           var list = result.cards.data
-          list.forEach((card => newData.push({
-            name: card.name,
-            id: card.id,
-            brand: card.brand,
-            card: card.last4,
-            date: card.exp_month + "/" + card.exp_year,
-            zipcode: card.address_zip
-          })));
+          list.forEach((card => {
+            if (card.object === 'card') {
+              newData.push({
+                name: card.name,
+                id: card.id,
+                brand: card.brand,
+                card: card.last4,
+                date: card.exp_month + "/" + card.exp_year,
+                zipcode: card.address_zip
+              })
+            }
+          }));
         }
         dispatch({ type: "SAVE_CARDS_LIST", data: { list: newData, status: false } })
       })
@@ -107,9 +110,9 @@ const CARDS = dispatch => ({
       })
       .catch((error) => {
         console.log(error)
-        callback( false )
+        callback(false)
       })
-   }
+  }
 });
 
 export default CARDS

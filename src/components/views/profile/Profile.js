@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -12,7 +12,7 @@ import {  NavMenu, Footer } from '../';
 import './profile.css';
 import styles from '../../../styles'
 
-class Profile extends Component {
+class Profile extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
@@ -10,7 +10,7 @@ import Icon from '@material-ui/core/Icon';
 import { USERS, CARDS } from '../../../../actions';
 import styles from '../../../../styles';
 
-class SavedCards extends Component {
+class SavedCards extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -48,10 +48,6 @@ class SavedCards extends Component {
             {
               Header: "Cardholder Name",
               accessor: "name"
-            },
-            {
-              Header: "Card id",
-              accessor: "id"
             },
             {
               Header: "Brand",

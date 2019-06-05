@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import ReactTable from "react-table";
@@ -6,7 +6,7 @@ import format from '../../../../assets/format'
 import { USERS, CARDS } from '../../../../actions';
 import styles from '../../../../styles';
 
-class PaymentHistory extends Component {
+class PaymentHistory extends PureComponent {
   formatStripeDate = (unix_timestamp) => {
     var date = new Date(unix_timestamp * 1000);
     var objtime = format.date(date)

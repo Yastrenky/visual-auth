@@ -19,7 +19,7 @@ const styles = theme => ({
   },
   button: {
     margin: 15,
-    width: 100,
+    width: 105,
   },
   input: {
     display: 'none',

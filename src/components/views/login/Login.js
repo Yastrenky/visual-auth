@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -14,7 +14,7 @@ import Footer from '../footer/Footer';
 import './login.css';
 import styles from '../../../styles'
 
-class Login extends Component {
+class Login extends PureComponent {
 
   state = {
     email: 'ybramos91@gmail.com',

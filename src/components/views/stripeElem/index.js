@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   injectStripe, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement
 } from 'react-stripe-elements';
@@ -31,7 +31,7 @@ const createOptions = () => {
   }
 };
 
-class CheckoutForm extends Component {
+class CheckoutForm extends PureComponent {
   constructor (props) {
     super(props);
     this.state = {

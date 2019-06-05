@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 import "react-table/react-table.css";
@@ -6,7 +6,7 @@ import { Alert, NavMenu, Footer } from '../';
 import './dashboard.css';
 import styles from '../../../styles'
 
-class Dashboard extends Component {
+class Dashboard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

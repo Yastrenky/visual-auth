@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
@@ -10,7 +10,7 @@ import { NavMenu, Footer } from '../';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import styles from '../../../styles'
 
-class Billing extends Component {
+class Billing extends PureComponent {
 
   componentDidMount () {
     this.props.getCards()

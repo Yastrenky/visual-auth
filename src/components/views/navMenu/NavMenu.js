@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom'
@@ -12,7 +12,7 @@ import { USERS } from '../../../actions';
 import './navmenu.css';
 import styles from '../../../styles'
 
-class NavMenu extends Component {
+class NavMenu extends PureComponent {
   constructor(props) {
     super(props);
 

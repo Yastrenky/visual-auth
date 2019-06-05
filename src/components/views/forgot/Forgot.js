@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -11,7 +11,7 @@ import { ALERTS, USERS } from '../../../actions';
 import './forgot.css';
 import styles from '../../../styles'
 
-class Forgot extends Component {
+class Forgot extends PureComponent {
 
   state = {
     email: '',

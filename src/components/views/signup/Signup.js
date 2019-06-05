@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from "react-redux";
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,7 +14,7 @@ import { ALERTS , USERS} from '../../../actions';
 import './signup.css';
 import styles from '../../../styles'
 
-class App extends Component {
+class App extends PureComponent {
 
   state = {
     name: 'Yastrenky',

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom'
 import { Dashboard, Signup, Login, Forgot, Reset, Profile, Billing } from './views';
 import Button from '@material-ui/core/Button';
@@ -10,7 +10,7 @@ import { cryptr } from '../index'
 import styles from '../styles'
 import './App.css';
 
-class App extends Component {
+class App extends PureComponent {
   constructor (props) {
     super(props);
     this.state = {

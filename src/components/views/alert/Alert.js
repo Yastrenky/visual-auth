@@ -6,11 +6,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-export const Transition = React.forwardRef((props, ref) => (
+
+const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" {...props} />
 ))
 
-class AlertDialogSlide extends React.Component {
+class AlertDialogSlide extends React.PureComponent {
   constructor(props) {
     super(props);
 
