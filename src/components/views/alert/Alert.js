@@ -6,10 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
+export const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="up" {...props} />
+))
 
 class AlertDialogSlide extends React.Component {
   constructor(props) {
@@ -18,9 +17,6 @@ class AlertDialogSlide extends React.Component {
     this.state = {
       open: true,
     };
-    this.handleClickOpen = this.handleClickOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-
   }
 
   handleClickOpen = () => {

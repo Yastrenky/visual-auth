@@ -13,8 +13,8 @@ const styles = theme => ({
     borderRadius: 100,
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(),
+    marginRight: theme.spacing(),
     width: 320,
   },
   button: {
@@ -32,30 +32,30 @@ const styles = theme => ({
     width: 200,
   },
   icon: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
     color: '#3f51b5'
   },
 
   iconHover: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
     '&:hover': {
       color: red[800],
     }
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
   },
   size: {
     width: 40,
     height: 0,
   },
   margin: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(),
   },
   bootstrapRoot: {
     padding: 0,
     'label + &': {
-      marginTop: theme.spacing.unit * 3,
+      marginTop: theme.spacing(3),
     },
   },
   bootstrapInput: {
