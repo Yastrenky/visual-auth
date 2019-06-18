@@ -17,7 +17,8 @@
     "react-stripe-elements": "^2.0.1",
     "react-swipeable-views": "^0.13.3",
     "react-table": "^6.10.0",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "stripe": "^7.2.0"
   },
   "scripts": {
     "start": "set PORT=80 && react-scripts start",

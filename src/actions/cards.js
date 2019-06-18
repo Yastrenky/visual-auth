@@ -106,6 +106,7 @@ const CARDS = dispatch => ({
     })
       .then(response => response.json())
       .then(response => {
+        // console.log(response)
         callback(false)
       })
       .catch((error) => {

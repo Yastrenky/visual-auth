@@ -50,6 +50,11 @@ class SavedCards extends PureComponent {
               accessor: "name"
             },
             {
+              Header: "Card id",
+              accessor: "id",
+              show: false
+            },
+            {
               Header: "Brand",
               accessor: "brand"
             },
