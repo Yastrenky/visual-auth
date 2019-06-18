@@ -82,6 +82,7 @@ class MakePayment extends PureComponent {
         this.props.showAlert('Amount error', 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.')
       }
       else if (inv_amount >= parseFloat(this.state.amount)) {
+        const { total } = this.CheckoutCal(this.state.amount)
         fetch(server + "/chargeCustomer", {
           method: "POST",
           headers: {
@@ -91,7 +92,7 @@ class MakePayment extends PureComponent {
           credentials: "include",
           body: JSON.stringify({
             custId: this.props.users.customerid,
-            amount: this.state.amount * 100,
+            amount: total * 100,
             source: this.state.card_selected
           })
         })
