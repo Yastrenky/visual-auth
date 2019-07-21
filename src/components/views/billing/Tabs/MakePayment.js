@@ -5,9 +5,8 @@ import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@mate
 import NumberFormat from 'react-number-format';
 import List from '../Lists/List';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import server from '../../../../config';
 import format from '../../../../assets/format'
-import { USERS, CARDS, ALERTS, INVOICES } from '../../../../actions';
+import { USERS, CARDS, INVOICES, ALERTS } from '../../../../actions';
 import styles from '../../../../styles';
 
 
@@ -44,7 +43,8 @@ class MakePayment extends PureComponent {
     this.setState({
       inv_slected: null,
       card_selected: null,
-      amount: 0 });
+      amount: 0
+    });
   };
 
   amountChange = prop => event => {
@@ -83,35 +83,16 @@ class MakePayment extends PureComponent {
       }
       else if (inv_amount >= parseFloat(this.state.amount)) {
         const { total } = this.CheckoutCal(this.state.amount)
-        fetch(server + "/chargeCustomer", {
-          method: "POST",
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            custId: this.props.users.customerid,
-            amount: total * 100,
-            source: this.state.card_selected
-          })
+        this.props.chargeCustomer(this.props.users.customerid, this.state.card_selected, total, (status, title, text) => {
+          if (status) {
+            this.props.showAlert(title, text)
+          }
+          else {
+            this.clearFields()
+            this.props.loadCharges();
+            this.props.goToTab(1)
+          }
         })
-          .then(response => response.json())
-          .then(response => {
-            // console.log("charge response", response)
-            if (response.charge.status === "succeeded") {
-              this.clearFields()
-              this.props.loadCharges();
-              this.props.goToTab(1)
-            }
-            else {
-              console.log("Error in payment")
-            }
-          })
-          .catch((e) => {
-            console.log(e)
-            this.props.showAlert('Connection lost', 'Server connection lost. Please contact your service provider. ' + e)
-          })
 
         // console.log("payment amount",this.state.amount)
         // console.log("Invoice amount",inv_amount);

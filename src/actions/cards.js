@@ -113,6 +113,36 @@ const CARDS = dispatch => ({
         console.log(error)
         callback(false)
       })
+  },
+
+  chargeCustomer: async (customerid, sourceid, amount, callback) => {
+    fetch(server + "/chargeCustomer", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        custId: customerid,
+        amount: amount * 100,
+        source: sourceid
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        // console.log("charge response", response)
+        if (response.charge.status === "succeeded") {
+          callback(false)
+        }
+        else {
+          callback(true, "Error in payment")
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        callback(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+      })
   }
 });
 
