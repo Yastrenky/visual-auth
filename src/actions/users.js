@@ -54,7 +54,8 @@ const USERS = (dispatch) => ({
     }).then(response => response.json())
       .then(response => {
         sessionStorage.removeItem('session');
-        alert(true, response.title, response.message, 'loguot')
+        alert(true, response.title, response.message)
+        dispatch({ type: "LOGOUT_USER", response })
       })
       .catch(
         (error) => {
@@ -84,7 +85,7 @@ const USERS = (dispatch) => ({
           alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
         });
   },
-  
+
   signup: async (name, email, password, alert) => {
     fetch(server + '/signup', {
       method: 'POST',
@@ -150,14 +151,37 @@ const USERS = (dispatch) => ({
   },
 
   getSessionID: async (callback) => {
-    fetch(server + '/sessionID', { credentials: 'include' })
+    fetch(server + '/sessionID')
       .then(response => response.json())
       .then(result => {
         callback(result.sessionID)
       })
       .catch(e => {
-        alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+
       });
+  },
+
+  veryfyEmail: async (token, alert, error) => {
+    console.log(token)
+    fetch(server + '/mail_verification/' + token, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then(response => response.json())
+      .then(response => {
+        if (!response.success) {
+          alert(true, response.title, response.message, true)
+        }
+        else {
+          alert(true, response.title, response.message, false)
+        }
+      })
+      .catch(
+        (error) => {
+          alert(true, 'Connection lost', "Server connection lost. Please contact your service provider.", true)
+        })
   }
 
 

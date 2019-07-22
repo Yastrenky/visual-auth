@@ -12,25 +12,9 @@ const Transition = React.forwardRef((props, ref) => (
 ))
 
 class AlertDialogSlide extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      open: true,
-    };
-  }
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
 
   handleClose = () => {
-    this.setState({ open: false });
     this.props.resetAlert();
-    if(this.props.data.title ==="User Eliminated"){
-      // console.log("<<<<<<<<Alert>>>>>>")
-    this.props.logOut()
-    }
   };
 
   render() {
@@ -39,7 +23,7 @@ class AlertDialogSlide extends React.PureComponent {
     return (
       <div>
         <Dialog
-          open={this.state.open}
+          open={true}
           TransitionComponent={Transition}
           keepMounted
           onClose={this.handleClose}

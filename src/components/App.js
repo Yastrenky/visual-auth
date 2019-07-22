@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom'
-import { Dashboard, Signup, Login, Forgot, Reset, Profile, Billing } from './views';
+import { Dashboard, Signup, Login, Forgot, Reset, Profile, Billing, Verification } from './views';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Alert from './views/alert/Alert';
@@ -99,6 +99,9 @@ class App extends PureComponent {
             />
             <Route path='/reset/:handle'
               component={Reset}
+            />
+            <Route path='/mail_verification/:handle'
+              component={Verification}
             />
           </Switch>
         </BrowserRouter>

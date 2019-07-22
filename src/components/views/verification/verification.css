@@ -1,4 +1,4 @@
-.Verify-card {
+.Reset-card {
   text-align: center;
   display: flex;
   justify-content: space-around;
@@ -12,14 +12,14 @@
   box-shadow: 0px 10px 31px #888888a8;
 }
 
-.Verify-header {
+.Reset-header {
   background-color: #222;
   height: 100px;
   padding: 20px;
   color: white;
 }
 
-.Verify-title {
+.Reset-title {
   align-items: center;
   display: flex;
   justify-content: center;

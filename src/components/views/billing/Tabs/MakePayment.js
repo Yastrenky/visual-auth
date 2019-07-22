@@ -93,9 +93,6 @@ class MakePayment extends PureComponent {
             this.props.goToTab(1)
           }
         })
-
-        // console.log("payment amount",this.state.amount)
-        // console.log("Invoice amount",inv_amount);
       }
       else {
         this.props.showAlert('Amount error', 'The amount to pay for invoice is too big. Your payment was not processed.')

@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import validate from '../../../assets/validate';
-import Alert from '../alert/Alert';
 import Footer from '../footer/Footer';
 import { ALERTS, USERS } from '../../../actions';
 import './reset.css';
@@ -65,12 +64,8 @@ class Reset extends PureComponent {
     // console.log("state", this.state)
 
     const { classes } = this.props;
-    const alert = this.state.alert.show;
-
     return (
       <div className='view-container'>
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
-
         <header className="Reset-header">
           <h1 className="Reset-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
