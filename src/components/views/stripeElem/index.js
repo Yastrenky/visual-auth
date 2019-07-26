@@ -5,10 +5,8 @@ import {
 import { USERS, CARDS, ALERTS } from '../../../actions';
 import { connect } from "react-redux";
 import Button from '@material-ui/core/Button';
-import server from '../../../config';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Alert from '../../views/alert/Alert';
 import './stripe.css'
 import styles from '../../../styles'
 
@@ -26,7 +24,7 @@ const createOptions = () => {
       },
       invalid: {
         color: '#c23d4b',
-      },
+      }
     }
   }
 };
@@ -35,14 +33,8 @@ class CheckoutForm extends PureComponent {
   constructor (props) {
     super(props);
     this.state = {
-      complete: false,
       cardholder: null,
       loading: false,
-      alert: {
-        show: false,
-        title: '',
-        text: ''
-      }
     };
   }
 
@@ -65,41 +57,17 @@ class CheckoutForm extends PureComponent {
       this.setState({ loading: true })
       let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
       if (token) {
-        await fetch(server + "/addCard", {
-          method: "POST",
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            token: token.id,
-            customerid: this.props.users.customerid
-          })
+        this.props.addCard(this.props.users.customerid, token.id, (status, title, message) => {
+          if (status) {
+            this.props.showAlert(title, message)
+          }
+          else {
+            this.props.getCards();
+            this.cleanForm();
+          }
+          this.setState({ loading: false })
         })
-          .then(response => response.json())
-          .then(response => {
-            // console.log(response)
-            if (response.err) {
-              alert.show = true;
-              alert.title = "Card error";
-              alert.text = response.err.message;
-              this.setState({
-                loading: false,
-                alert: alert
-              })
-            }
-            else {
-              this.props.getCards();
-              this.cleanForm();
-              this.setState({ loading: false })
-            }
-          })
-          .catch((e) => {
-            this.props.showAlert('Connection lost', 'Server connection lost. Please contact your service provider. ' + e)
-          })
       }
-
       else {
         this.props.showAlert('Card Error', error.message)
       }
@@ -111,13 +79,10 @@ class CheckoutForm extends PureComponent {
   }
 
   render () {
-    // console.log(this.state)
     const { classes } = this.props;
-    const alert = this.state.alert.show;
 
     return (
       <div className="checkout">
-        {alert ? <Alert data={this.state.alert} resetAlert={this.resetAlert} /> : null}
         <p>Save your cards to have more options to pay your invoices</p>
         <div>
           <form>

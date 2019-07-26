@@ -1,6 +1,33 @@
 import server from '../config/index';
 
 const CARDS = dispatch => ({
+  addCard: async (customerid, token, callback) => {
+    await fetch(server + "/addCard", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        token: token,
+        customerid: customerid
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        // console.log(response)
+        if (response.err) {
+          callback( true, "Card error", response.err.message)
+        }
+        else {
+          callback(false)
+        }
+      })
+      .catch((e) => {
+        callback(true, 'Connection lost', 'Server connection lost. Please contact your service provider. ' + e)
+      })
+  },
 
   loadCharges: async (customerid) => {
     dispatch({ type: "UPDATE_CHARGES_STATUS", status: true })
@@ -57,9 +84,6 @@ const CARDS = dispatch => ({
       }).catch(e => {
         console.log(e)
       });
-  },
-  addCard: async () => {
-
   },
 
   getCards: async () => {
