@@ -29,6 +29,58 @@ const CARDS = dispatch => ({
       })
   },
 
+  getCharge: async (chargeId, callback) => { 
+    await fetch(server + "/getCharge", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+       id: chargeId
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.err) {
+          dispatch({ type: "SHOW_ALERT", info: { title: "Data Error", text: response.err.message }})
+        }
+        else {
+          callback(response.charge)
+        }
+      })
+      .catch((e) => {
+        dispatch({ type: "SHOW_ALERT", info: { title: "Connection lost", text: 'Server connection lost. Please contact your service provider. ' + e}})
+      })
+  },
+
+  getRefund: async (refundId, callback) => {
+    await fetch(server + "/getRefund", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",
+      body: JSON.stringify({
+       id: refundId
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.err) {
+          dispatch({ type: "SHOW_ALERT", info: { title: "Data Error", text: response.err.message }})
+        }
+        else {
+          callback(response.refund)
+        }
+      })
+      .catch((e) => {
+        dispatch({ type: "SHOW_ALERT", info: { title: "Connection lost", text: 'Server connection lost. Please contact your service provider. ' + e}})
+      })
+  },
+
   loadCharges: async (customerid) => {
     dispatch({ type: "UPDATE_CHARGES_STATUS", status: true })
     fetch(server + '/getCustomerCharges', {
@@ -51,32 +103,31 @@ const CARDS = dispatch => ({
           // console.log(result)
           var list = result.charge.data
           var charges = [];
-
           list.forEach((charge => {
             let refunds = charge.refunds.data
 
             refunds.forEach((refund => {
               charges.push({
+                object:refund.object,
                 date: refund.created,
                 card_id: charge.source.id,
-                charge_id: refund.id,
+                id: refund.id,
                 card: charge.source.last4 ? charge.source.last4 : charge.source.card.last4,
                 status: refund.status,
                 amount: refund.amount,
                 currency: refund.currency,
-                type: 'refund'
               })
             }))
 
             charges.push({
+              object: charge.object,
               date: charge.created,
               card_id: charge.source.id,
-              charge_id: charge.id,
+              id: charge.id,
               card: charge.source.last4 ? charge.source.last4 : charge.source.card.last4,
               status: charge.status,
               amount: charge.amount,
               currency: charge.currency,
-              type: 'charge'
             })
           }));
           dispatch({ type: "SAVE_CHARGES_LIST", data: { list: charges, status: false } })

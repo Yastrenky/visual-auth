@@ -116,3 +116,16 @@ footer h5 a {
   align-content: center;
   justify-content: center;
 }
+
+.charge-refund-info{
+  display: flex;
+  flex-direction: column;
+}
+
+.charge-refund-info span{
+  display: inline-flex;
+}
+
+.charge-refund-info p{
+  margin-right: 5px;
+}
