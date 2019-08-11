@@ -69,7 +69,6 @@ class PaymentHistory extends PureComponent {
       })
     }
     if (type === 'REFUND') {
-
       this.props.getRefund(id, (refundResp) => {
         this.props.showAlert('Refund Details', <RefundInfo refund={refundResp} />)
       })

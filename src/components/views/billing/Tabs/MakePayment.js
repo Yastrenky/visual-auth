@@ -50,6 +50,7 @@ class MakePayment extends PureComponent {
   amountChange = prop => event => {
     this.setState({ amount: event.target.value });
   }
+
   selectInvoice = inv => {
     if (this.state.inv_slected === inv) {
       this.setState({ inv_slected: null });
