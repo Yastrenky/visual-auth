@@ -73,16 +73,16 @@ class SavedCards extends PureComponent {
               accessor: 'zipcode'
             },
             {
-              Header: "Delete Card",
               id: "click-me-button",
               Cell: ({ row }) => (this.state.loadremove === row.id ?
                 <CircularProgress className={classes.progress} size={30} style={{ margin: 0 }}/>
                 :
-                <Icon className={classes.icon} color="secondary" style={{ fontSize: 30, margin: 0 , color: '#f50057' }} onClick={(e) => this.deletCard(row.id)}>
+                <Icon className={classes.icon} color="secondary" style={{ fontSize: 30, margin: 0 , color: '#f50057', cursor: 'pointer' }} onClick={(e) => this.deletCard(row.id)}>
                   delete_forever
                </Icon>
                 //  <button onClick={(e) => this.deletCard(row.id)}>Delete</button>
-              )
+              ),
+              width: 80
             }
           ]}
           defaultPageSize={10}

@@ -10,6 +10,12 @@ import { cryptr } from '../index'
 import styles from '../styles'
 import './App.css';
 
+
+// eslint-disable-next-line
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1)
+}
+
 class App extends PureComponent {
   constructor (props) {
     super(props);

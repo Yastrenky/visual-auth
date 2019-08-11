@@ -129,3 +129,8 @@ footer h5 a {
 .charge-refund-info p{
   margin-right: 5px;
 }
+
+.MuiFormControlLabel-root{
+  margin-right: 0px;
+  margin-left: 0px;
+}

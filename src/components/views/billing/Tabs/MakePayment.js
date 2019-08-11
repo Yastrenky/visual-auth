@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import ReactTable from "react-table";
 import { Button, TextField, FormControlLabel, Checkbox, withStyles } from '@material-ui/core';
 import NumberFormat from 'react-number-format';
-import List from '../Lists/List';
+import { List } from '../sourceData';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import format from '../../../../assets/format'
 import { USERS, CARDS, INVOICES, ALERTS } from '../../../../actions';
@@ -66,6 +66,7 @@ class MakePayment extends PureComponent {
   };
 
   pay = e => {
+
     if (this.state.inv_slected === null) {
       this.props.showAlert('Select Invoice', 'Please select one of the invoices to pake a payment.')
     }
@@ -75,9 +76,8 @@ class MakePayment extends PureComponent {
     else {
       var inv_amount = null;
       this.props.invoices.list.forEach(inv => {
-        if (inv.invoice === this.state.inv_slected) { inv_amount = inv.balance }
-      });
-
+        if (inv.reference === this.state.inv_slected) { inv_amount = inv.balance }
+      })
 
       if (parseFloat(this.state.amount) <= 0) {
         this.props.showAlert('Amount error', 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.')
@@ -134,8 +134,8 @@ class MakePayment extends PureComponent {
             data={this.props.invoices.list}
             columns={[
               {
-                Header: "Invoice",
-                accessor: "invoice",
+                Header: "#",
+                accessor: "reference",
               },
               {
                 Header: "Product name",
@@ -164,13 +164,14 @@ class MakePayment extends PureComponent {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={this.state.inv_slected === b.invoice ? true : false}
-                        onChange={e => this.selectInvoice(b.invoice)}
+                        checked={this.state.inv_slected === b.reference ? true : false}
+                        onChange={e => this.selectInvoice(b.reference)}
                         value="checkedB"
                         color="primary"
                         className={classes.size}
                       />}
-                  />
+                  />,
+                width: 80
               }
             ]}
             defaultPageSize={10}
