@@ -50,7 +50,8 @@ const RefundInfo = (props) => {
   )
 }
 
-String.prototype.capitalize = function() {
+// eslint-disable-next-line
+String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1)
 }
 
