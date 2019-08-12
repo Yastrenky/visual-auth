@@ -133,7 +133,7 @@ const CARDS = dispatch => ({
           dispatch({ type: "SAVE_CHARGES_LIST", data: { list: charges, status: false } })
         }
       }).catch(e => {
-        console.log(e)
+        // console.log(e)
       });
   },
 
@@ -161,7 +161,7 @@ const CARDS = dispatch => ({
         dispatch({ type: "SAVE_CARDS_LIST", data: { list: newData, status: false } })
       })
       .catch(e => {
-        console.log(e)
+        // console.log(e)
       });
   },
 

@@ -30,15 +30,14 @@ class App extends PureComponent {
     //     this.props.showAlert(title, text)
     //   }
     // })
-
     this.props.getSessionID(sessionId => {
       const localSessionId = cryptr.decrypt((JSON.parse(sessionStorage.getItem('session'))))
-      if (sessionId && localSessionId && localSessionId !== sessionId) {
+      if (localSessionId !== sessionId) {
         console.log('<<< AUTO LOGOUT >>>')
         this.props.logout()
         this.props.showAlert('Session Error', 'Your session has expired, if you like to continue working please login again.')
-       }   
-      })
+      }
+    })
   }
 
   render () {

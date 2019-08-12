@@ -33,11 +33,11 @@ const USERS = (dispatch) => ({
   },
 
   logout: async () => {
+    sessionStorage.removeItem('session');
     await fetch(server + '/logout', { credentials: 'include' })
       .then(response => response.json())
       .then(response => {
         // console.log(response)
-        sessionStorage.removeItem('session');
         dispatch({ type: "LOGOUT_USER", response })
       })
       .catch(e => console.log(e));
@@ -151,10 +151,15 @@ const USERS = (dispatch) => ({
   },
 
   getSessionID: async (callback) => {
-    fetch(server + '/sessionID')
+    fetch(server + '/sessionID', { credentials: "include" })
       .then(response => response.json())
       .then(result => {
-        callback(result.sessionID)
+        if (result.sessionID) {
+          callback(result.sessionID)
+        }
+        else {
+          callback(null)
+        }
       })
       .catch(e => {
 
