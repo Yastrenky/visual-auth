@@ -1,4 +1,4 @@
-import server from '../config/index';
+import { server } from '../config'
 
 const CREDENTIALS = dispatch => ({
 

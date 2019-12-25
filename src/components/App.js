@@ -128,7 +128,6 @@ function mapDispatchToProps (dispatch) {
     ...USERS(dispatch),
     ...CREDENTIALS(dispatch),
     ...ALERTS(dispatch)
-
   }
 }
 

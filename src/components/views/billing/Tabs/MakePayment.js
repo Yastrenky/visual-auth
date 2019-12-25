@@ -66,37 +66,38 @@ class MakePayment extends PureComponent {
   };
 
   pay = e => {
-
-    if (this.state.inv_slected === null) {
-      this.props.showAlert('Select Invoice', 'Please select one of the invoices to pake a payment.')
+    const { showAlert, invoices, chargeCustomer, users, loadCharges, goToTab } = this.props
+    const {inv_slected, card_selected , amount} = this.state
+    if (inv_slected === null) {
+      showAlert('Select Invoice', 'Please select one of the invoices to pake a payment.')
     }
-    else if (this.state.card_selected === null) {
-      this.props.showAlert('Select Card', 'Please select one of the cards to pake a payment.')
+    else if (card_selected === null) {
+      showAlert('Select Card', 'Please select one of the cards to pake a payment.')
     }
     else {
       var inv_amount = null;
-      this.props.invoices.list.forEach(inv => {
-        if (inv.reference === this.state.inv_slected) { inv_amount = inv.balance }
+      invoices.list.forEach(inv => {
+        if (inv.number === inv_slected) { inv_amount = inv.amount_remaining }
       })
-
-      if (parseFloat(this.state.amount) <= 0) {
-        this.props.showAlert('Amount error', 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.')
+console.log(inv_amount)
+      if (parseFloat(amount) <= 0) {
+        showAlert('Amount error', 'The amount to pay for invoice is too low. Your amount can not be cero ar a negative number. Your payment was not processed.')
       }
-      else if (inv_amount >= parseFloat(this.state.amount)) {
-        const { total } = this.CheckoutCal(this.state.amount)
-        this.props.chargeCustomer(this.props.users.customerid, this.state.card_selected, total, (status, title, text) => {
+      else if (inv_amount >= parseFloat(amount)) {
+        const { total } = this.CheckoutCal(amount)
+        chargeCustomer(users.customerid, card_selected, total, (status, title, text) => {
           if (status) {
-            this.props.showAlert(title, text)
+            showAlert(title, text)
           }
           else {
             this.clearFields()
-            this.props.loadCharges();
-            this.props.goToTab(1)
+            loadCharges();
+            goToTab(1)
           }
         })
       }
       else {
-        this.props.showAlert('Amount error', 'The amount to pay for invoice is too big. Your payment was not processed.')
+        showAlert('Amount error', 'The amount to pay for invoice is too big. Your payment was not processed.')
       }
 
     }
@@ -135,27 +136,27 @@ class MakePayment extends PureComponent {
             columns={[
               {
                 Header: "#",
-                accessor: "reference",
-              },
-              {
-                Header: "Product name",
-                accessor: "product",
-
+                accessor: "number",
               },
               {
                 Header: "Due date",
-                accessor: "due",
+                id: "due_date",
+                accessor: d => format.formatStripeDate(d.due_date)
               },
               {
-                Header: "Charges by Fee",
+                Header: "Amount due",
                 id: "fee",
-                accessor: i => "$" + i.fee
+                accessor: i => "$" + format.money(i.amount_due.toString())
               },
               {
-                Header: "Balance",
+                Header: "Amount paid",
+                id: "fee",
+                accessor: i => "$" + format.money(i.amount_paid.toString())
+              },
+              {
+                Header: "Amount remaining",
                 id: 'balance',
-                accessor: b => "$" + b.balance
-
+                accessor: a => "$" + format.money(a.amount_remaining.toString())
               },
               {
                 Header: "",
@@ -164,8 +165,8 @@ class MakePayment extends PureComponent {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={this.state.inv_slected === b.reference ? true : false}
-                        onChange={e => this.selectInvoice(b.reference)}
+                        checked={this.state.inv_slected === b.number ? true : false}
+                        onChange={e => this.selectInvoice(b.number)}
                         value="checkedB"
                         color="primary"
                         className={classes.size}

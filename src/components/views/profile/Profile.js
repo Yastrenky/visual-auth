@@ -7,7 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import validate from '../../../assets/validate';
 import { connect } from "react-redux";
 import { USERS, ALERTS, PROFILE } from '../../../actions';
-import server from '../../../config';
+import { server } from '../../../config';
 import {  NavMenu, Footer } from '../';
 import './profile.css';
 import styles from '../../../styles'
@@ -131,7 +131,7 @@ class Profile extends PureComponent {
 
                   {/* <button onClick={this.uploadHandler}>Upload!</button> */}
                 </div>
-                <div>
+                <div className="profile-info">
                   <h5>Id: {this.props.users.id}</h5>
                   <h5>Name: {this.props.users.name}</h5>
                   <h5>Email: {this.props.users.email}</h5>

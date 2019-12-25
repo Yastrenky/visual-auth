@@ -1,4 +1,4 @@
-import server from '../config/index';
+import { server } from '../config'
 
 const CARDS = dispatch => ({
   addCard: async (customerid, token, callback) => {

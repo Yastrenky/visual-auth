@@ -1,4 +1,4 @@
-import server from '../config/index';
+import { server } from '../config'
 import { cryptr } from '../index'
 
 const USERS = (dispatch) => ({
