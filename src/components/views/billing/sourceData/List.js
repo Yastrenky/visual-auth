@@ -12,20 +12,20 @@ class CheckboxList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      checked: null,
+      cardInfo: {},
     };
   }
 
   handleToggle = card => () => {
-    if (this.state.checked === card) {
+    if (this.state.cardInfo === card) {
       this.setState({
-        checked: null,
+        cardInfo: {},
       });
       this.props.selectCard(null)
     }
     else {
       this.setState({
-        checked: card,
+        cardInfo: card,
       });
       this.props.selectCard(card)
     }
@@ -40,27 +40,27 @@ class CheckboxList extends React.PureComponent {
         <List
           className={classes.listoverflow}
         >
-          {this.props.data.length > 0? this.props.data.map((value) => (
+          {this.props.data.length > 0? this.props.data.map((cardData) => (
             <ListItem
-              key={value.id}
+              key={cardData.id}
               role={undefined}
               dense
               button
-              onClick={this.handleToggle(value.id)}
+              onClick={this.handleToggle(cardData)}
               className={classes.listItem}
             >
               <Checkbox
-                checked={this.state.checked === value.id}
+                checked={this.state.cardInfo.id === cardData.id}
                 tabIndex={-1}
                 disableRipple
                 color="primary"
               />
               <PaymentIcon
-                id={value.brand === "American Express" ? "amex" : value.brand.toLowerCase()}
+                id={cardData.brand === "American Express" ? "amex" : cardData.brand.toLowerCase()}
                 style={{ margin: 5, width: 60 }}
                 className="payment-icon"
               />
-              <ListItemText primary={`****  ${value.card} (${value.date}) `} />
+              <ListItemText primary={`****  ${cardData.card} (${cardData.date}) `} />
             </ListItem>
           )): <div>Please add payment method</div>}
         </List>

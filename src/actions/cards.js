@@ -1,8 +1,9 @@
 import { server } from '../config'
+import ALERTS from './alerts'
 
 const CARDS = dispatch => ({
-  addCard: async (customerid, token, callback) => {
-    await fetch(server + "/addCard", {
+  addCard: async (customerid, token) => {
+    return fetch(server + "/addCard", {
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -18,18 +19,17 @@ const CARDS = dispatch => ({
       .then(response => {
         // console.log(response)
         if (response.err) {
-          callback( true, "Card error", response.err.message)
+          ALERTS(dispatch).showAlert("Card error", response.err.message)
+          return false
         }
-        else {
-          callback(false)
-        }
+        return true
       })
       .catch((e) => {
-        callback(true, 'Connection lost', 'Server connection lost. Please contact your service provider. ' + e)
+        ALERTS(dispatch).showAlert("Connection lost", 'Server connection lost. Please contact your service provider. ' + e)
       })
   },
 
-  getCharge: async (chargeId, callback) => { 
+  getCharge: async (chargeId, callback) => {
     await fetch(server + "/getCharge", {
       method: "POST",
       headers: {
@@ -38,20 +38,20 @@ const CARDS = dispatch => ({
       },
       credentials: "include",
       body: JSON.stringify({
-       id: chargeId
+        id: chargeId
       })
     })
       .then(response => response.json())
       .then(response => {
         if (response.err) {
-          dispatch({ type: "SHOW_ALERT", info: { title: "Data Error", text: response.err.message }})
+          ALERTS(dispatch).showAlert("Charge Error", response.err.message)
         }
         else {
           callback(response.charge)
         }
       })
       .catch((e) => {
-        dispatch({ type: "SHOW_ALERT", info: { title: "Connection lost", text: 'Server connection lost. Please contact your service provider. ' + e}})
+        ALERTS(dispatch).showAlert("Connection lost", 'Server connection lost. Please contact your service provider. ' + e)
       })
   },
 
@@ -64,20 +64,20 @@ const CARDS = dispatch => ({
       },
       credentials: "include",
       body: JSON.stringify({
-       id: refundId
+        id: refundId
       })
     })
       .then(response => response.json())
       .then(response => {
         if (response.err) {
-          dispatch({ type: "SHOW_ALERT", info: { title: "Data Error", text: response.err.message }})
+          ALERTS(dispatch).showAlert("Refund Error", response.err.message)
         }
         else {
           callback(response.refund)
         }
       })
       .catch((e) => {
-        dispatch({ type: "SHOW_ALERT", info: { title: "Connection lost", text: 'Server connection lost. Please contact your service provider. ' + e}})
+        ALERTS(dispatch).showAlert("Connection lost", 'Server connection lost. Please contact your service provider. ' + e)
       })
   },
 
@@ -108,7 +108,7 @@ const CARDS = dispatch => ({
 
             refunds.forEach((refund => {
               charges.push({
-                object:refund.object,
+                object: refund.object,
                 date: refund.created,
                 card_id: charge.source.id,
                 id: refund.id,
@@ -190,8 +190,8 @@ const CARDS = dispatch => ({
       })
   },
 
-  chargeCustomer: async (customerid, sourceid, amount, callback) => {
-    fetch(server + "/chargeCustomer", {
+  chargeCustomer: async (customerid, sourceid, amount, showMessage) => {
+    return fetch(server + "/chargeCustomer", {
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -206,17 +206,23 @@ const CARDS = dispatch => ({
     })
       .then(response => response.json())
       .then(response => {
-        // console.log("charge response", response)
-        if (response.charge.status === "succeeded") {
-          callback(false)
+        const stripteErrMsg = response?.err?.message
+        if (stripteErrMsg) {
+          ALERTS(dispatch).showAlert('Server Error', stripteErrMsg)
+          return false
+        }
+        if (response?.charge?.status === "succeeded") {
+          return true
         }
         else {
-          callback(true, "Error in payment")
+          ALERTS(dispatch).showAlert('Server Error', "Error in payment")
+          return false
         }
       })
       .catch((e) => {
-        console.log(e)
-        callback(true, 'Connection lost', "Server connection lost. Please contact your service provider.")
+        // console.log(e)
+        ALERTS(dispatch).showAlert('Server Error', "Error processing payment")
+        return false
       })
   }
 });

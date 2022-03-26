@@ -30,7 +30,7 @@ const createOptions = () => {
 };
 
 class CheckoutForm extends PureComponent {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       cardholder: null,
@@ -53,32 +53,32 @@ class CheckoutForm extends PureComponent {
   submit = async (ev) => {
     ev.preventDefault();
 
-    if (this.state.cardholder) {
-      this.setState({ loading: true })
-      let { token, error } = await this.props.stripe.createToken({ name: this.state.cardholder });
-      if (token) {
-        this.props.addCard(this.props.users.customerid, token.id, (status, title, message) => {
-          if (status) {
-            this.props.showAlert(title, message)
-          }
-          else {
-            this.props.getCards();
-            this.cleanForm();
-          }
-          this.setState({ loading: false })
-        })
-      }
-      else {
-        this.props.showAlert('Card Error', error.message)
-      }
-    }
-    else {
-      this.props.showAlert('Card Error', 'Please enter cardholder name')
+    const { state: { cardholder }, props: { stripe, users, addCard, getCards, showAlert }} = this
+    const { token, error } = await stripe.createToken({ name: cardholder })
 
+    if (!cardholder) {
+      showAlert('Card Error', 'Please enter cardholder name')
     }
+    if (error) {
+      showAlert('Cardholder Error', error.message)
+    }
+
+    if (token) {
+      this.setState({ loading: true })
+      const succees = await addCard(users.customerid, token.id)
+
+      if (succees) {
+        await getCards();
+        this.cleanForm();
+      }
+      this.setState({ loading: false })
+    } else {
+      showAlert('Card Error', 'Unable to create token for cardholder')
+    }
+
   }
 
-  render () {
+  render() {
     const { classes } = this.props;
 
     return (
@@ -100,7 +100,7 @@ class CheckoutForm extends PureComponent {
                 color="primary"
                 className={classes.button}>
                 Save
-             </Button>
+              </Button>
               :
               <CircularProgress className={classes.progress} />
             }
@@ -113,14 +113,14 @@ class CheckoutForm extends PureComponent {
   }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
   return {
     users: state.users,
     cards: state.cards,
   }
 };
 
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
     ...USERS(dispatch),
     ...CARDS(dispatch),
