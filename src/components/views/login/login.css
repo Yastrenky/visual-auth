@@ -12,14 +12,8 @@
   box-shadow: 0px 10px 31px #888888a8;
 }
 
-.Login-header {
-  background-color: #222;
-  height: 100px;
-  padding: 20px;
-  color: white;
-}
-
 .Login-title {
+  margin: 0px;
   align-items: center;
   display: flex;
   justify-content: center;

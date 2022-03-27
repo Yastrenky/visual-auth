@@ -28,7 +28,7 @@ class Billing extends PureComponent {
     return (
       <div className='view-container'>
         <NavMenu variant="contained" />
-        <header className="Billing-header">
+        <header className="main-header">
           <h1 className="Billing-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               airplay

@@ -14,7 +14,7 @@ class Dashboard extends PureComponent {
     return (
       <div className='view-container'>
         <NavMenu variant="contained" />
-        <header className="Dashboard-header">
+        <header className="main-header">
           <h1 className="Dashboard-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               airplay

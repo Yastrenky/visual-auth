@@ -77,7 +77,7 @@ class App extends PureComponent {
     const { classes } = this.props;
     return (
       <div className='view-container'>
-        <header className="Signup-header">
+        <header className="main-header">
           <h1 className="Signup-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               input

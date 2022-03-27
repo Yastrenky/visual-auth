@@ -70,7 +70,7 @@ class Login extends PureComponent {
 
     return (
       <div className='view-container'>
-        <header className="Login-header">
+        <header className="main-header">
           <h1 className="Login-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               input

@@ -1,5 +1,5 @@
 .Dashboard-card {
-   display: flex;
+  display: flex;
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
@@ -10,7 +10,8 @@
   border-radius: 5px;
   box-shadow: 0px 10px 31px #888888a8;
 }
-.stripe-card{
+
+.stripe-card {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -24,14 +25,8 @@
   margin: 20px;
 }
 
-.Dashboard-header {
-  background-color: #222;
-  height: 100px;
-  padding: 20px;
-  color: white;
-}
-
 .Dashboard-title {
+  margin: 0px;
   align-items: center;
   display: flex;
   justify-content: center;

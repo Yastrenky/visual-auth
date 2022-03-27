@@ -79,7 +79,7 @@ class Verify extends PureComponent {
     const token = this.props.match.params.handle;
     return (
       <div className='view-container'>
-        <header className="Verify-header">
+        <header className="main-header">
           <h1 className="Verify-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               email

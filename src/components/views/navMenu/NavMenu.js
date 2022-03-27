@@ -37,12 +37,13 @@ class NavMenu extends PureComponent {
     return (
       <div className="nav-menu">
         <Button
+          id="main-nav-menu-btn"
           aria-owns={anchorEl ? 'fade-menu' : null}
           aria-haspopup="true"
           onClick={this.handleClick}
         >
           <ListItemIcon className={classes.icon}>
-            <Icon className={classes.icon} color="primary" style={{ fontSize: 45 }}>
+            <Icon className={classes.icon} color="primary" style={{ fontSize: 35 }}>
               menu
             </Icon>
           </ListItemIcon>

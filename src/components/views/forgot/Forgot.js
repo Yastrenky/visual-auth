@@ -43,7 +43,7 @@ class Forgot extends PureComponent {
 
     return (
       <div className = 'view-container'>
-        <header className="Forgot-header">
+        <header className="main-header">
           <h1 className="Forgot-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               lock

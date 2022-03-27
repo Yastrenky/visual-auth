@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 .App {
   text-align: center;
   height: 100%;
@@ -25,7 +26,16 @@
 
 }
 
+.main-header {
+  background-color: #222;
+  height: 50px;
+  padding: 20px;
+  color: white;
+}
 
+#main-nav-menu-btn {
+  padding: 0px 0px;
+}
 
 .footer {
   position: relative;
@@ -42,6 +52,7 @@
   width: 5px;
   padding-top: 40px;
 }
+
 ::-webkit-scrollbar:horizontal {
   height: 5px;
 

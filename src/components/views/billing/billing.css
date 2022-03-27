@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
 .Billing-card {
   display: flex;
   justify-content: space-around;
@@ -30,14 +31,8 @@
   width: 90%
 }
 
-.Billing-header {
-  background-color: #222;
-  height: 100px;
-  padding: 20px;
-  color: white;
-}
-
 .Billing-title {
+  margin: 0px;
   align-items: center;
   display: flex;
   justify-content: center;
@@ -117,20 +112,20 @@ footer h5 a {
   justify-content: center;
 }
 
-.charge-refund-info{
+.charge-refund-info {
   display: flex;
   flex-direction: column;
 }
 
-.charge-refund-info span{
+.charge-refund-info span {
   display: inline-flex;
 }
 
-.charge-refund-info p{
+.charge-refund-info p {
   margin-right: 5px;
 }
 
-.MuiFormControlLabel-root{
+.MuiFormControlLabel-root {
   margin-right: 0px;
   margin-left: 0px;
 }

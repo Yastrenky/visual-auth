@@ -66,7 +66,7 @@ class Reset extends PureComponent {
     const { classes } = this.props;
     return (
       <div className='view-container'>
-        <header className="Reset-header">
+        <header className="main-header">
           <h1 className="Reset-title">
             <Icon className={classes.icon} color="primary" style={{ fontSize: 30 }}>
               lock_open
